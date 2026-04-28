@@ -181,12 +181,15 @@ export async function onRecordSave(api, recordOld, recordNew) {
       }),
     );
   } catch (e) {
-    // sync is best-effort after local save — surface but don't fail
+    // sync is best-effort after local save — surface but don't throw
     console.error("sync after save failed:", e);
     setStore("syncError", e?.message ?? String(e));
   }
 
   const keyNew = recordNew[recordNew._];
+
+  // force reload
+  setStore("recordSet", []);
 
   setStore("recordMap", { [keyNew]: recordNew });
 

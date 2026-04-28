@@ -37,7 +37,7 @@ export async function find(api, mind, name) {
 
   if (mindRecord === undefined) throw Error("where is my mind");
 
-  const schema = await readSchema(mindRecord.mind);
+  const schema = await readSchema(api, mindRecord.mind);
 
   return { mind: mindRecord, schema };
 }
@@ -90,7 +90,7 @@ export async function clone(api, url, token) {
   // get mind name from remote
   const nameClone = pathname.substring(pathname.lastIndexOf("/") + 1);
 
-  const schemaClone = await readSchema(mindRemote);
+  const schemaClone = await readSchema(api, mindRemote);
 
   const [schemaRecordClone, ...metaRecordsClone] =
     schemaToBranchRecords(schemaClone);

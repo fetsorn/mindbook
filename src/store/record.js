@@ -137,9 +137,14 @@ export async function saveMindRecord(api, record) {
   // create mind directory
   const name = Array.isArray(record.name) ? record.name[0] : record.name;
 
-  await api.gitinit(mind, name);
+  try {
+    // fails if exists
+    await api.gitinit(mind, name);
 
-  await api.csvsinit(mind);
+    await api.csvsinit(mind);
+  } catch {
+    await api.rename(mind, name);
+  }
 
   //await api.createLFS(mind);
 
