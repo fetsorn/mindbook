@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta
+      name="description"
+      content="Event editor - Tell the story of your own life"
+    />
+    <link rel="stylesheet" href="./src/index.css" />
+  </head>
+
+  <body>
+    <div id="root" class="root"></div>
+    <script type="module">
+      import LightningFS from "https://cdn.jsdelivr.net/npm/@isomorphic-git/lightning-fs@4.6.2/+esm";
+
+      import { init } from "./src/index.jsx";
+
+      const fs = new LightningFS("fs");
+
+      // construct the provider and call init here
+      init({
+        fs,
+        resolve: () => Promise.resolve({ ok: true }),
+        rename: () => {},
+        zip: () => {},
+        uploadFile: () => {},
+        uploadBlobsLFS: () => {},
+        downloadAsset: () => {},
+        downloadUrlFromPointer: () => {},
+        setAssetPath: () => {},
+        getAssetPath: () => {},
+        select: () => {},
+        selectStream: () => Promise.resolve({ done: true, value: undefined }),
+        updateRecord: () => {},
+        deleteRecord: () => {},
+        buildRecord: () => {},
+        init: () => {},
+        createLFS: () => {},
+        clone: () => {},
+        commit: () => {},
+        fetchAsset: () => {},
+        putAsset: () => {},
+        setOrigin: () => {},
+        getOrigin: () => Promise.resolve(""),
+      });
+    </script>
+  </body>
+</html>
