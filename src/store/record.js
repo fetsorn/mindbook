@@ -117,7 +117,12 @@ export async function createRoot(api) {
     }
 
     await api.commit("root");
-  } catch {
+  } catch (e) {
+    if (e.message === "EEXIST") {
+      console.log("root exists");
+    } else {
+      console.log(e);
+    }
     // do nothing
   }
 }
@@ -142,8 +147,14 @@ export async function saveMindRecord(api, record) {
     await api.gitinit(mind, name);
 
     await api.csvsinit(mind);
-  } catch {
-    await api.rename(mind, name);
+  } catch (e) {
+    if (e.message === "EEXIST") {
+      console.log("repo exists, renaming");
+
+      await api.rename(mind, name);
+    } else {
+      console.log(e.message);
+    }
   }
 
   //await api.createLFS(mind);
