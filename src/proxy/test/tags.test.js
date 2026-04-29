@@ -4,7 +4,7 @@ import {
   readLocalTags,
   writeRemoteTags,
   writeLocalTags,
-} from "@/store/tags.js";
+} from "@/proxy/tags.js";
 import stub from "./stub.js";
 
 describe("readRemoteTags", () => {

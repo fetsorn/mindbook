@@ -7,15 +7,14 @@ import {
   deleteRecord,
   readSchema,
   createRoot,
-  saveMindRecord,
-  loadMindRecord,
 } from "@/store/record.js";
+import { saveMindRecord, loadMindRecord } from "@/proxy/record.js";
 import {
   readRemoteTags,
   readLocalTags,
   writeRemoteTags,
   writeLocalTags,
-} from "@/store/tags.js";
+} from "@/proxy/tags.js";
 import { schemaToBranchRecords } from "@/query/pure.js";
 import schemaRoot from "@/store/default_root_schema.json";
 import stub from "./stub.js";
@@ -29,7 +28,7 @@ vi.mock("@/query/pure.js", async (importOriginal) => {
   };
 });
 
-vi.mock("@/store/tags.js", async (importOriginal) => {
+vi.mock("@/proxy/tags.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {

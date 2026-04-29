@@ -1,12 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { updateRecord, createRecord, selectStream } from "@/store/impure.js";
-import {
-  newUUID,
-  updateMind,
-  updateEntry,
-  saveMindRecord,
-  loadMindRecord,
-} from "@/store/record.js";
+import { newUUID, updateMind, updateEntry } from "@/store/record.js";
+import { saveMindRecord, loadMindRecord } from "@/proxy/record.js";
 import defaultMindRecord from "@/store/default_mind_record.json";
 import stub from "./stub.js";
 
@@ -43,6 +38,13 @@ vi.mock("@/store/record.js", async (importOriginal) => {
     updateMind: vi.fn(),
     updateEntry: vi.fn(),
     deleteRecord: vi.fn(),
+  };
+});
+
+vi.mock("@/proxy/record.js", async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
     saveMindRecord: vi.fn(),
     loadMindRecord: vi.fn(),
   };
