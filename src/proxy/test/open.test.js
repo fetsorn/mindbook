@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
-import { newUUID, readSchema } from "@/store/record.js";
+import { newUUID } from "@/query/record.js";
+import { readSchema } from "@/store/record.js";
 import { enrichBranchRecords, schemaToBranchRecords } from "@/query/pure.js";
 import { find, clone } from "@/proxy/open.js";
 import schemaRoot from "@/proxy/default_root_schema.json";
@@ -20,8 +21,16 @@ vi.mock("@/store/record.js", async (importOriginal) => {
 
   return {
     ...mod,
-    newUUID: vi.fn(),
     readSchema: vi.fn(),
+  };
+});
+
+vi.mock("@/query/record.js", async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
+    ...mod,
+    newUUID: vi.fn(),
   };
 });
 

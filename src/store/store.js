@@ -3,7 +3,7 @@ import parser from "search-query-parser";
 import diff from "microdiff";
 import { getDefaultBase, makeURL } from "@/query/pure.js";
 import { produce } from "solid-js/store";
-import { selectStream, buildRecord, createRecord } from "@/store/impure.js";
+import { selectStream, buildRecord } from "@/store/impure.js";
 import { resolve } from "@/proxy/record.js";
 import { createRoot, readSchema } from "@/store/record.js";
 import { saveRecord, wipeRecord, changeMind } from "@/store/action.js";
@@ -399,22 +399,4 @@ export async function onMindOpen(api, mind) {
   const base = await getDefaultBase(schema);
 
   await onMindChange(api, `/${mind}`, `_=${base}`);
-}
-
-/**
- * This
- * @name onRecordCreate
- * @export function
- */
-export async function onRecordCreate() {
-  const record = await createRecord(
-    queryStore.mind.mind,
-    new URLSearchParams(queryStore.searchParams).get("_"),
-  );
-
-  setQueryStore(
-    produce((state) => {
-      state.record = record;
-    }),
-  );
 }

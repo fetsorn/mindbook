@@ -3,6 +3,7 @@ import diff from "microdiff";
 import { createContext } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 import { sortCallback, changeSearchParams, makeURL } from "@/query/pure.js";
+import { createRecord } from "@/query/impure.js";
 
 export const QueryContext = createContext();
 
@@ -15,6 +16,7 @@ export const [queryStore, setQueryStore] = createStore({
   recordMap: {},
   spoilerMap: {},
   loading: false,
+  template: {},
   searchBar: "", // remembers the last state of search bar
 });
 
@@ -262,6 +264,25 @@ export async function onSort(field, value) {
   setQueryStore(
     produce((state) => {
       state.recordSet = getSortedRecords();
+    }),
+  );
+}
+
+/**
+ * This
+ * @name onRecordCreate
+ * @export function
+ */
+export async function onRecordCreate() {
+  const record = await createRecord(
+    queryStore.mind.mind,
+    new URLSearchParams(queryStore.searchParams).get("_"),
+    queryStore.template,
+  );
+
+  setQueryStore(
+    produce((state) => {
+      state.record = record;
     }),
   );
 }

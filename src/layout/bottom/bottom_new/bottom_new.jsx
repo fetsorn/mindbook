@@ -1,7 +1,6 @@
 import { useContext } from "solid-js";
 import { useApi } from "@/context.js";
-import { onRecordCreate } from "@/store/store.js";
-import { QueryContext } from "@/query/store.js";
+import { QueryContext, onRecordCreate } from "@/query/store.js";
 
 export function BottomNew() {
   const { store } = useContext(QueryContext);

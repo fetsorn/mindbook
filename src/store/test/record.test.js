@@ -1,13 +1,13 @@
 import { describe, expect, test, vi } from "vitest";
 import { v4 as uuidv4 } from "uuid";
 import {
-  newUUID,
   updateMind,
   updateEntry,
   deleteRecord,
   readSchema,
   createRoot,
 } from "@/store/record.js";
+import { newUUID } from "@/query/record.js";
 import { saveMindRecord, loadMindRecord } from "@/proxy/record.js";
 import {
   readRemoteTags,

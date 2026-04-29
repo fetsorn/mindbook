@@ -1,6 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
-import { updateRecord, createRecord, selectStream } from "@/store/impure.js";
-import { newUUID, updateMind, updateEntry } from "@/store/record.js";
+import { updateRecord, selectStream } from "@/store/impure.js";
+import { createRecord } from "@/query/impure.js";
+import { updateMind, updateEntry } from "@/store/record.js";
+import { newUUID } from "@/query/record.js";
 import { saveMindRecord, loadMindRecord } from "@/proxy/record.js";
 import defaultMindRecord from "@/proxy/default_mind_record.json";
 import stub from "./stub.js";
@@ -32,12 +34,19 @@ vi.mock("@/store/record.js", async (importOriginal) => {
 
   return {
     ...mod,
-    newUUID: vi.fn(),
     readSchema: vi.fn(),
     createRoot: vi.fn(),
     updateMind: vi.fn(),
     updateEntry: vi.fn(),
     deleteRecord: vi.fn(),
+  };
+});
+
+vi.mock("@/query/record.js", async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
+    newUUID: vi.fn(),
   };
 });
 
@@ -80,7 +89,7 @@ describe("createRecord", () => {
   newUUID.mockImplementation(() => stub.id);
 
   test("root", async () => {
-    const record = await createRecord("root", "mind");
+    const record = await createRecord("root", "mind", defaultMindRecord);
 
     expect(record).toStrictEqual({
       _: "mind",
@@ -90,7 +99,7 @@ describe("createRecord", () => {
   });
 
   test("id", async () => {
-    const record = await createRecord(stub.id, stub.trunk);
+    const record = await createRecord(stub.id, stub.trunk, {});
 
     expect(record).toStrictEqual({ _: stub.trunk, [stub.trunk]: stub.id });
   });

@@ -4,9 +4,9 @@ import {
   onRecordWipe,
   onSearch,
   onMindChange,
-  onRecordCreate,
 } from "@/store/store.js";
 import {
+  onRecordCreate,
   updateSearchParams,
   getSpoilerOpen,
   setSpoilerOpen,
@@ -19,7 +19,8 @@ import {
 import { queryStore, setQueryStore } from "@/query/store.js";
 import { proxyStore, setProxyStore } from "@/proxy/store.js";
 import { changeSearchParams, makeURL } from "@/query/pure.js";
-import { createRecord, selectStream } from "@/store/impure.js";
+import { selectStream } from "@/store/impure.js";
+import { createRecord } from "@/query/impure.js";
 import { saveRecord, wipeRecord, changeMind } from "@/store/action.js";
 import schemaRoot from "@/proxy/default_root_schema.json";
 
@@ -39,8 +40,16 @@ vi.mock("@/store/impure.js", async (importOriginal) => {
 
   return {
     ...mod,
-    createRecord: vi.fn(),
     selectStream: vi.fn(),
+  };
+});
+
+vi.mock("@/query/impure.js", async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
+    ...mod,
+    createRecord: vi.fn(),
   };
 });
 
@@ -95,7 +104,7 @@ describe("store", () => {
 
       await onRecordCreate();
 
-      expect(createRecord).toHaveBeenCalledWith("root", "mind");
+      expect(createRecord).toHaveBeenCalledWith("root", "mind", {});
 
       expect(queryStore.record).toStrictEqual(1);
     });

@@ -3,10 +3,10 @@ import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import schemaRoot from "@/proxy/default_root_schema.json";
-import { onRecordCreate } from "@/store/store.js";
+import { onRecordCreate } from "@/query/store.js";
 import { BottomNew } from "./bottom_new.jsx";
 
-vi.mock("@/store/store.js", async (importOriginal) => {
+vi.mock("@/query/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {

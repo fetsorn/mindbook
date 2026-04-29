@@ -1,5 +1,5 @@
 import { searchParamsToQuery } from "@/query/pure.js";
-import { newUUID, updateMind, updateEntry } from "@/store/record.js";
+import { updateMind, updateEntry } from "@/store/record.js";
 import { saveMindRecord, loadMindRecord } from "@/proxy/record.js";
 import defaultMindRecord from "@/proxy/default_mind_record.json";
 
@@ -114,30 +114,4 @@ export async function buildRecord(api, mind, record) {
   const recordNew = isHomeScreen ? await loadMindRecord(api, fetched) : fetched;
 
   return recordNew;
-}
-
-/**
- * This
- * @name createRecord
- * @function
- * @param {object} mind -
- * @param {String} base -
- * @returns {object}
- */
-export async function createRecord(mind, base) {
-  const isHomeScreen = mind === "root";
-
-  const isMindBranch = base === "mind";
-
-  const isMindRecord = isHomeScreen && isMindBranch;
-
-  const mindPartial = isMindRecord ? defaultMindRecord : {};
-
-  const record = {
-    _: base,
-    [base]: await newUUID(),
-    ...mindPartial,
-  };
-
-  return record;
 }
