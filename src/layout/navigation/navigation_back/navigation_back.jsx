@@ -1,9 +1,10 @@
 import { useContext } from "solid-js";
 import { useApi } from "@/context.js";
-import { StoreContext, onMindChange } from "@/store/index.js";
+import { ProxyContext } from "@/proxy/store.js";
+import { onMindChange } from "@/store/store.js";
 
 export function NavigationBack() {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(ProxyContext);
 
   const api = useApi();
 

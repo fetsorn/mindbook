@@ -1,25 +1,27 @@
 import { useContext } from "solid-js";
-import { StoreContext, onRecordEdit } from "@/store/index.js";
+import { QueryContext, onRecordEdit } from "@/query/store.js";
+import { ProxyContext } from "@/proxy/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
 import { ProfileField, ProfileValue } from "../index.js";
 
 export function ProfileRecord(props) {
-  const { store } = useContext(StoreContext);
+  const { store: queryStore } = useContext(QueryContext);
+  const { store: proxyStore } = useContext(ProxyContext);
 
   const leaves = () => {
     if (
-      store.schema === undefined ||
-      store.schema[props.record._] === undefined
+      queryStore.schema === undefined ||
+      queryStore.schema[props.record._] === undefined
     )
       return [];
 
-    return store.schema[props.record._].leaves;
+    return queryStore.schema[props.record._].leaves;
   };
 
   const isRemote = () => {
-    if (store.mind === undefined) return false;
+    if (proxyStore.mind === undefined) return false;
 
-    return store.mind.mind === "root" && props.record._ === "origin_url";
+    return proxyStore.mind.mind === "root" && props.record._ === "origin_url";
   };
 
   function access(field) {

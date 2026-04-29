@@ -1,11 +1,11 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store, onRecordSave } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { onRecordSave } from "@/store/store.js";
 import { NavigationSave } from "./navigation_save.jsx";
 
-vi.mock("@/store/index.js", async (importOriginal) => {
+vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
@@ -18,12 +18,12 @@ describe("NavigationSave", () => {
   test("", async () => {
     const record = { _: "mind", mind: "mind" };
 
-    setStore("record", record);
+    setQueryStore("record", record);
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <NavigationSave />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
     const save = getByText("save");

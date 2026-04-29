@@ -1,20 +1,21 @@
 import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import schemaRoot from "@/store/default_root_schema.json";
 import { OverviewValue } from "./overview_value.jsx";
 
 describe("OverviewValue", () => {
   test("", async () => {
+    setQueryStore("schema", schemaRoot);
     const branch = "mind";
 
     const value = "mind";
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <OverviewValue value={value} branch={branch} />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
     expect(() => getByText("mind")).not.toThrowError();

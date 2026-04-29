@@ -1,11 +1,13 @@
 import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import schemaRoot from "@/store/default_root_schema.json";
 import { OverviewRecord } from "./overview_record.jsx";
 
 describe("OverviewRecord", () => {
   test("no items", async () => {
+    setQueryStore("schema", schemaRoot);
     const index = "";
 
     const baseRecord = { _: "mind", mind: "mind" };
@@ -13,15 +15,16 @@ describe("OverviewRecord", () => {
     const record = baseRecord;
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <OverviewRecord record={record} index={index} />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
     expect(() => getByText("record no items")).toThrowError();
   });
 
   test("", async () => {
+    setQueryStore("schema", schemaRoot);
     const index = "";
 
     const value = "a";
@@ -35,9 +38,9 @@ describe("OverviewRecord", () => {
     const record = baseRecord;
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <OverviewRecord record={record} index={index} />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
     await userEvent.click(getByText("with..."));

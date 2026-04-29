@@ -1,8 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import {
   MenuSortQuery,
   MenuBaseQuery,
@@ -24,12 +23,12 @@ vi.mock(
 
 describe("NavigationMenu", () => {
   test("", async () => {
-    setStore("searchParams", "_=mind&.sortBy=mind");
+    setQueryStore("searchParams", "_=mind&.sortBy=mind");
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <NavigationMenu />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
     expect(MenuBaseQuery).toHaveBeenCalled();

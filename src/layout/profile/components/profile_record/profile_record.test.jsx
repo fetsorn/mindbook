@@ -1,35 +1,44 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store, onRecordEdit } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import {
+  QueryContext,
+  queryStore,
+  setQueryStore,
+  onRecordEdit,
+} from "@/query/store.js";
+import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
+import schemaRoot from "@/store/default_root_schema.json";
 import { ProfileRecord } from "./profile_record.jsx";
 
-vi.mock("@/store/index.js", async (importOriginal) => {
+vi.mock("@/query/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
     ...mod,
-    onRecordEdit: vi.fn((path, value) => setStore(...path, value)),
+    onRecordEdit: vi.fn((path, value) => setQueryStore(...path, value)),
   };
 });
 
 describe("ProfileRecord", () => {
   test("adds branch", async () => {
+    setQueryStore("schema", schemaRoot);
     const index = "index";
 
     const branch = "branch";
 
     const baseRecord = { _: "mind", mind: "mind" };
 
-    setStore("record", baseRecord);
+    setQueryStore("record", baseRecord);
 
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <ProfileRecord index={index} record={baseRecord} path={["record"]} />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -53,7 +62,7 @@ describe("ProfileRecord", () => {
       ],
     );
 
-    expect(store.record).toEqual({
+    expect(queryStore.record).toEqual({
       _: "mind",
       mind: "mind",
       branch: [
@@ -66,6 +75,7 @@ describe("ProfileRecord", () => {
   });
 
   test("adds another branch", async () => {
+    setQueryStore("schema", schemaRoot);
     const index = "index";
 
     const branch = "branch";
@@ -81,14 +91,16 @@ describe("ProfileRecord", () => {
       ],
     };
 
-    setStore("record", baseRecord);
+    setQueryStore("record", baseRecord);
 
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <ProfileRecord index={index} record={baseRecord} path={["record"]} />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -102,7 +114,7 @@ describe("ProfileRecord", () => {
       branch: "",
     });
 
-    expect(store.record).toEqual({
+    expect(queryStore.record).toEqual({
       _: "mind",
       mind: "mind",
       branch: [
@@ -119,6 +131,7 @@ describe("ProfileRecord", () => {
   });
 
   test("adds description", async () => {
+    setQueryStore("schema", schemaRoot);
     const index = "index";
 
     const branch = "branch";
@@ -134,18 +147,20 @@ describe("ProfileRecord", () => {
       branch: [item],
     };
 
-    setStore("record", baseRecord);
+    setQueryStore("record", baseRecord);
 
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <ProfileRecord
-          index={index}
-          record={item}
-          path={["record", "branch", 0]}
-        />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <ProfileRecord
+            index={index}
+            record={item}
+            path={["record", "branch", 0]}
+          />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -164,7 +179,7 @@ describe("ProfileRecord", () => {
       ],
     );
 
-    expect(store.record).toEqual({
+    expect(queryStore.record).toEqual({
       _: "mind",
       mind: "mind",
       branch: [

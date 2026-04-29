@@ -1,4 +1,4 @@
-import { onRecordEdit } from "@/store/index.js";
+import { onRecordEdit } from "@/query/store.js";
 import styles from "./profile_value.module.css";
 
 // https://css-tricks.com/auto-growing-inputs-textareas/

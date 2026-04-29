@@ -1,18 +1,22 @@
 import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
 import { Overview } from "./overview.jsx";
+import schemaRoot from "@/store/default_root_schema.json";
 
 describe("Overview", () => {
   test("no items", async () => {
+    setQueryStore("schema", schemaRoot);
     const items = [];
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <Overview items={items} />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <Overview items={items} />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     expect(() =>
@@ -21,6 +25,7 @@ describe("Overview", () => {
   });
 
   test("item", async () => {
+    setQueryStore("schema", schemaRoot);
     const item = {
       _: "mind",
       mind: "mind",
@@ -28,12 +33,14 @@ describe("Overview", () => {
 
     const items = [item];
 
-    setStore("recordSet", items);
+    setQueryStore("recordSet", items);
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <Overview />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <Overview />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     expect(() => getByText("mind")).not.toThrowError();

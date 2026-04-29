@@ -41,16 +41,16 @@ vi.mock("@/store/tags.js", async (importOriginal) => {
   };
 });
 
+vi.mock("uuid", async (importOriginal) => {
+  const mod = await importOriginal();
+
+  return {
+    ...mod,
+    v4: vi.fn(() => "1"),
+  };
+});
+
 describe("newUUID", () => {
-  vi.mock("uuid", async (importOriginal) => {
-    const mod = await importOriginal();
-
-    return {
-      ...mod,
-      v4: vi.fn(() => "1"),
-    };
-  });
-
   test("generates an id", () => {
     const uuid = newUUID();
 

@@ -1,5 +1,5 @@
 import { useContext } from "solid-js";
-import { StoreContext } from "@/store/index.js";
+import { QueryContext } from "@/query/store.js";
 import {
   OverviewItem,
   OverviewFilter,
@@ -8,7 +8,7 @@ import {
 import styles from "./overview.module.css";
 
 export function Overview() {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   return (
     <>

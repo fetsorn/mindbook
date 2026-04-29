@@ -1,9 +1,9 @@
 import { useContext } from "solid-js";
-import { StoreContext } from "@/store/index.js";
+import { QueryContext } from "@/query/store.js";
 import { ProfileRecord, ProfileValue } from "../index.js";
 
 export function ProfileFieldItem(props) {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   // if base has no leaves, show value
   // otherwise show record with buttons that can add leaves

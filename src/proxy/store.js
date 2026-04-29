@@ -1,7 +1,7 @@
 import { createContext } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 
-export const StoreContext = createContext();
+export const ProxyContext = createContext();
 
 export const [proxyStore, setProxyStore] = createStore({
   abortPreviousStream: async () => {},

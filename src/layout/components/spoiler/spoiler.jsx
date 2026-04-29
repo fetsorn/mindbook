@@ -1,5 +1,5 @@
 import { createEffect, createSignal } from "solid-js";
-import { getSpoilerOpen, setSpoilerOpen } from "@/store/index.js";
+import { getSpoilerOpen, setSpoilerOpen } from "@/query/store.js";
 
 export function Spoiler(props) {
   const [isOpen, setIsOpen] = createSignal(props.isOpenDefault);

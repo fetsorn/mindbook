@@ -1,4 +1,4 @@
-import { onRecordEdit } from "@/store/index.js";
+import { onRecordEdit } from "@/query/store.js";
 
 export function NavigationRevert() {
   return (

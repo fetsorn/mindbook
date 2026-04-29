@@ -1,9 +1,9 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
+import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
 import { ApiProvider } from "@/context.js";
-import { setStore, onStartup } from "@/store/store.js";
+import { onStartup } from "@/store/store.js";
 import { NavigationBack } from "./navigation_back.jsx";
 
 describe("NavigationBack", () => {
@@ -17,13 +17,13 @@ describe("NavigationBack", () => {
 
     await onStartup(api);
 
-    setStore("mind", { _: "mind", mind: "somemind" });
+    setProxyStore("mind", { _: "mind", mind: "somemind" });
 
     const { getByText } = render(() => (
       <ApiProvider value={api}>
-        <StoreContext.Provider value={{ store }}>
+        <ProxyContext.Provider value={{ store: proxyStore }}>
           <NavigationBack />
-        </StoreContext.Provider>
+        </ProxyContext.Provider>
       </ApiProvider>
     ));
 
@@ -33,6 +33,6 @@ describe("NavigationBack", () => {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    expect(store.mind).toEqual({ _: "mind", mind: "root", name: "minds" });
+    expect(proxyStore.mind).toEqual({ _: "mind", mind: "root", name: "minds" });
   });
 });

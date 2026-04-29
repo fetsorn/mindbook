@@ -1,17 +1,21 @@
 import { describe, expect, test, afterEach, vi } from "vitest";
 import {
   updateSearchParams,
-  getSortedRecords,
-  getFilterQueries,
-  getFilterOptions,
   onRecordSave,
   onRecordWipe,
   onSearch,
   onMindChange,
-  appendRecord,
   onRecordCreate,
 } from "@/store/store.js";
-import { getSpoilerOpen, setSpoilerOpen, onRecordEdit } from "@/query/store.js";
+import {
+  getSpoilerOpen,
+  setSpoilerOpen,
+  onRecordEdit,
+  appendRecord,
+  getSortedRecords,
+  getFilterQueries,
+  getFilterOptions,
+} from "@/query/store.js";
 import { queryStore, setQueryStore } from "@/query/store.js";
 import { proxyStore, setProxyStore } from "@/proxy/store.js";
 import { changeSearchParams, makeURL } from "@/query/pure.js";
@@ -101,9 +105,13 @@ describe("store", () => {
     test("", async () => {
       saveRecord.mockImplementation(() => 1);
 
-      await onRecordSave({}, {}, {});
+      const api = {
+        getOrigin: vi.fn(),
+      };
 
-      expect(saveRecord).toHaveBeenCalledWith({}, "root", "mind", [], {}, {});
+      await onRecordSave(api, {}, {});
+
+      expect(saveRecord).toHaveBeenCalledWith(api, "root", "mind", [], {}, {});
 
       expect(queryStore.recordSet).toStrictEqual(1);
     });
@@ -113,9 +121,13 @@ describe("store", () => {
     test("", async () => {
       wipeRecord.mockImplementation(() => 1);
 
-      await onRecordWipe({}, {});
+      const api = {
+        getOrigin: vi.fn(),
+      };
 
-      expect(wipeRecord).toHaveBeenCalledWith({}, "root", "mind", [], {});
+      await onRecordWipe(api, {});
+
+      expect(wipeRecord).toHaveBeenCalledWith(api, "root", "mind", [], {});
 
       expect(queryStore.recordSet).toStrictEqual(1);
     });
@@ -176,7 +188,11 @@ describe("store", () => {
         startStream,
       }));
 
-      await onSearch();
+      const api = {
+        appendRecord: vi.fn(),
+      };
+
+      await onSearch(api);
 
       expect(queryStore.recordSet).toStrictEqual([]);
 
@@ -202,7 +218,11 @@ describe("store", () => {
 
       makeURL.mockImplementation(() => 5);
 
-      await onMindChange("/", "_=mind");
+      const api = {
+        getOrigin: vi.fn(),
+      };
+
+      await onMindChange(api, "/", "_=mind");
 
       expect(proxyStore.mind).toStrictEqual(mind);
 

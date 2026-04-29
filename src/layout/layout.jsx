@@ -2,7 +2,9 @@ import history from "history/hash";
 import { onMount, useContext } from "solid-js";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { useApi } from "@/context.js";
-import { StoreContext, store, onMindChange, onStartup } from "@/store/index.js";
+import { onMindChange, onStartup } from "@/store/store.js";
+import { QueryContext, queryStore } from "@/query/store.js";
+import { ProxyContext, proxyStore } from "@/proxy/store.js";
 import {
   NavigationBack,
   NavigationRevert,
@@ -20,6 +22,8 @@ import { Profile } from "./profile/profile.jsx";
 import styles from "./layout.module.css";
 
 export function LayoutOverview() {
+  const { store } = useContext(QueryContext);
+
   return (
     <div
       className={
@@ -61,15 +65,16 @@ export function LayoutOverview() {
 }
 
 export function LayoutProfile() {
-  const { store } = useContext(StoreContext);
+  const { store: queryStore } = useContext(QueryContext);
+  const { store: proxyStore } = useContext(ProxyContext);
 
   return (
-    <Show when={store.record !== undefined} fallback={<></>}>
+    <Show when={queryStore.record !== undefined} fallback={<></>}>
       <div
         className={
           styles.window +
           " " +
-          (store.record === undefined ? styles.closed : "")
+          (queryStore.record === undefined ? styles.closed : "")
         }
       >
         <nav
@@ -101,19 +106,21 @@ export function App() {
   });
 
   return (
-    <StoreContext.Provider value={{ store }}>
-      <MetaProvider>
-        <Title>{"evenor – " + store.mind.name}</Title>
-      </MetaProvider>
+    <ProxyContext.Provider value={{ store: proxyStore }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <MetaProvider>
+          <Title>{"evenor – " + proxyStore.mind.name}</Title>
+        </MetaProvider>
 
-      <main className={styles.main}>
-        <LayoutOverview />
+        <main className={styles.main}>
+          <LayoutOverview />
 
-        <LayoutProfile />
-      </main>
+          <LayoutProfile />
+        </main>
 
-      <span style={{ display: "none" }}>{__COMMIT_HASH__}</span>
-    </StoreContext.Provider>
+        <span style={{ display: "none" }}>{__COMMIT_HASH__}</span>
+      </QueryContext.Provider>
+    </ProxyContext.Provider>
   );
 }
 

@@ -1,11 +1,14 @@
 import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { ProxyContext, proxyStore } from "@/proxy/store.js";
 import { OverviewField } from "./overview_field.jsx";
+import schemaRoot from "@/store/default_root_schema.json";
 
 describe("OverviewField", () => {
   test("no items", async () => {
+    setQueryStore("schema", schemaRoot);
     const index = "";
 
     const branch = "branch";
@@ -15,9 +18,11 @@ describe("OverviewField", () => {
     const items = [];
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <OverviewField index={index} branch={branch} items={items} />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <OverviewField index={index} branch={branch} items={items} />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     expect(() => getByText("field no items")).toThrowError();
@@ -35,9 +40,11 @@ describe("OverviewField", () => {
     const baseRecord = { _: "mind", mind: "mind", branch: items };
 
     const { getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <OverviewField index={index} branch={branch} items={items} />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <OverviewField index={index} branch={branch} items={items} />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     expect(() => getByText("a")).not.toThrowError();

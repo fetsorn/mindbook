@@ -1,13 +1,11 @@
 import { useContext, createEffect } from "solid-js";
 import { ProfileFieldItem } from "../index.js";
-import { StoreContext, onRecordEdit } from "@/store/index.js";
+import { onRecordEdit } from "@/query/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
 
 // can't move this to field item
 // because remove needs to filter props.items
 export function Foo(props) {
-  const { store } = useContext(StoreContext);
-
   return (
     <>
       <br />

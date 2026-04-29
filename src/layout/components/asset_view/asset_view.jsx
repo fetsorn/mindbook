@@ -1,9 +1,9 @@
 import { useContext, createSignal } from "solid-js";
-import { StoreContext } from "@/store/index.js";
+import { QueryContext } from "@/query/store.js";
 import { convert, isIFrameable } from "./asset_view_controller.js";
 
 export function AssetView(props) {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   const [blobURL, setBlobURL] = createSignal(undefined);
 

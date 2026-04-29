@@ -1,9 +1,10 @@
 import { useContext, For } from "solid-js";
-import { StoreContext, onSort } from "@/store/index.js";
+import { QueryContext } from "@/query/store.js";
+import { onSort } from "@/store/store.js";
 import styles from "./menu_sort_query.module.css";
 
 export function MenuSortQuery(props) {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   return (
     <div id="menuSort" className={styles.dropdown}>

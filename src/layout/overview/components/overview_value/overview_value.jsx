@@ -1,9 +1,9 @@
 import { createSignal, useContext } from "solid-js";
-import { StoreContext } from "@/store/index.js";
+import { QueryContext } from "@/query/store.js";
 import { Spoiler } from "@/layout/components/index.js";
 
 export function OverviewValue(props) {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   const isBase =
     props.branch === new URLSearchParams(store.searchParams).get("_");

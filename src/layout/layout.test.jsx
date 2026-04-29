@@ -1,9 +1,10 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { cleanup, render } from "@solidjs/testing-library";
-import { StoreContext, store, onMindChange } from "@/store/index.js";
+import { onMindChange } from "@/store/store.js";
 import { ApiProvider } from "@/context.js";
-import { setStore } from "@/store/store.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
 import {
   NavigationBack,
   NavigationRevert,
@@ -20,7 +21,7 @@ import { Overview } from "./overview/overview.jsx";
 import { Profile } from "./profile/profile.jsx";
 import { App, LayoutOverview, LayoutProfile } from "./layout.jsx";
 
-vi.mock("@/store/index.js", async (importOriginal) => {
+vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
@@ -52,8 +53,12 @@ vi.mock("./profile/profile.jsx", () => ({
 }));
 
 describe("LayoutOverview", () => {
-  test("", async () => {
-    render(() => <LayoutOverview />);
+  test("layout", async () => {
+    render(() => (
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <LayoutOverview />
+      </QueryContext.Provider>
+    ));
 
     expect(NavigationBack).toHaveBeenCalledWith({});
 
@@ -73,12 +78,14 @@ describe("LayoutOverview", () => {
 
 describe("LayoutProfile", () => {
   test("", async () => {
-    setStore("record", { _: "mind", mind: "mind" });
+    setQueryStore("record", { _: "mind", mind: "mind" });
 
     render(() => (
-      <StoreContext.Provider value={{ store }}>
-        <LayoutProfile />
-      </StoreContext.Provider>
+      <ProxyContext.Provider value={{ store: proxyStore }}>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <LayoutProfile />
+        </QueryContext.Provider>
+      </ProxyContext.Provider>
     ));
 
     expect(NavigationRevert).toHaveBeenCalledWith({});

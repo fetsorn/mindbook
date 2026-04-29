@@ -1,9 +1,10 @@
 import { useContext, createSignal } from "solid-js";
 import { useApi } from "@/context.js";
-import { StoreContext, onRecordSave } from "@/store/index.js";
+import { onRecordSave } from "@/store/store.js";
+import { QueryContext } from "@/query/store.js";
 
 export function NavigationSave() {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   const api = useApi();
 

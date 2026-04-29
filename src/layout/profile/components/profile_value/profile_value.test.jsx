@@ -2,28 +2,27 @@ import { test, expect, vi } from "vitest";
 import { createSignal } from "solid-js";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { store, onRecordEdit } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import { queryStore, setQueryStore, onRecordEdit } from "@/query/store.js";
 import { ProfileValue } from "./profile_value.jsx";
 
-vi.mock("@/store/index.js", async (importOriginal) => {
+vi.mock("@/query/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
     ...mod,
-    onRecordEdit: vi.fn((path, value) => setStore(...path, value)),
+    onRecordEdit: vi.fn((path, value) => setQueryStore(...path, value)),
   };
 });
 
 test("profile value", async () => {
   const record = { _: "mind", mind: "mind" };
 
-  setStore("record", record);
+  setQueryStore("record", record);
 
   const path = ["record", "mind"];
 
   const { getByText, getByRole } = render(() => (
-    <ProfileValue value={store.record.mind} branch="mind" path={path} />
+    <ProfileValue value={queryStore.record.mind} branch="mind" path={path} />
   ));
 
   const input = getByRole("textbox");
@@ -36,5 +35,5 @@ test("profile value", async () => {
 
   expect(onRecordEdit).toHaveBeenCalledWith(path, "amind");
 
-  expect(store.record.mind).toBe("amind");
+  expect(queryStore.record.mind).toBe("amind");
 });

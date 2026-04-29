@@ -1,11 +1,16 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store, onSearchBar } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import {
+  QueryContext,
+  queryStore,
+  setQueryStore,
+  onSearchBar,
+} from "@/query/store.js";
 import { OverviewFilter } from "./overview_filter.jsx";
+import schemaRoot from "@/store/default_root_schema.json";
 
-vi.mock("@/store/index.js", async (importOriginal) => {
+vi.mock("@/query/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
@@ -16,10 +21,11 @@ vi.mock("@/store/index.js", async (importOriginal) => {
 
 describe("OverviewFilter", () => {
   test("", async () => {
+    setQueryStore("schema", schemaRoot);
     const { getByText, getByRole } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <OverviewFilter />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
     const input = getByRole("textbox");

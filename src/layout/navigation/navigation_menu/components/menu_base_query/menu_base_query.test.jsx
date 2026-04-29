@@ -1,29 +1,30 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
-import { setStore } from "@/store/store.js";
+import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import schemaRoot from "@/store/default_root_schema.json";
 import { MenuBaseQuery } from "./menu_base_query.jsx";
 
 describe("MenuBaseQuery", () => {
   test("", async () => {
-    setStore("searchParams", "_=mind");
+    setQueryStore("searchParams", "_=mind");
+    setQueryStore("schema", schemaRoot);
 
     const { getByRole, getAllByRole } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <MenuBaseQuery />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
-    expect(getByRole('option', { name: 'mind' }).selected).toBe(true)
+    expect(getByRole("option", { name: "mind" }).selected).toBe(true);
 
-    expect(getAllByRole('option').length).toBe(14)
+    expect(getAllByRole("option").length).toBe(14);
 
     await userEvent.selectOptions(
-      getByRole('combobox'),
-      getByRole('option', { name: 'branch' }),
+      getByRole("combobox"),
+      getByRole("option", { name: "branch" }),
     );
 
-    expect(getByRole('option', { name: 'branch' }).selected).toBe(true)
+    expect(getByRole("option", { name: "branch" }).selected).toBe(true);
   });
 });

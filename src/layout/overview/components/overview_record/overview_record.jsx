@@ -1,10 +1,10 @@
 import { useContext } from "solid-js";
-import { StoreContext } from "@/store/index.js";
+import { QueryContext } from "@/query/store.js";
 import { Spoiler } from "@/layout/components/index.js";
 import { OverviewField, OverviewValue } from "../index.js";
 
 export function OverviewRecord(props) {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   function recordHasLeaf(leaf) {
     return props.record.hasOwnProperty(leaf);

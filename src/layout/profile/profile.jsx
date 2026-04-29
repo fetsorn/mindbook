@@ -1,10 +1,10 @@
 import { useContext } from "solid-js";
-import { StoreContext } from "@/store/index.js";
+import { QueryContext } from "@/query/store.js";
 import { ProfileRecord } from "./components/index.js";
 import styles from "./profile.module.css";
 
 export function Profile() {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   return (
     <div className={styles.profile}>

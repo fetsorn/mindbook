@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { StoreContext, store } from "@/store/index.js";
+import { QueryContext, queryStore } from "@/query/store.js";
 import { ProfileFieldItem } from "./profile_field_item.jsx";
 
 describe("ProfileFieldItem", () => {
@@ -15,14 +15,14 @@ describe("ProfileFieldItem", () => {
     const items = [item];
 
     const { getByRole, getByText } = render(() => (
-      <StoreContext.Provider value={{ store }}>
+      <QueryContext.Provider value={{ store: queryStore }}>
         <ProfileFieldItem
           index={index}
           branch={branch}
           item={item}
           path={["record", "branch", 0]}
         />
-      </StoreContext.Provider>
+      </QueryContext.Provider>
     ));
 
     const input = getByRole("textbox");

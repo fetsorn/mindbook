@@ -1,17 +1,18 @@
-import { getFilterQueries, getFilterOptions } from "@/store/index.js";
 import { useContext } from "solid-js";
 import { useApi } from "@/context.js";
 import {
-  StoreContext,
-  onSearchBar,
+  getFilterQueries,
+  getFilterOptions,
+  QueryContext,
   getSearchBar,
-  onSearch,
-} from "@/store/index.js";
+  onSearchBar,
+} from "@/query/store.js";
+import { onSearch } from "@/store/store.js";
 import { Spoiler } from "@/layout/components/index.js";
 import styles from "./overview_filter.module.css";
 
 export function OverviewFilter() {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   const api = useApi();
 

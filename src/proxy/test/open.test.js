@@ -50,6 +50,8 @@ describe("find", () => {
 
     const api = { select: vi.fn(() => [testCase.record]) };
 
+    readSchema.mockReset();
+
     readSchema.mockImplementation(() => stub.schema);
 
     const result = await find(api, stub.id, undefined);
@@ -89,6 +91,8 @@ describe("clone", () => {
 
     newUUID.mockImplementation(() => stub.id);
 
+    readSchema.mockReset();
+
     readSchema.mockImplementation(() => testCase.schema);
 
     schemaToBranchRecords.mockImplementation(() => [
@@ -105,7 +109,7 @@ describe("clone", () => {
       token: testCase.token,
     });
 
-    expect(readSchema).toHaveBeenCalledWith(api, stub.id);
+    expect(readSchema).toHaveBeenCalledWith(api, testCase.hash);
 
     const c = {
       _: "mind",

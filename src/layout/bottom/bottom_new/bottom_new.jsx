@@ -1,9 +1,10 @@
 import { useContext } from "solid-js";
 import { useApi } from "@/context.js";
-import { StoreContext, onRecordCreate } from "@/store/index.js";
+import { onRecordCreate } from "@/store/store.js";
+import { QueryContext } from "@/query/store.js";
 
 export function BottomNew() {
-  const { store } = useContext(StoreContext);
+  const { store } = useContext(QueryContext);
 
   const api = useApi();
 
