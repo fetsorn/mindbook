@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import shajs from "sha.js";
 import { recordsToSchema, schemaToBranchRecords } from "@/query/pure.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 
 /**
  * This

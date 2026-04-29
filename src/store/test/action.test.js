@@ -3,7 +3,7 @@ import { saveRecord, wipeRecord, changeMind } from "@/store/action.js";
 import { deleteRecord } from "@/store/record.js";
 import { updateRecord } from "@/store/impure.js";
 import { find, clone } from "@/proxy/open.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 import stub from "./stub.js";
 
 vi.mock("@/query/pure.js", async (importOriginal) => {

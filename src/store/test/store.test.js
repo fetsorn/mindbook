@@ -21,7 +21,7 @@ import { proxyStore, setProxyStore } from "@/proxy/store.js";
 import { changeSearchParams, makeURL } from "@/query/pure.js";
 import { createRecord, selectStream } from "@/store/impure.js";
 import { saveRecord, wipeRecord, changeMind } from "@/store/action.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 
 vi.mock("@/store/action.js", async (importOriginal) => {
   const mod = await importOriginal();

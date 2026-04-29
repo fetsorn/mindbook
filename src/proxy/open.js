@@ -5,7 +5,7 @@ import {
 } from "@/query/pure.js";
 import { newUUID, readSchema, updateMind } from "@/store/record.js";
 import { saveMindRecord } from "@/proxy/record.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 
 /**
  * This

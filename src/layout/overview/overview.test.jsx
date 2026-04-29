@@ -4,7 +4,7 @@ import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
 import { Overview } from "./overview.jsx";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 
 describe("Overview", () => {
   test("no items", async () => {

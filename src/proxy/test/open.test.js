@@ -2,7 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { newUUID, readSchema } from "@/store/record.js";
 import { enrichBranchRecords, schemaToBranchRecords } from "@/query/pure.js";
 import { find, clone } from "@/proxy/open.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 import stub from "./stub.js";
 
 vi.mock("@/query/pure.js", async (importOriginal) => {

@@ -8,7 +8,7 @@ import {
   onRecordEdit,
 } from "@/query/store.js";
 import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 import { ProfileRecord } from "./profile_record.jsx";
 
 vi.mock("@/query/store.js", async (importOriginal) => {

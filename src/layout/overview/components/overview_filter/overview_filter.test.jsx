@@ -8,7 +8,7 @@ import {
   onSearchBar,
 } from "@/query/store.js";
 import { OverviewFilter } from "./overview_filter.jsx";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 
 vi.mock("@/query/store.js", async (importOriginal) => {
   const mod = await importOriginal();

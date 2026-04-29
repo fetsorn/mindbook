@@ -3,7 +3,7 @@ import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import { ProxyContext, proxyStore } from "@/proxy/store.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 import { OverviewItemFull } from "./overview_item_full.jsx";
 
 describe("OverviewItemFull", () => {

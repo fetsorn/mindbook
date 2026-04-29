@@ -8,7 +8,7 @@ import { resolve, exportMind } from "@/proxy/record.js";
 import { createRoot, readSchema } from "@/store/record.js";
 import { saveRecord, wipeRecord, changeMind } from "@/store/action.js";
 import { changeSearchParams, makeURL } from "@/query/pure.js";
-import schemaRoot from "@/store/default_root_schema.json";
+import schemaRoot from "@/proxy/default_root_schema.json";
 import { proxyStore, setProxyStore } from "@/proxy/store.js";
 import {
   queryStore,
