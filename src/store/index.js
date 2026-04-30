@@ -1,5 +1,4 @@
 import {
-  onStartup,
   onRecordSave,
   onRecordWipe,
   onRecordCreate,
@@ -8,11 +7,9 @@ import {
   onSearch,
   getRecord,
   onCancel,
-  onExport,
 } from "./store.js";
 
 export {
-  onStartup,
   onRecordSave,
   onRecordWipe,
   onRecordCreate,
@@ -21,11 +18,9 @@ export {
   onSearch,
   getRecord,
   onCancel,
-  onExport,
 };
 
 export default {
-  onStartup,
   onRecordSave,
   onRecordWipe,
   onRecordCreate,
@@ -34,5 +29,4 @@ export default {
   onSearch,
   getRecord,
   onCancel,
-  onExport,
 };

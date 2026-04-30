@@ -18,6 +18,7 @@ export const [queryStore, setQueryStore] = createStore({
   loading: false,
   template: {},
   searchBar: "", // remembers the last state of search bar
+  streamCounter: 0,
 });
 
 /**

@@ -3,7 +3,7 @@ import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import { ApiProvider } from "@/context.js";
-import { onStartup } from "@/store/store.js";
+import { onStartup } from "@/proxy/store.js";
 import { NavigationBack } from "./navigation_back.jsx";
 
 describe("NavigationBack", () => {

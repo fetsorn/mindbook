@@ -1,14 +1,11 @@
 /* try to keep store interactions only in this file */
-import parser from "search-query-parser";
-import diff from "microdiff";
 import { getDefaultBase, makeURL } from "@/query/pure.js";
 import { produce } from "solid-js/store";
 import { buildRecord } from "@/proxy/impure.js";
 import { selectStream } from "@/store/impure.js";
-import { resolve, createRoot } from "@/proxy/record.js";
+import { resolve } from "@/proxy/record.js";
 import { readSchema } from "@/store/record.js";
 import { saveRecord, wipeRecord, changeMind } from "@/store/action.js";
-import schemaRoot from "@/proxy/default_root_schema.json";
 import { proxyStore, setProxyStore } from "@/proxy/store.js";
 import {
   queryStore,
@@ -140,7 +137,7 @@ export async function onCancel() {
 export async function onSearch(api) {
   setQueryStore("loading", true);
 
-  setProxyStore("streamCounter", queryStore.streamCounter + 1);
+  setQueryStore("streamCounter", queryStore.streamCounter + 1);
 
   try {
     // if search bar can be parsed as url, clone
@@ -183,7 +180,7 @@ export async function onSearch(api) {
       queryStore.mind.mind,
       appendRecord,
       new URLSearchParams(queryStore.searchParams),
-      proxyStore.streamCounter,
+      queryStore.streamCounter,
     );
 
     // stop previous stream
@@ -379,19 +376,6 @@ export async function warp(branch, value, cognate) {
   await onSearch(api, "__", cognate);
 
   await onSearch(api, queryStore.schema[cognate].trunks[0], value);
-}
-
-/**
- * This
- * @name onStartup
- * @export function
- */
-export async function onStartup(api) {
-  setQueryStore("loading", true);
-
-  await createRoot(api);
-
-  setQueryStore("loading", false);
 }
 
 export async function onMindOpen(api, mind) {
