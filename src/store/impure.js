@@ -1,35 +1,4 @@
 import { searchParamsToQuery } from "@/query/pure.js";
-import {
-  saveMindRecord,
-  loadMindRecord,
-  updateMind,
-  updateEntry,
-} from "@/proxy/record.js";
-import defaultMindRecord from "@/proxy/default_mind_record.json";
-
-/**
- * This
- * @name updateRecord
- * @function
- * @param {object} mind -
- * @param {String} base -
- * @param {object} recordNew -
- */
-export async function updateRecord(api, mind, base, recordNew) {
-  const isHomeScreen = mind === "root";
-
-  const isMindBranch = base === "mind";
-
-  const canSaveMind = isHomeScreen && isMindBranch;
-
-  if (canSaveMind) {
-    await updateMind(api, recordNew);
-
-    await saveMindRecord(api, recordNew);
-  } else {
-    await updateEntry(api, mind, recordNew);
-  }
-}
 
 /**
  * This
@@ -108,14 +77,4 @@ export async function selectStream(
   }
 
   return { abortPreviousStream, startStream };
-}
-
-export async function buildRecord(api, mind, record) {
-  const fetched = await api.buildRecord(mind, record);
-
-  const isHomeScreen = mind === "root";
-
-  const recordNew = isHomeScreen ? await loadMindRecord(api, fetched) : fetched;
-
-  return recordNew;
 }

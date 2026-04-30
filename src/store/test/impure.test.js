@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
-import { updateRecord, selectStream } from "@/store/impure.js";
+import { selectStream } from "@/store/impure.js";
+import { updateRecord } from "@/proxy/impure.js";
 import { createRecord } from "@/query/impure.js";
 import { newUUID } from "@/query/record.js";
 import {
