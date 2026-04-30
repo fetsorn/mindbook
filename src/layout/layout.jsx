@@ -6,7 +6,6 @@ import { onMindChange } from "@/store/store.js";
 import { QueryContext, queryStore } from "@/query/store.js";
 import { ProxyContext, proxyStore, onStartup } from "@/proxy/store.js";
 import {
-  NavigationBack,
   NavigationRevert,
   NavigationSave,
   NavigationMenu,
@@ -38,8 +37,6 @@ export function LayoutOverview() {
         }
         title="navigationOverview"
       >
-        <NavigationBack />
-
         <NavigationMenu />
       </nav>
 

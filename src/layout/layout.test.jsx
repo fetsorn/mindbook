@@ -6,7 +6,6 @@ import { ApiProvider } from "@/context.js";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
 import {
-  NavigationBack,
   NavigationRevert,
   NavigationSave,
   NavigationMenu,
@@ -31,7 +30,6 @@ vi.mock("@/store/store.js", async (importOriginal) => {
 });
 
 vi.mock("./navigation/index.js", () => ({
-  NavigationBack: vi.fn(),
   NavigationRevert: vi.fn(),
   NavigationSave: vi.fn(),
   NavigationMenu: vi.fn(),
@@ -59,8 +57,6 @@ describe("LayoutOverview", () => {
         <LayoutOverview />
       </QueryContext.Provider>
     ));
-
-    expect(NavigationBack).toHaveBeenCalledWith({});
 
     expect(NavigationMenu).toHaveBeenCalledWith({});
 
