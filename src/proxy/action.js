@@ -12,6 +12,7 @@ import defaultMindRecord from "@/proxy/default_mind_record.json";
  * @returns {object}
  */
 export async function changeMind(api, pathname, searchString) {
+  console.log("[proxy] changeMind", { pathname, searchString });
   const mind = pathname === "/" ? "root" : pathname.replace("/", "");
 
   const template = mind === "root" ? defaultMindRecord : {};
@@ -33,9 +34,11 @@ export async function changeMind(api, pathname, searchString) {
     }
   }
 
+  console.log("[proxy] changeMind", { mind, shouldClone });
   const { mind: mindRecord } = shouldClone
     ? await clone(api, undefined, remoteUrl, token)
     : await find(api, mind, undefined);
+  console.log("[proxy] changeMind: mindRecord", mindRecord);
 
   const schema = await readSchema(api, mindRecord.mind);
 

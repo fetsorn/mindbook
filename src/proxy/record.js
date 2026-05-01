@@ -43,14 +43,12 @@ export async function readSchema(api, mind) {
  * @param {String} remoteToken
  */
 export async function resolve(api, mind) {
+  console.log("[proxy] resolve", { mind });
   const tagsRemote = await readRemoteTags(api, mind);
 
   let resolveResult = { ok: true };
 
   for (const tagRemote of tagsRemote) {
-    // to fail early
-    await fetch(tagRemote.origin_url, { mode: "no-cors" });
-
     const resolvePartial = await api.resolve(mind, {
       url: tagRemote.origin_url,
       token: tagRemote.origin_token,
@@ -58,6 +56,8 @@ export async function resolve(api, mind) {
 
     resolveResult.ok = resolveResult.ok && resolvePartial.ok;
   }
+
+  console.log("[proxy] resolve", { mind, resolveResult });
 
   return resolveResult;
 }
@@ -122,6 +122,11 @@ async function mindIsNew(api, mind) {
  * @param {object} record
  */
 export async function saveMindRecord(api, record) {
+  console.log("[proxy] saveMindRecord", {
+    mind: record.mind,
+    name: record.name,
+    hasOrigin: !!record.origin_url,
+  });
   const mind = record.mind;
 
   // create mind directory
@@ -140,7 +145,13 @@ export async function saveMindRecord(api, record) {
   // TODO this is not strictly correct because if clone fails
   // it should fall through to the initialization
 
+  console.log("[proxy] saveMindRecord", { hasURL, isNew, mind });
+
   if (hasURL && isNew) {
+    console.log("[proxy] saveMindRecord: cloning", {
+      mind,
+      url: origin.origin_url,
+    });
     // pass a uuid to clone so that it can clone to proper place
     const recordClone = await clone(
       api,
@@ -162,6 +173,7 @@ export async function saveMindRecord(api, record) {
     //  // TODO if user approves write new remote to mind
     //}
 
+    console.log("[proxy] saveMindRecord: clone done", { mind });
     // no need to write schema or init since clone has everything
     return undefined;
   }

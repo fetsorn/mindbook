@@ -13,6 +13,7 @@ import {
  * @returns {object}
  */
 export async function find(api, mind, name) {
+  console.log("[proxy] find", { mind, name });
   if (mind === "root")
     return {
       mind: { _: "mind", mind: "root", name: "minds" },
@@ -47,6 +48,7 @@ export async function find(api, mind, name) {
  * @returns {object}
  */
 export async function clone(api, mind, url, token) {
+  console.log("[proxy] clone", { mind, url, token });
   // if uri specifies a remote
   // try to clone remote
   // where mind string is a digest of remote

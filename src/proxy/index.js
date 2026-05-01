@@ -11,12 +11,16 @@ import {
 
 // this posts a record somewhere for special actions
 async function c(api, mind, record) {
+  console.log("[proxy] c", { mind, action: record.action, record: record.record });
   if (record.action === "open") {
+    console.log("[proxy] c: opening mind", record.record.mind);
     await onMindOpen(api, record.record.mind);
+    console.log("[proxy] c: opened mind", record.record.mind);
   }
 }
 
 async function r(api, mind, record) {
+  console.log("[proxy] r", { mind, record });
   return api.selectStream(mind, record);
 
   // repair url clone
@@ -44,7 +48,9 @@ async function r(api, mind, record) {
 }
 
 async function u(api, mind, record) {
+  console.log("[proxy] u", { mind, record });
   await updateRecord(api, mind, record);
+  console.log("[proxy] u: done", { mind });
 
   try {
     const syncResult = await resolve(api, mind);
@@ -63,7 +69,9 @@ async function u(api, mind, record) {
 }
 
 async function d(api, mind, record) {
+  console.log("[proxy] d", { mind, record });
   await deleteRecord(api, mind, record);
+  console.log("[proxy] d: done", { mind });
 
   try {
     const syncResult = await resolve(api, mind);

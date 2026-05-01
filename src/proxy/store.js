@@ -31,6 +31,7 @@ export async function onStartup(api) {
  * @param {String} searchString -
  */
 export async function onMindChange(api, pathname, searchString) {
+  console.log("[proxy] onMindChange", { pathname, searchString });
   await queryStore.abortPreviousStream();
 
   setQueryStore(
@@ -50,7 +51,7 @@ export async function onMindChange(api, pathname, searchString) {
   try {
     result = await changeMind(api, pathname, searchString);
   } catch (e) {
-    console.error(e);
+    console.error("[proxy] onMindChange: changeMind failed", e);
 
     // TODO set template to defaultroot
     result = await changeMind(api, "/", "_=mind");
@@ -91,9 +92,13 @@ export async function onMindChange(api, pathname, searchString) {
 }
 
 export async function onMindOpen(api, mind) {
+  console.log("[proxy] onMindOpen", { mind });
   const schema = await readSchema(api, mind);
+  console.log("[proxy] onMindOpen: schema", schema);
 
   const base = await getDefaultBase(schema);
+  console.log("[proxy] onMindOpen: base", base);
 
   await onMindChange(api, `/${mind}`, `_=${base}`);
+  console.log("[proxy] onMindOpen: done");
 }
