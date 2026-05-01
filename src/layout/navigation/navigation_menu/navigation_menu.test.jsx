@@ -1,7 +1,6 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import {
   MenuSortQuery,
   MenuBaseQuery,
@@ -23,13 +22,7 @@ vi.mock(
 
 describe("NavigationMenu", () => {
   test("", async () => {
-    setQueryStore("searchParams", "_=mind&.sortBy=mind");
-
-    const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
-        <NavigationMenu />
-      </QueryContext.Provider>
-    ));
+    const { getByText } = render(() => <NavigationMenu />);
 
     expect(MenuBaseQuery).toHaveBeenCalled();
 

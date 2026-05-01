@@ -1,35 +1,25 @@
 import { useContext } from "solid-js";
-import { useApi } from "@/context.js";
-import {
-  getFilterQueries,
-  getFilterOptions,
-  QueryContext,
-  getSearchBar,
-  onSearchBar,
-  onSearch,
-} from "@/query/store.js";
+import { Context, getSearchBar, onSearchBar, onSearch } from "@/store/store.js";
 import { Spoiler } from "@/layout/components/index.js";
 import styles from "./overview_filter.module.css";
 
 export function OverviewFilter() {
-  const { store } = useContext(QueryContext);
-
-  const api = useApi();
+  const context = useContext(Context);
 
   return (
     <div>
       <input
         id="query"
         aria-label="query"
-        value={getSearchBar(store.searchParams)}
+        value={getSearchBar(context, context.store.searchParams)}
         onInput={async (event) => {
-          await onSearchBar(event.currentTarget.value);
+          await onSearchBar(context, event.currentTarget.value);
         }}
       />
 
       <button
         onClick={async (event) => {
-          await onSearch(api);
+          await onSearch(context);
         }}
       >
         search

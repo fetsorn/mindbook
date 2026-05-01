@@ -1,8 +1,8 @@
 import { useContext } from "solid-js";
-import { QueryContext } from "@/query/store.js";
+import { Context } from "@/store/store.js";
 
 export function BottomCount() {
-  const { store } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
   return <span>found {store.recordSet.length} </span>;
 }

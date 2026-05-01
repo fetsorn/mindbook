@@ -1,17 +1,19 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { BottomLoader } from "./bottom_loader.jsx";
 
 describe("BottomLoader", () => {
   test("", async () => {
-    setQueryStore("loading", true);
+    const [store, setStore] = makeStore();
+
+    setStore("loading", true);
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <BottomLoader />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(() => getByText("Loading...")).not.toThrowError();

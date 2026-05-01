@@ -1,11 +1,8 @@
 import { useContext, createSignal } from "solid-js";
-import { useApi } from "@/context.js";
-import { QueryContext, onRecordSave } from "@/query/store.js";
+import { Context, onRecordSave } from "@/store/store.js";
 
 export function NavigationSave() {
-  const { store } = useContext(QueryContext);
-
-  const api = useApi();
+  const { store, setStore, api } = useContext(Context);
 
   const [recordBackup] = createSignal(store.record);
 
@@ -13,7 +10,9 @@ export function NavigationSave() {
     <button
       className="navigationSave"
       title={""}
-      onClick={() => onRecordSave(api, recordBackup(), store.record)}
+      onClick={() =>
+        onRecordSave({ store, setStore, api }, recordBackup(), store.record)
+      }
     >
       save
     </button>

@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { Profile } from "./profile.jsx";
 import { ProfileRecord } from "./components/index.js";
 
@@ -14,14 +14,16 @@ vi.mock("./components/index.js", () => {
 
 describe("Profile", () => {
   test("", () => {
+    const [store, setStore] = makeStore();
+
     const baseRecord = { _: "mind", mind: "mind" };
 
-    setQueryStore("record", baseRecord);
+    setStore("record", baseRecord);
 
     render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <Profile />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(ProfileRecord).toHaveBeenCalledWith({

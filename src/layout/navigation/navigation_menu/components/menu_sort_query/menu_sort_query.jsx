@@ -1,9 +1,9 @@
 import { useContext, For } from "solid-js";
-import { QueryContext, onSort } from "@/query/store.js";
+import { Context, onSort } from "@/store/store.js";
 import styles from "./menu_sort_query.module.css";
 
 export function MenuSortQuery(props) {
-  const { store } = useContext(QueryContext);
+  const { store, setStore } = useContext(Context);
 
   return (
     <div id="menuSort" className={styles.dropdown}>
@@ -15,7 +15,9 @@ export function MenuSortQuery(props) {
         id="selectSort"
         className={styles.select}
         value={new URLSearchParams(store.searchParams).get(".sortBy")}
-        onChange={({ target: { value } }) => onSort(".sortBy", value)}
+        onChange={({ target: { value } }) =>
+          onSort({ store, setStore }, ".sortBy", value)
+        }
       >
         <For
           each={Object.keys(store.schema)

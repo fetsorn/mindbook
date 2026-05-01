@@ -1,4 +1,4 @@
-import { newUUID } from "@/query/record.js";
+import { newUUID } from "@/store/record.js";
 
 /**
  * This

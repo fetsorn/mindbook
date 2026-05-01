@@ -1,11 +1,13 @@
 import { useContext, createEffect } from "solid-js";
-import { ProfileFieldItem } from "../index.js";
-import { onRecordEdit } from "@/query/store.js";
+import { Context, onRecordEdit } from "@/store/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
+import { ProfileFieldItem } from "../index.js";
 
 // can't move this to field item
 // because remove needs to filter props.items
 export function Foo(props) {
+  const context = useContext(Context);
+
   return (
     <>
       <br />
@@ -15,6 +17,7 @@ export function Foo(props) {
         question={"really cut?"}
         onAction={() =>
           onRecordEdit(
+            context,
             props.path,
             props.items.filter((el, i) => i !== props.i),
           )
@@ -32,13 +35,16 @@ export function Foo(props) {
 }
 
 export function ProfileField(props) {
+  const context = useContext(Context);
+
   // if props.items is not a list, treat is as list
   const items = () =>
     Array.isArray(props.items) ? props.items : [props.items];
 
   // and make sure props.items becomes a list in the store
   createEffect(() => {
-    if (!Array.isArray(props.items)) onRecordEdit(props.path, [props.items]);
+    if (!Array.isArray(props.items))
+      onRecordEdit(context, props.path, [props.items]);
   });
 
   return (

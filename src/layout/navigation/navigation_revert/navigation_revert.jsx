@@ -1,11 +1,14 @@
-import { onRecordEdit } from "@/query/store.js";
+import { useContext } from "solid-js";
+import { Context, onRecordEdit } from "@/store/store.js";
 
 export function NavigationRevert() {
+  const context = useContext(Context);
+
   return (
     <button
       className="navigationRevert"
       title={""}
-      onClick={() => onRecordEdit(["record"], undefined)}
+      onClick={() => onRecordEdit(context, ["record"], undefined)}
     >
       revert
     </button>

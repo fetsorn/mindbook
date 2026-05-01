@@ -1,11 +1,13 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { MenuSortQuery } from "./menu_sort_query.jsx";
 
 describe("MenuSortQuery", () => {
-  beforeEach(() => {
+  test("", async () => {
+    const [store, setStore] = makeStore();
+
     const schemaRoot = {
       mind: {
         trunks: [],
@@ -17,16 +19,14 @@ describe("MenuSortQuery", () => {
       },
     };
 
-    setQueryStore("schema", schemaRoot);
-  });
+    setStore("schema", schemaRoot);
 
-  test("", async () => {
-    setQueryStore("searchParams", "_=mind&.sortBy=mind");
+    setStore("searchParams", "_=mind&.sortBy=mind");
 
     const { getByRole, getAllByRole } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <MenuSortQuery />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(getByRole("option", { name: "name" }).selected).toBe(false);

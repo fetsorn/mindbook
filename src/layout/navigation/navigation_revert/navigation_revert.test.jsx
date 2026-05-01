@@ -1,23 +1,25 @@
 import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { NavigationRevert } from "./navigation_revert.jsx";
 
 describe("NavigationRevert", () => {
   test("", async () => {
-    setQueryStore("record", { _: "mind", mind: "mind" });
+    const [store, setStore] = makeStore();
+
+    setStore("record", { _: "mind", mind: "mind" });
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store, setStore }}>
         <NavigationRevert />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     const revert = getByText("revert");
 
     await userEvent.click(revert);
 
-    expect(queryStore.record).toEqual(undefined);
+    expect(store.record).toEqual(undefined);
   });
 });

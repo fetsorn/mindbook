@@ -1,8 +1,7 @@
 import history from "history/hash";
 import { onMount, useContext } from "solid-js";
 import { MetaProvider, Title } from "@solidjs/meta";
-import { useApi } from "@/context.js";
-import { QueryContext } from "@/query/store.js";
+import { Context } from "@/store/store.js";
 import {
   NavigationRevert,
   NavigationSave,
@@ -19,7 +18,7 @@ import { Profile } from "./profile/profile.jsx";
 import styles from "./layout.module.css";
 
 export function LayoutOverview() {
-  const { store } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
   return (
     <div
@@ -60,15 +59,15 @@ export function LayoutOverview() {
 }
 
 export function LayoutProfile() {
-  const { store: queryStore } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
   return (
-    <Show when={queryStore.record !== undefined} fallback={<></>}>
+    <Show when={store.record !== undefined} fallback={<></>}>
       <div
         className={
           styles.window +
           " " +
-          (queryStore.record === undefined ? styles.closed : "")
+          (store.record === undefined ? styles.closed : "")
         }
       >
         <nav
@@ -91,16 +90,14 @@ export function LayoutProfile() {
 }
 
 export function App() {
-  const api = useApi();
-
-  const { store: queryStore } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
   // TODO onSearch onMount if config true
 
   return (
     <>
       <MetaProvider>
-        <Title>{"evenor – " + queryStore.mind.name}</Title>
+        <Title>{"evenor – " + store.mind.name}</Title>
       </MetaProvider>
 
       <main className={styles.main}>

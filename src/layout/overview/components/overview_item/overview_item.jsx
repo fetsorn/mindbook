@@ -1,12 +1,12 @@
 import { useContext } from "solid-js";
-import { QueryContext, getBase } from "@/query/store.js";
+import { Context, getBase } from "@/store/store.js";
 import { OverviewItemLight, OverviewItemFull } from "../index.js";
 import styles from "./overview_item.module.css";
 
 export function OverviewItem(props) {
-  const { store } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
-  const base = getBase();
+  const base = getBase({ store });
 
   const grain = { _: base, [base]: props.item };
 

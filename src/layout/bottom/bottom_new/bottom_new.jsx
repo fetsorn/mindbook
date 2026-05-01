@@ -1,11 +1,9 @@
 import { useContext } from "solid-js";
-import { useApi } from "@/context.js";
-import { QueryContext, onRecordCreate } from "@/query/store.js";
+import { Context } from "@/store/store.js";
+import { onRecordCreate } from "@/store/store.js";
 
 export function BottomNew() {
-  const { store } = useContext(QueryContext);
-
-  const api = useApi();
+  const { store, setStore } = useContext(Context);
 
   // if base is twig, it has no connections
   // we can add new values to csvs only if base has some connections
@@ -22,7 +20,10 @@ export function BottomNew() {
   };
   return (
     <Show when={canAdd()} fallback={<></>}>
-      <button className="bottomNew" onClick={() => onRecordCreate(api)}>
+      <button
+        className="bottomNew"
+        onClick={() => onRecordCreate({ store, setStore })}
+      >
         new
       </button>
     </Show>

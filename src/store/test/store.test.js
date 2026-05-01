@@ -1,6 +1,8 @@
 import { describe, expect, test, beforeEach, vi } from "vitest";
-import { onRecordSave, onRecordWipe, onSearch } from "@/query/store.js";
 import {
+  onRecordSave,
+  onRecordWipe,
+  onSearch,
   onRecordCreate,
   updateSearchParams,
   getSpoilerOpen,
@@ -9,13 +11,13 @@ import {
   getSortedRecords,
   getFilterQueries,
   getFilterOptions,
-} from "@/query/store.js";
-import { queryStore, setQueryStore } from "@/query/store.js";
-import { changeSearchParams } from "@/query/pure.js";
-import { createRecord } from "@/query/impure.js";
+  makeStore,
+} from "@/store/store.js";
+import { changeSearchParams } from "@/store/pure.js";
+import { createRecord } from "@/store/impure.js";
 import stub from "./stub.js";
 
-vi.mock("@/query/impure.js", async (importOriginal) => {
+vi.mock("@/store/impure.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
@@ -24,7 +26,7 @@ vi.mock("@/query/impure.js", async (importOriginal) => {
   };
 });
 
-vi.mock("@/query/pure.js", async (importOriginal) => {
+vi.mock("@/store/pure.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
@@ -33,16 +35,19 @@ vi.mock("@/query/pure.js", async (importOriginal) => {
   };
 });
 
+const [store, setStore] = makeStore();
+
 describe("store", () => {
   // restore after, not before
   // to keep initial state
   beforeEach(() => {
-    setQueryStore(undefined);
+    setStore(undefined);
 
     changeSearchParams.mockReset();
+
     createRecord.mockReset();
 
-    setQueryStore({
+    setStore({
       searchParams: new URLSearchParams("_=mind"),
       schema: stub.schemaRoot,
       record: undefined,
@@ -54,9 +59,9 @@ describe("store", () => {
 
   describe("onRecordEdit", () => {
     test("", async () => {
-      await onRecordEdit(["record"], 1);
+      await onRecordEdit({ setStore }, ["record"], 1);
 
-      expect(queryStore.record).toStrictEqual(1);
+      expect(store.record).toStrictEqual(1);
     });
   });
 
@@ -64,17 +69,17 @@ describe("store", () => {
     test("", async () => {
       createRecord.mockImplementation(() => 1);
 
-      await onRecordCreate();
+      await onRecordCreate({ store, setStore });
 
       expect(createRecord).toHaveBeenCalledWith("root", "mind", {});
 
-      expect(queryStore.record).toStrictEqual(1);
+      expect(store.record).toStrictEqual(1);
     });
   });
 
   describe("onRecordSave", () => {
     test("", async () => {
-      setQueryStore("recordSet", ["value1"]);
+      setStore("recordSet", ["value1"]);
 
       const api = {
         u: vi.fn(() => 1),
@@ -85,13 +90,13 @@ describe("store", () => {
 
       const recordNew = { _: "mind", mind: "value2" };
 
-      await onRecordSave(api, recordOld, recordNew);
+      await onRecordSave({ store, setStore, api }, recordOld, recordNew);
 
       expect(api.d).toHaveBeenCalledWith("root", recordOld);
 
       expect(api.u).toHaveBeenCalledWith("root", recordNew);
 
-      expect(queryStore.recordSet).toStrictEqual(["value2"]);
+      expect(store.recordSet).toStrictEqual(["value2"]);
     });
   });
 
@@ -101,11 +106,11 @@ describe("store", () => {
         d: vi.fn(() => 1),
       };
 
-      await onRecordWipe(api, {});
+      await onRecordWipe({ store, setStore, api }, {});
 
       expect(api.d).toHaveBeenCalledWith("root", {});
 
-      expect(queryStore.recordSet).toStrictEqual([]);
+      expect(store.recordSet).toStrictEqual([]);
     });
   });
 
@@ -119,9 +124,9 @@ describe("store", () => {
 
       window.history.replaceState = vi.fn();
 
-      await updateSearchParams(field, value);
+      await updateSearchParams({ store, setStore }, field, value);
 
-      expect(queryStore.searchParams.toString()).toStrictEqual("1");
+      expect(store.searchParams.toString()).toStrictEqual("1");
 
       // TODO do in proxy
       //expect(window.history.replaceState).toHaveBeenCalledWith(null, null, 2);
@@ -136,9 +141,9 @@ describe("store", () => {
 
       window.history.replaceState = vi.fn();
 
-      await updateSearchParams(field, value);
+      await updateSearchParams({ store, setStore }, field, value);
 
-      expect(queryStore.searchParams).toBe("1");
+      expect(store.searchParams).toBe("1");
 
       // TODO actually check that it ignores
     });
@@ -150,9 +155,9 @@ describe("store", () => {
         r: vi.fn(() => ({ done: "ok", value: {} })),
       };
 
-      await onSearch(api);
+      await onSearch({ store, setStore, api });
 
-      expect(queryStore.recordSet).toStrictEqual([]);
+      expect(store.recordSet).toStrictEqual([]);
 
       expect(api.r).toHaveBeenCalled();
     });
@@ -160,23 +165,23 @@ describe("store", () => {
 
   describe("getSpoilerOpen", () => {
     test("undefined at first", async () => {
-      expect(getSpoilerOpen("a")).toBe(undefined);
+      expect(getSpoilerOpen({ store }, "a")).toBe(undefined);
     });
 
     test("gets true", async () => {
-      setQueryStore("spoilerMap", "a", true);
+      setStore("spoilerMap", "a", true);
 
-      expect(getSpoilerOpen("a")).toBe(true);
+      expect(getSpoilerOpen({ store }, "a")).toBe(true);
     });
   });
 
   describe("setSpoilerOpen", () => {
     test("sets true", async () => {
-      setQueryStore("spoilerMap", "a", false);
+      setStore("spoilerMap", "a", false);
 
-      setSpoilerOpen("a", true);
+      setSpoilerOpen({ store, setStore }, "a", true);
 
-      expect(queryStore.spoilerMap["a"]).toBe(true);
+      expect(store.spoilerMap["a"]).toBe(true);
     });
   });
 
@@ -186,14 +191,14 @@ describe("store", () => {
 
       const record2 = { _: "mind", mind: "id2" };
 
-      setQueryStore("recordSet", [record1, record2]);
+      setStore("recordSet", [record1, record2]);
 
-      setQueryStore(
+      setStore(
         "searchParams",
         new URLSearchParams(".sortBy=mind&.sortDirection=first"),
       );
 
-      expect(getSortedRecords()).toStrictEqual([record1, record2]);
+      expect(getSortedRecords({ store })).toStrictEqual([record1, record2]);
     });
 
     test("sorts ascending", async () => {
@@ -201,26 +206,26 @@ describe("store", () => {
 
       const record2 = { _: "mind", mind: "id2" };
 
-      setQueryStore("recordSet", [record1, record2]);
+      setStore("recordSet", [record1, record2]);
 
-      setQueryStore(
+      setStore(
         "searchParams",
         new URLSearchParams(".sortBy=mind&.sortDirection=last"),
       );
 
-      expect(getSortedRecords()).toStrictEqual([record2, record1]);
+      expect(getSortedRecords({ store })).toStrictEqual([record2, record1]);
     });
   });
 
   describe("getFilterQueries", () => {
     test("", async () => {
-      expect(getFilterQueries()).toStrictEqual([["_", "mind"]]);
+      expect(getFilterQueries({ store })).toStrictEqual([["_", "mind"]]);
     });
   });
 
   describe("getFilterOptions", () => {
     test("", async () => {
-      expect(getFilterOptions()).toStrictEqual(["name", "mind", "__"]);
+      expect(getFilterOptions({ store })).toStrictEqual(["name", "mind", "__"]);
     });
   });
 });

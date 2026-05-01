@@ -1,4 +1,5 @@
-import { onRecordEdit } from "@/query/store.js";
+import { useContext } from "solid-js";
+import { Context, onRecordEdit } from "@/store/store.js";
 import styles from "./profile_value.module.css";
 
 // https://css-tricks.com/auto-growing-inputs-textareas/
@@ -67,6 +68,8 @@ function calcSize(value, textarea) {
 }
 
 export function ProfileValue(props) {
+  const context = useContext(Context);
+
   let textarea;
 
   return (
@@ -79,7 +82,7 @@ export function ProfileValue(props) {
           const { selectionStart, selectionEnd, selectionDirection } =
             event.currentTarget;
 
-          await onRecordEdit(props.path, event.target.value);
+          await onRecordEdit(context, props.path, event.target.value);
 
           event.currentTarget.value = props.value;
 

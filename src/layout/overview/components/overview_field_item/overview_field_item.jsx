@@ -1,9 +1,9 @@
 import { useContext } from "solid-js";
-import { QueryContext } from "@/query/store.js";
+import { Context } from "@/store/store.js";
 import { OverviewRecord, OverviewValue } from "../index.js";
 
 export function OverviewFieldItem(props) {
-  const { store } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
   // if base has no leaves, show value
   // otherwise show record

@@ -1,30 +1,43 @@
 /* try to keep store interactions only in this file */
 import parser from "search-query-parser";
 import diff from "microdiff";
-import { createContext } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 import {
   sortCallback,
   changeSearchParams,
   searchParamsToQuery,
-} from "@/query/pure.js";
-import { createRecord } from "@/query/impure.js";
+} from "@/store/pure.js";
+import { createRecord } from "@/store/impure.js";
+import { createContext } from "solid-js";
 
-export const QueryContext = createContext();
+export const Context = createContext();
 
-export const [queryStore, setQueryStore] = createStore({
-  abortPreviousStream: async () => {},
-  searchParams: "_=mind", // sets the state of search bar
-  mind: { _: "mind", mind: "root", name: "minds" },
-  schema: {}, // TODO set schemaRoot somehow
-  template: {},
-  record: undefined,
-  recordSet: [],
-  recordMap: {},
-  spoilerMap: {},
-  loading: false,
-  searchBar: "", // remembers the last state of search bar
-});
+export function makeStore() {
+  return createStore({
+    abortPreviousStream: async () => {},
+    searchParams: "_=mind", // sets the state of search bar
+    mind: { _: "mind", mind: "root", name: "minds" },
+    schema: {}, // TODO set schemaRoot somehow
+    template: {},
+    record: undefined,
+    recordSet: [],
+    recordMap: {},
+    spoilerMap: {},
+    loading: false,
+    searchBar: "", // remembers the last state of search bar
+  });
+}
+
+export function openBook({ setStore }, content) {
+  setStore(
+    produce((state) => {
+      state.mind = content.mind;
+      state.schema = content.schema;
+      state.searchParams = content.searchParams;
+      state.template = content.template;
+    }),
+  );
+}
 
 /**
  * This
@@ -32,8 +45,8 @@ export const [queryStore, setQueryStore] = createStore({
  * @param {String} index -
  * @export function
  */
-export function getSpoilerOpen(index) {
-  return queryStore.spoilerMap[index];
+export function getSpoilerOpen({ store }, index) {
+  return store.spoilerMap[index];
 }
 
 /**
@@ -43,8 +56,8 @@ export function getSpoilerOpen(index) {
  * @param {boolean} isOpen -
  * @export function
  */
-export function setSpoilerOpen(index, isOpen) {
-  setQueryStore("spoilerMap", { [index]: isOpen });
+export function setSpoilerOpen({ setStore }, index, isOpen) {
+  setStore("spoilerMap", { [index]: isOpen });
 }
 
 /**
@@ -54,12 +67,12 @@ export function setSpoilerOpen(index, isOpen) {
  * @param {String[]} path -
  * @param {String} value -
  */
-export function onRecordEdit(path, value) {
-  setQueryStore(...path, value);
+export function onRecordEdit({ setStore }, path, value) {
+  setStore(...path, value);
 }
 
-export function getBase() {
-  return new URLSearchParams(queryStore.searchParams).get("_");
+export function getBase({ store }) {
+  return new URLSearchParams(store.searchParams).get("_");
 }
 
 /**
@@ -68,21 +81,17 @@ export function getBase() {
  * @export function
  * @returns {String[]}
  */
-export function getFilterOptions() {
-  if (queryStore.schema === undefined || queryStore.searchParams === undefined)
-    return [];
+export function getFilterOptions({ store }) {
+  if (store.schema === undefined || store.searchParams === undefined) return [];
 
   // find all fields name
-  const leafFields = queryStore.schema[
-    new URLSearchParams(queryStore.searchParams).get("_")
-  ].leaves.concat([
-    new URLSearchParams(queryStore.searchParams).get("_"),
-    "__",
-  ]);
+  const leafFields = store.schema[
+    new URLSearchParams(store.searchParams).get("_")
+  ].leaves.concat([new URLSearchParams(store.searchParams).get("_"), "__"]);
 
   // find field name which is added to filter search params
   const addedFields = Array.from(
-    new URLSearchParams(queryStore.searchParams).keys(),
+    new URLSearchParams(store.searchParams).keys(),
   );
 
   // find name fields which is not added to filter search params
@@ -97,13 +106,13 @@ export function getFilterOptions() {
  * @export function
  * @returns {String[]}
  */
-export function getFilterQueries() {
-  if (queryStore.searchParams === undefined) return [];
+export function getFilterQueries({ store }) {
+  if (store.searchParams === undefined) return [];
 
   // convert entries iterator to array for Index
-  return Array.from(
-    new URLSearchParams(queryStore.searchParams).entries(),
-  ).filter(([key]) => key !== ".sortDirection");
+  return Array.from(new URLSearchParams(store.searchParams).entries()).filter(
+    ([key]) => key !== ".sortDirection",
+  );
 }
 
 /**
@@ -112,36 +121,36 @@ export function getFilterQueries() {
  * @export function
  * @returns {Function}
  */
-export function getSortedRecords() {
-  const sortBy = new URLSearchParams(queryStore.searchParams).get(".sortBy");
+export function getSortedRecords({ store }) {
+  const sortBy = new URLSearchParams(store.searchParams).get(".sortBy");
 
-  const sortDirection = new URLSearchParams(queryStore.searchParams).get(
+  const sortDirection = new URLSearchParams(store.searchParams).get(
     ".sortDirection",
   );
 
-  const records = queryStore.recordSet.toSorted(
-    sortCallback(sortBy, sortDirection),
-  );
+  const records = store.recordSet.toSorted(sortCallback(sortBy, sortDirection));
 
   return records;
 }
 
-export async function onSearchBar(searchBar) {
-  setQueryStore(
+export async function onSearchBar({ store, setStore, api }, searchBar) {
+  setStore(
     produce((state) => {
       state.searchBar = searchBar;
     }),
   );
 
   const options = {
-    keywords: Object.keys(queryStore.schema),
+    keywords: Object.keys(store.schema),
   };
 
   function objectize(q) {
     return typeof q === "string" ? { text: q } : q;
   }
 
-  const searchBarOld = objectize(parser.parse(getSearchBar(), options));
+  const searchBarOld = objectize(
+    parser.parse(getSearchBar({ store }), options),
+  );
 
   const searchBarNew = objectize(parser.parse(searchBar, options));
 
@@ -157,7 +166,7 @@ export async function onSearchBar(searchBar) {
   // in the most naive case we input a letter, and get that letter's
   // field and value
   // but what if the letter is plain text and must match multiple fields?
-  const doSearch = batchUpdateSearchParams(changes);
+  const doSearch = batchUpdateSearchParams(context, changes);
 
   // no longer do search on change of search bar
   //if (doSearch) {
@@ -165,11 +174,11 @@ export async function onSearchBar(searchBar) {
   //}
 }
 
-export function getSearchBar() {
-  const searchParams = new URLSearchParams(queryStore.searchParams);
+export function getSearchBar({ store }) {
+  const searchParams = new URLSearchParams(store.searchParams);
 
   const options = {
-    keywords: Object.keys(queryStore.schema),
+    keywords: Object.keys(store.schema),
   };
 
   const searchBar = Array.from(searchParams.entries())
@@ -181,21 +190,21 @@ export function getSearchBar() {
   return parser.stringify(searchBar, options);
 }
 
-export function updateSearchParams(field, value) {
+export function updateSearchParams({ store, setStore }, field, value) {
   // NOTE freeform text is not supported by csvs yet
   if (field !== "text") {
     const searchParams = changeSearchParams(
-      new URLSearchParams(queryStore.searchParams),
+      new URLSearchParams(store.searchParams),
       field,
       value,
     );
 
     // TODO move to proxy somewhere
-    //const url = makeURL(searchParams, queryStore.mind.mind);
+    //const url = makeURL(searchParams, store.mind.mind);
     //window.history.replaceState(null, null, url);
 
     // do not reset searchParams here to preserve focus on filter
-    setQueryStore(
+    setStore(
       produce((state) => {
         state.searchParams = searchParams.toString();
       }),
@@ -207,8 +216,8 @@ export function updateSearchParams(field, value) {
   return false;
 }
 
-// diff changes to queryStore.searchParams
-function batchUpdateSearchParams(changes) {
+// diff changes to store.searchParams
+function batchUpdateSearchParams(context, changes) {
   // only search if some field was updated
   // don't search on freeform text
   let doSearch = false;
@@ -220,7 +229,9 @@ function batchUpdateSearchParams(changes) {
         case "REMOVE": {
           const field = change.path[0];
 
-          doSearch = doSearch ? doSearch : updateSearchParams(field, undefined);
+          doSearch = doSearch
+            ? doSearch
+            : updateSearchParams(context, field, undefined);
 
           break;
         }
@@ -229,7 +240,7 @@ function batchUpdateSearchParams(changes) {
 
           doSearch = doSearch
             ? doSearch
-            : updateSearchParams(field, change.value);
+            : updateSearchParams(context, field, change.value);
 
           break;
         }
@@ -238,7 +249,7 @@ function batchUpdateSearchParams(changes) {
 
           doSearch = doSearch
             ? doSearch
-            : updateSearchParams(field, change.value);
+            : updateSearchParams(context, field, change.value);
 
           break;
         }
@@ -248,18 +259,18 @@ function batchUpdateSearchParams(changes) {
   return doSearch;
 }
 
-export async function onBase(value) {
-  updateSearchParams("_", value);
+export async function onBase(context, value) {
+  updateSearchParams(context, "_", value);
 
   //await onSearch()
 }
 
-export async function onSort(field, value) {
-  updateSearchParams(field, value);
+export async function onSort(context, field, value) {
+  updateSearchParams(context, field, value);
 
-  setQueryStore(
+  context.setStore(
     produce((state) => {
-      state.recordSet = getSortedRecords();
+      state.recordSet = getSortedRecords(context);
     }),
   );
 }
@@ -269,38 +280,38 @@ export async function onSort(field, value) {
  * @name onRecordCreate
  * @export function
  */
-export async function onRecordCreate() {
+export async function onRecordCreate({ store, setStore }) {
   const record = await createRecord(
-    queryStore.mind.mind,
-    new URLSearchParams(queryStore.searchParams).get("_"),
-    queryStore.template,
+    store.mind.mind,
+    new URLSearchParams(store.searchParams).get("_"),
+    store.template,
   );
 
-  setQueryStore(
+  setStore(
     produce((state) => {
       state.record = record;
     }),
   );
 }
 
-export async function onCancel() {
-  await queryStore.abortPreviousStream();
+export async function onCancel({ store, setStore }) {
+  await store.abortPreviousStream();
 
-  setQueryStore("loading", false);
+  setStore("loading", false);
 }
 
-export async function getRecord(api, record) {
-  const base = getBase();
+export async function getRecord({ store, setStore, api }, record) {
+  const base = getBase({ store });
 
   const grain = { _: base, [base]: record };
 
-  if (queryStore.recordMap[record] === undefined) {
-    const recordNew = await api.describe(queryStore.mind.mind, grain);
+  if (store.recordMap[record] === undefined) {
+    const recordNew = await api.describe(store.mind.mind, grain);
 
-    setQueryStore("recordMap", { [record]: recordNew });
+    setStore("recordMap", { [record]: recordNew });
   }
 
-  const recordNew = queryStore.recordMap[record];
+  const recordNew = store.recordMap[record];
 
   return recordNew;
 }
@@ -312,36 +323,38 @@ export async function getRecord(api, record) {
  * @param {object} recordOld -
  * @param {object} recordNew -
  */
-export async function onRecordSave(api, recordOld, recordNew) {
-  setQueryStore("loading", true);
+export async function onRecordSave(
+  { store, setStore, api },
+  recordOld,
+  recordNew,
+) {
+  setStore("loading", true);
 
-  const base = new URLSearchParams(queryStore.searchParams).get("_");
+  const base = new URLSearchParams(store.searchParams).get("_");
 
-  await api.d(queryStore.mind.mind, recordOld);
+  await api.d(store.mind.mind, recordOld);
 
-  await api.u(queryStore.mind.mind, recordNew);
+  await api.u(store.mind.mind, recordNew);
 
   const keyOld = recordOld[base];
 
   const keyNew = recordNew[base];
 
-  const records = queryStore.recordSet
-    .filter((r) => r !== keyOld)
-    .concat([keyNew]);
+  const records = store.recordSet.filter((r) => r !== keyOld).concat([keyNew]);
 
   // force reload
-  setQueryStore("recordSet", []);
+  setStore("recordSet", []);
 
-  setQueryStore("recordMap", { [keyNew]: recordNew });
+  setStore("recordMap", { [keyNew]: recordNew });
 
-  setQueryStore(
+  setStore(
     produce((state) => {
       state.recordSet = records;
       state.record = undefined;
     }),
   );
 
-  setQueryStore("loading", false);
+  setStore("loading", false);
 }
 
 /**
@@ -350,25 +363,25 @@ export async function onRecordSave(api, recordOld, recordNew) {
  * @export function
  * @param {object} record -
  */
-export async function onRecordWipe(api, record) {
-  setQueryStore("loading", true);
+export async function onRecordWipe({ store, setStore, api }, record) {
+  setStore("loading", true);
 
-  await api.d(queryStore.mind.mind, record);
+  await api.d(store.mind.mind, record);
 
-  const base = new URLSearchParams(queryStore.searchParams).get("_");
+  const base = new URLSearchParams(store.searchParams).get("_");
 
   const key = record[base];
 
-  const records = queryStore.recordSet.filter((r) => r !== key);
+  const records = store.recordSet.filter((r) => r !== key);
 
-  setQueryStore(
+  setStore(
     produce((state) => {
       state.recordSet = records;
       state.recordMap[record] = undefined;
     }),
   );
 
-  setQueryStore("loading", false);
+  setStore("loading", false);
 }
 
 /**
@@ -376,11 +389,11 @@ export async function onRecordWipe(api, record) {
  * @name onSearch
  * @export function
  */
-export async function onSearch(api) {
-  setQueryStore("loading", true);
+export async function onSearch({ store, setStore, api }) {
+  setStore("loading", true);
 
   try {
-    const searchParams = new URLSearchParams(queryStore.searchParams);
+    const searchParams = new URLSearchParams(store.searchParams);
 
     // remove all evenor-specific searchParams before passing to csvs
     const searchParamsWithoutCustom = new URLSearchParams(
@@ -389,12 +402,9 @@ export async function onSearch(api) {
       ),
     );
 
-    const query = searchParamsToQuery(
-      queryStore.schema,
-      searchParamsWithoutCustom,
-    );
+    const query = searchParamsToQuery(store.schema, searchParamsWithoutCustom);
 
-    const fromStrm = await api.r(queryStore.mind.mind, query);
+    const fromStrm = await api.r(store.mind.mind, query);
 
     // prepare a controller to stop the new stream
     let isAborted = false;
@@ -417,7 +427,7 @@ export async function onSearch(api) {
         const key = chunk[chunk._];
 
         // append record
-        setQueryStore("recordSet", queryStore.recordSet.length, key);
+        setStore("recordSet", store.recordSet.length, key);
       },
 
       abort() {
@@ -426,9 +436,9 @@ export async function onSearch(api) {
     });
 
     // stop previous stream
-    await queryStore.abortPreviousStream();
+    await store.abortPreviousStream();
 
-    setQueryStore(
+    setStore(
       produce((state) => {
         // solid store tries to call the function, so pass a factory here
         state.abortPreviousStream = () => () => {
@@ -443,13 +453,13 @@ export async function onSearch(api) {
     await fromStrm.pipeTo(toStrm, { signal: abortController.signal });
 
     // TODO does it stop main?
-    for (const record of queryStore.recordSet) {
-      await getRecord(api, record);
+    for (const record of store.recordSet) {
+      await getRecord({ store, setStore, api }, record);
     }
   } catch (e) {
     console.error(e);
 
-    setQueryStore(
+    setStore(
       produce((state) => {
         // erase existing records
         state.recordSet = [];
@@ -457,7 +467,7 @@ export async function onSearch(api) {
     );
   }
 
-  const scroll = new URLSearchParams(queryStore.searchParams).get(".scroll");
+  const scroll = new URLSearchParams(store.searchParams).get(".scroll");
 
   if (scroll !== null) {
     // SEC-16: null-check before calling scrollIntoView
@@ -468,7 +478,7 @@ export async function onSearch(api) {
     }
   }
 
-  setQueryStore("loading", false);
+  setStore("loading", false);
 }
 
 /**
@@ -479,18 +489,18 @@ export async function onSearch(api) {
  * @param {String} value -
  * @param {String} cognate -
  */
-export async function leapfrog(branch, value, cognate) {
-  await onSearch(api, undefined, undefined);
+export async function leapfrog(context, branch, value, cognate) {
+  await onSearch(context, undefined, undefined);
 
   await onSearch(
-    api,
+    context,
     "_",
-    new URLSearchParams(queryStore.searchParams).get("_"),
+    new URLSearchParams(store.searchParams).get("_"),
   );
 
-  await onSearch(api, "__", cognate);
+  await onSearch(context, "__", cognate);
 
-  await onSearch(api, branch, value);
+  await onSearch(context, branch, value);
 }
 
 /**
@@ -501,14 +511,14 @@ export async function leapfrog(branch, value, cognate) {
  * @param {String} value -
  * @param {String} cognate -
  */
-export async function backflip(branch, value, cognate) {
-  await onSearch(api, undefined, undefined);
+export async function backflip(context, branch, value, cognate) {
+  await onSearch(context, undefined, undefined);
 
-  await onSearch(api, "_", cognate);
+  await onSearch(context, "_", cognate);
 
-  await onSearch(api, "__", branch);
+  await onSearch(context, "__", branch);
 
-  await onSearch(api, cognate, value);
+  await onSearch(context, cognate, value);
 }
 
 /**
@@ -519,12 +529,12 @@ export async function backflip(branch, value, cognate) {
  * @param {String} value -
  * @param {String} cognate -
  */
-export async function sidestep(branch, value, cognate) {
-  await onSearch(api, undefined, undefined);
+export async function sidestep(context, branch, value, cognate) {
+  await onSearch(context, undefined, undefined);
 
-  await onSearch(api, "_", cognate);
+  await onSearch(context, "_", cognate);
 
-  await onSearch(api, cognate, value);
+  await onSearch(context, cognate, value);
 }
 
 /**
@@ -535,22 +545,22 @@ export async function sidestep(branch, value, cognate) {
  * @param {String} value -
  * @param {String} cognate -
  */
-export async function warp(branch, value, cognate) {
-  await onSearch(api, undefined, undefined);
+export async function warp(context, branch, value, cognate) {
+  await onSearch(context, undefined, undefined);
 
-  await onSearch(api, "_", queryStore.schema[cognate].trunks[0]);
+  await onSearch(context, "_", store.schema[cognate].trunks[0]);
 
-  await onSearch(api, "__", cognate);
+  await onSearch(context, "__", cognate);
 
-  await onSearch(api, queryStore.schema[cognate].trunks[0], value);
+  await onSearch(context, store.schema[cognate].trunks[0], value);
 }
 
-export async function onAction(api, action, record) {
+export async function onAction({ api }, action, record) {
   const actionRecord = {
     _: "action",
     action,
     record,
   };
 
-  api.c(queryStore.mind.mind, actionRecord);
+  api.c(store.mind.mind, actionRecord);
 }

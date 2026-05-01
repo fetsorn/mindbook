@@ -1,12 +1,12 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal, createEffect } from "solid-js";
-import { QueryContext, getRecord } from "@/query/store.js";
+import { Context, getRecord } from "@/store/store.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
 import { OverviewValue } from "../index.js";
 import styles from "./overview_item_light.module.css";
 
 export function OverviewItemLight(props) {
-  const { store } = useContext(QueryContext);
+  const context = useContext(Context);
 
   const [content, setContent] = createSignal();
 
@@ -27,7 +27,7 @@ export function OverviewItemLight(props) {
 
       <button
         onClick={async () => {
-          await getRecord(props.item);
+          await getRecord(context, props.item);
         }}
       >
         more...

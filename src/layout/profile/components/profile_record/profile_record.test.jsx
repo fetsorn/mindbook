@@ -1,20 +1,17 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import {
-  QueryContext,
-  queryStore,
-  setQueryStore,
-  onRecordEdit,
-} from "@/query/store.js";
+import { Context, makeStore, onRecordEdit } from "@/store/store.js";
 import { ProfileRecord } from "./profile_record.jsx";
 
-vi.mock("@/query/store.js", async (importOriginal) => {
+const [store, setStore] = makeStore();
+
+vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
     ...mod,
-    onRecordEdit: vi.fn((path, value) => setQueryStore(...path, value)),
+    onRecordEdit: vi.fn((context, path, value) => setStore(...path, value)),
   };
 });
 
@@ -39,7 +36,7 @@ describe("ProfileRecord", () => {
       },
     };
 
-    setQueryStore("schema", schemaRoot);
+    setStore("schema", schemaRoot);
   });
 
   test("adds branch", async () => {
@@ -49,14 +46,14 @@ describe("ProfileRecord", () => {
 
     const baseRecord = { _: "mind", mind: "mind" };
 
-    setQueryStore("record", baseRecord);
+    setStore("record", baseRecord);
 
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store, setStore }}>
         <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -71,6 +68,7 @@ describe("ProfileRecord", () => {
     await userEvent.click(getByText("branch"));
 
     expect(onRecordEdit).toHaveBeenCalledWith(
+      { setStore },
       ["record", "branch"],
       [
         {
@@ -80,7 +78,7 @@ describe("ProfileRecord", () => {
       ],
     );
 
-    expect(queryStore.record).toEqual({
+    expect(store.record).toEqual({
       _: "mind",
       mind: "mind",
       branch: [
@@ -108,14 +106,14 @@ describe("ProfileRecord", () => {
       ],
     };
 
-    setQueryStore("record", baseRecord);
+    setStore("record", baseRecord);
 
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store, setStore }}>
         <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -124,12 +122,16 @@ describe("ProfileRecord", () => {
 
     await userEvent.click(getByText("branch"));
 
-    expect(onRecordEdit).toHaveBeenCalledWith(["record", "branch", 1], {
-      _: "branch",
-      branch: "",
-    });
+    expect(onRecordEdit).toHaveBeenCalledWith(
+      { setStore },
+      ["record", "branch", 1],
+      {
+        _: "branch",
+        branch: "",
+      },
+    );
 
-    expect(queryStore.record).toEqual({
+    expect(store.record).toEqual({
       _: "mind",
       mind: "mind",
       branch: [
@@ -161,18 +163,18 @@ describe("ProfileRecord", () => {
       branch: [item],
     };
 
-    setQueryStore("record", baseRecord);
+    setStore("record", baseRecord);
 
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store, setStore }}>
         <ProfileRecord
           index={index}
           record={item}
           path={["record", "branch", 0]}
         />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -182,6 +184,7 @@ describe("ProfileRecord", () => {
     await userEvent.click(getByText("description_en"));
 
     expect(onRecordEdit).toHaveBeenCalledWith(
+      { setStore },
       ["record", "branch", 0, "description_en"],
       [
         {
@@ -191,7 +194,7 @@ describe("ProfileRecord", () => {
       ],
     );
 
-    expect(queryStore.record).toEqual({
+    expect(store.record).toEqual({
       _: "mind",
       mind: "mind",
       branch: [

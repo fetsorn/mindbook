@@ -1,36 +1,38 @@
 import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { OverviewValue } from "./overview_value.jsx";
+
+const schemaRoot = {
+  mind: {
+    trunks: [],
+    leaves: ["name", "branch"],
+  },
+  name: {
+    trunks: ["mind"],
+    leaves: [],
+  },
+  branch: {
+    trunks: ["mind"],
+    leaves: [],
+  },
+};
 
 describe("OverviewValue", () => {
   test("", async () => {
-    const schemaRoot = {
-      mind: {
-        trunks: [],
-        leaves: ["name", "branch"],
-      },
-      name: {
-        trunks: ["mind"],
-        leaves: [],
-      },
-      branch: {
-        trunks: ["mind"],
-        leaves: [],
-      },
-    };
+    const [store, setStore] = makeStore();
 
-    setQueryStore("schema", schemaRoot);
+    setStore("schema", schemaRoot);
 
     const branch = "mind";
 
     const value = "mind";
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <OverviewValue value={value} branch={branch} />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(() => getByText("mind")).not.toThrowError();

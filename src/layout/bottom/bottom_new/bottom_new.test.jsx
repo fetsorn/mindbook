@@ -1,11 +1,10 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import { onRecordCreate } from "@/query/store.js";
+import { Context, makeStore, onRecordCreate } from "@/store/store.js";
 import { BottomNew } from "./bottom_new.jsx";
 
-vi.mock("@/query/store.js", async (importOriginal) => {
+vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
@@ -15,7 +14,9 @@ vi.mock("@/query/store.js", async (importOriginal) => {
 });
 
 describe("BottomNew", () => {
-  beforeEach(() => {
+  test("", async () => {
+    const [store, setStore] = makeStore();
+
     const schemaRoot = {
       mind: {
         trunks: [],
@@ -27,20 +28,18 @@ describe("BottomNew", () => {
       },
     };
 
-    setQueryStore("schema", schemaRoot);
-  });
+    setStore("schema", schemaRoot);
 
-  test("", async () => {
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store, setStore }}>
         <BottomNew />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     const bottomNew = getByText("new");
 
     await userEvent.click(bottomNew);
 
-    expect(onRecordCreate).toHaveBeenCalledWith(undefined);
+    expect(onRecordCreate).toHaveBeenCalledWith({ store, setStore });
   });
 });

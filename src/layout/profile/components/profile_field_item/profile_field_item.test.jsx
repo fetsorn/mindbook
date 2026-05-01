@@ -1,11 +1,13 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { ProfileFieldItem } from "./profile_field_item.jsx";
 
 describe("ProfileFieldItem", () => {
   test("object", async () => {
+    const [store, setStore] = makeStore();
+
     const index = "index";
 
     const branch = "branch";
@@ -15,14 +17,14 @@ describe("ProfileFieldItem", () => {
     const items = [item];
 
     const { getByRole, getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <ProfileFieldItem
           index={index}
           branch={branch}
           item={item}
           path={["record", "branch", 0]}
         />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     const input = getByRole("textbox");

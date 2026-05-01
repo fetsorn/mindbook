@@ -1,17 +1,19 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { BottomSync } from "./bottom_sync.jsx";
 
 describe("BottomSync", () => {
   test("", async () => {
-    setQueryStore("mergeResult", false);
+    const [store, setStore] = makeStore();
+
+    setStore("mergeResult", false);
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <BottomSync />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(() => getByText("Conflict")).not.toThrowError();

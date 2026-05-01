@@ -1,32 +1,32 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { Overview } from "./overview.jsx";
 
+const schemaRoot = {
+  mind: {
+    trunks: [],
+    leaves: ["name"],
+  },
+  name: {
+    trunks: ["mind"],
+    leaves: [],
+  },
+};
+
 describe("Overview", () => {
-  beforeEach(() => {
-    const schemaRoot = {
-      mind: {
-        trunks: [],
-        leaves: ["name"],
-      },
-      name: {
-        trunks: ["mind"],
-        leaves: [],
-      },
-    };
-
-    setQueryStore("schema", schemaRoot);
-  });
-
   test("no items", async () => {
+    const [store, setStore] = makeStore();
+
+    setStore("schema", schemaRoot);
+
     const items = [];
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <Overview items={items} />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(() =>
@@ -35,6 +35,10 @@ describe("Overview", () => {
   });
 
   test("item", async () => {
+    const [store, setStore] = makeStore();
+
+    setStore("schema", schemaRoot);
+
     const item = {
       _: "mind",
       mind: "mind",
@@ -42,12 +46,12 @@ describe("Overview", () => {
 
     const items = [item];
 
-    setQueryStore("recordSet", items);
+    setStore("recordSet", items);
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <Overview />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(() => getByText("mind")).not.toThrowError();

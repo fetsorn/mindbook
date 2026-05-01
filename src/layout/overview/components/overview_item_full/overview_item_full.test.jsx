@@ -1,11 +1,13 @@
 import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import { OverviewItemFull } from "./overview_item_full.jsx";
 
 describe("OverviewItemFull", () => {
   test("", async () => {
+    const [store, setStore] = makeStore();
+
     const schemaRoot = {
       mind: {
         trunks: [],
@@ -17,7 +19,7 @@ describe("OverviewItemFull", () => {
       },
     };
 
-    setQueryStore("schema", schemaRoot);
+    setStore("schema", schemaRoot);
 
     const index = "";
 
@@ -31,9 +33,9 @@ describe("OverviewItemFull", () => {
     const record = baseRecord;
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <OverviewItemFull item={record} index={index} />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(() => getByText("mind")).not.toThrowError();

@@ -2,27 +2,31 @@ import { test, expect, vi } from "vitest";
 import { createSignal } from "solid-js";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { queryStore, setQueryStore, onRecordEdit } from "@/query/store.js";
+import { Context, makeStore, onRecordEdit } from "@/store/store.js";
 import { ProfileValue } from "./profile_value.jsx";
 
-vi.mock("@/query/store.js", async (importOriginal) => {
+const [store, setStore] = makeStore();
+
+vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
     ...mod,
-    onRecordEdit: vi.fn((path, value) => setQueryStore(...path, value)),
+    onRecordEdit: vi.fn((context, path, value) => setStore(...path, value)),
   };
 });
 
 test("profile value", async () => {
   const record = { _: "mind", mind: "mind" };
 
-  setQueryStore("record", record);
+  setStore("record", record);
 
   const path = ["record", "mind"];
 
   const { getByText, getByRole } = render(() => (
-    <ProfileValue value={queryStore.record.mind} branch="mind" path={path} />
+    <Context.Provider value={{ store, setStore }}>
+      <ProfileValue value={store.record.mind} branch="mind" path={path} />
+    </Context.Provider>
   ));
 
   const input = getByRole("textbox");
@@ -33,7 +37,7 @@ test("profile value", async () => {
 
   await userEvent.keyboard("a");
 
-  expect(onRecordEdit).toHaveBeenCalledWith(path, "amind");
+  expect(onRecordEdit).toHaveBeenCalledWith({ store, setStore }, path, "amind");
 
-  expect(queryStore.record.mind).toBe("amind");
+  expect(store.record.mind).toBe("amind");
 });

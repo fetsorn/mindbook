@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from "vitest";
-import { createRecord } from "@/query/impure.js";
-import { newUUID } from "@/query/record.js";
+import { createRecord } from "@/store/impure.js";
+import { newUUID } from "@/store/record.js";
 import stub from "./stub.js";
 
-vi.mock("@/query/record.js", async (importOriginal) => {
+vi.mock("@/store/record.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {

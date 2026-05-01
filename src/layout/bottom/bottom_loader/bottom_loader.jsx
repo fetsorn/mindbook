@@ -1,9 +1,9 @@
 import { useContext } from "solid-js";
-import { QueryContext, onCancel } from "@/query/store.js";
+import { Context, onCancel } from "@/store/store.js";
 import { Confirmation } from "@/layout/components/index.js";
 
 export function BottomLoader() {
-  const { store } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
   return (
     <Show when={store.loading} fallback={<></>}>

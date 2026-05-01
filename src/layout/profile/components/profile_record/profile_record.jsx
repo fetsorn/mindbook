@@ -1,25 +1,25 @@
 import { useContext } from "solid-js";
-import { QueryContext, onRecordEdit } from "@/query/store.js";
+import { Context, onRecordEdit } from "@/store/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
 import { ProfileField, ProfileValue } from "../index.js";
 
 export function ProfileRecord(props) {
-  const { store: queryStore } = useContext(QueryContext);
+  const { store, setStore } = useContext(Context);
 
   const leaves = () => {
     if (
-      queryStore.schema === undefined ||
-      queryStore.schema[props.record._] === undefined
+      store.schema === undefined ||
+      store.schema[props.record._] === undefined
     )
       return [];
 
-    return queryStore.schema[props.record._].leaves;
+    return store.schema[props.record._].leaves;
   };
 
   const isRemote = () => {
-    if (queryStore.mind === undefined) return false;
+    if (store.mind === undefined) return false;
 
-    return queryStore.mind.mind === "root" && props.record._ === "origin_url";
+    return store.mind.mind === "root" && props.record._ === "origin_url";
   };
 
   function access(field) {
@@ -44,6 +44,7 @@ export function ProfileRecord(props) {
             {(leaf, index) => {
               const addNew = () =>
                 onRecordEdit(
+                  { setStore },
                   [...props.path, leaf()],
                   [
                     {
@@ -54,10 +55,14 @@ export function ProfileRecord(props) {
                 );
 
               const addAnother = () =>
-                onRecordEdit([...props.path, leaf(), access(leaf()).length], {
-                  _: leaf(),
-                  [leaf()]: "",
-                });
+                onRecordEdit(
+                  { setStore },
+                  [...props.path, leaf(), access(leaf()).length],
+                  {
+                    _: leaf(),
+                    [leaf()]: "",
+                  },
+                );
 
               return (
                 <button

@@ -4,7 +4,7 @@ import {
   searchParamsToQuery,
   changeSearchParams,
   findFirstSortBy,
-} from "@/query/pure.js";
+} from "@/store/pure.js";
 import stub from "./stub.js";
 
 describe("ensureTrunk", () => {

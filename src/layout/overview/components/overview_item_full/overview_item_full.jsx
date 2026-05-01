@@ -1,16 +1,17 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal, createEffect } from "solid-js";
-import { useApi } from "@/context.js";
-import { QueryContext, onRecordEdit, onRecordWipe } from "@/query/store.js";
-import { onAction } from "@/query/store.js";
+import {
+  Context,
+  onRecordEdit,
+  onRecordWipe,
+  onAction,
+} from "@/store/store.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
 import { OverviewRecord } from "../index.js";
 import styles from "./overview_item_full.module.css";
 
 export function OverviewItemFull(props) {
-  const { store: queryStore } = useContext(QueryContext);
-
-  const api = useApi();
+  const { store, setStore, api } = useContext(Context);
 
   const [content, setContent] = createSignal();
 
@@ -22,10 +23,9 @@ export function OverviewItemFull(props) {
 
   const [isFold, setIsFold] = createSignal(true);
 
-  const isHomeScreen = queryStore.mind.mind === "root";
+  const isHomeScreen = store.mind.mind === "root";
 
-  const isMind =
-    new URLSearchParams(queryStore.searchParams).get("_") === "mind";
+  const isMind = new URLSearchParams(store.searchParams).get("_") === "mind";
 
   const canOpenMind = isHomeScreen && isMind;
 
@@ -58,7 +58,11 @@ export function OverviewItemFull(props) {
           <button
             className={"edit"}
             onClick={() => {
-              onRecordEdit(["record"], JSON.parse(JSON.stringify(props.item)));
+              onRecordEdit(
+                { setStore },
+                ["record"],
+                JSON.parse(JSON.stringify(props.item)),
+              );
 
               setShowActions(false);
             }}
@@ -69,14 +73,14 @@ export function OverviewItemFull(props) {
           <Confirmation
             action={`delete`}
             question={"really delete?"}
-            onAction={() => onRecordWipe(api, props.item)}
+            onAction={() => onRecordWipe({ store, setStore, api }, props.item)}
             onCancel={() => setShowActions(false)}
           />
 
           <Show when={canOpenMind} fallback={<></>}>
             <button
               title="open"
-              onClick={() => onAction(api, "open", props.item)}
+              onClick={() => onAction({ api }, "open", props.item)}
             >
               open{" "}
             </button>

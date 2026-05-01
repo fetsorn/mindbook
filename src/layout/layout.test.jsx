@@ -1,8 +1,7 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { cleanup, render } from "@solidjs/testing-library";
-import { ApiProvider } from "@/context.js";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
+import { Context, makeStore } from "@/store/store.js";
 import {
   NavigationRevert,
   NavigationSave,
@@ -41,10 +40,12 @@ vi.mock("./profile/profile.jsx", () => ({
 
 describe("LayoutOverview", () => {
   test("layout", async () => {
+    const [store, setStore] = makeStore();
+
     render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <LayoutOverview />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(NavigationMenu).toHaveBeenCalledWith({});
@@ -63,12 +64,14 @@ describe("LayoutOverview", () => {
 
 describe("LayoutProfile", () => {
   test("", async () => {
-    setQueryStore("record", { _: "mind", mind: "mind" });
+    const [store, setStore] = makeStore();
+
+    setStore("record", { _: "mind", mind: "mind" });
 
     render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store }}>
         <LayoutProfile />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     expect(NavigationRevert).toHaveBeenCalledWith({});
@@ -92,12 +95,12 @@ describe("App", () => {
       commit: vi.fn(),
     };
 
+    const [store, setStore] = makeStore();
+
     const { getByText } = render(() => (
-      <ApiProvider value={api}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <App />
-        </QueryContext.Provider>
-      </ApiProvider>
+      <Context.Provider value={{ store, setStore, api }}>
+        <App />
+      </Context.Provider>
     ));
 
     expect(() =>
@@ -115,12 +118,12 @@ describe("App", () => {
       commit: vi.fn(),
     };
 
+    const [store, setStore] = makeStore();
+
     render(() => (
-      <ApiProvider value={api}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <App />
-        </QueryContext.Provider>
-      </ApiProvider>
+      <Context.Provider value={{ store, setStore, api }}>
+        <App />
+      </Context.Provider>
     ));
   });
 });

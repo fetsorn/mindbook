@@ -1,20 +1,17 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import {
-  QueryContext,
-  queryStore,
-  setQueryStore,
-  onRecordEdit,
-} from "@/query/store.js";
+import { Context, makeStore, onRecordEdit } from "@/store/store.js";
 import { ProfileField } from "./profile_field.jsx";
 
-vi.mock("@/query/store.js", async (importOriginal) => {
+const [store, setStore] = makeStore();
+
+vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
     ...mod,
-    onRecordEdit: vi.fn((path, value) => setQueryStore(...path, value)),
+    onRecordEdit: vi.fn((context, path, value) => setStore(...path, value)),
   };
 });
 
@@ -44,17 +41,17 @@ describe("ProfileField", () => {
       ],
     };
 
-    setQueryStore("record", baseRecord);
+    setStore("record", baseRecord);
 
     const { getByRole, getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store, setStore }}>
         <ProfileField
           index={index}
           branch={branch}
           items={items}
           path={["record", "branch"]}
         />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     const input = getByRole("textbox");
@@ -66,9 +63,13 @@ describe("ProfileField", () => {
 
     await userEvent.click(getByText("Yes"));
 
-    expect(onRecordEdit).toHaveBeenCalledWith(["record", "branch"], []);
+    expect(onRecordEdit).toHaveBeenCalledWith(
+      { store, setStore },
+      ["record", "branch"],
+      [],
+    );
 
-    expect(queryStore.record).toEqual({
+    expect(store.record).toEqual({
       _: "mind",
       mind: "mind",
       branch: [],

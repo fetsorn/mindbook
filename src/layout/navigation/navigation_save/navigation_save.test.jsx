@@ -1,15 +1,10 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import {
-  QueryContext,
-  queryStore,
-  setQueryStore,
-  onRecordSave,
-} from "@/query/store.js";
+import { Context, makeStore, onRecordSave } from "@/store/store.js";
 import { NavigationSave } from "./navigation_save.jsx";
 
-vi.mock("@/query/store.js", async (importOriginal) => {
+vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {
@@ -20,20 +15,28 @@ vi.mock("@/query/store.js", async (importOriginal) => {
 
 describe("NavigationSave", () => {
   test("", async () => {
+    const [store, setStore] = makeStore();
+
     const record = { _: "mind", mind: "mind" };
 
-    setQueryStore("record", record);
+    setStore("record", record);
+
+    const api = {};
 
     const { getByText } = render(() => (
-      <QueryContext.Provider value={{ store: queryStore }}>
+      <Context.Provider value={{ store, setStore, api }}>
         <NavigationSave />
-      </QueryContext.Provider>
+      </Context.Provider>
     ));
 
     const save = getByText("save");
 
     await userEvent.click(save);
 
-    expect(onRecordSave).toHaveBeenCalledWith(undefined, record, record);
+    expect(onRecordSave).toHaveBeenCalledWith(
+      { store, setStore, api },
+      record,
+      record,
+    );
   });
 });

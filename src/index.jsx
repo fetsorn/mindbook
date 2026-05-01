@@ -1,12 +1,9 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
-import crud from "@/proxy/index.js";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import { ProxyContext, proxyStore } from "@/proxy/store.js";
-import { ApiProvider } from "./context.js";
-import { polyfill } from "./polyfill.js";
-import App from "./layout/layout.jsx";
-import "./index.css";
+import { Context, makeStore, openBook } from "@/store/store.js";
+import { polyfill } from "@/polyfill.js";
+import App from "@/layout/layout.jsx";
+import "@/index.css";
 
 polyfill();
 
@@ -16,17 +13,24 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-export default async function mindbook(provider) {
-  const api = await crud(provider);
-
+function bindBook(context, element) {
   render(
     () => (
-      <ApiProvider value={api}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <App />
-        </QueryContext.Provider>
-      </ApiProvider>
+      <Context.Provider value={context}>
+        <App />
+      </Context.Provider>
     ),
-    document.getElementById("root"),
+    element,
   );
 }
+
+export function create(api) {
+  const [store, setStore] = makeStore();
+
+  return {
+    open: (content) => openBook({ setStore }, content),
+    bind: (element) => bindBook({ store, setStore, api }, element),
+  };
+}
+
+export default { create };

@@ -1,8 +1,8 @@
 import { useContext } from "solid-js";
-import { QueryContext } from "@/query/store.js";
+import { Context } from "@/store/store.js";
 
 export function BottomSync() {
-  const { store } = useContext(QueryContext);
+  const { store } = useContext(Context);
 
   return (
     <Show when={!store.mergeResult} fallback={<></>}>
