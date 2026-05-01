@@ -2,7 +2,7 @@ import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal, createEffect } from "solid-js";
 import { useApi } from "@/context.js";
 import { QueryContext, onRecordEdit, onRecordWipe } from "@/query/store.js";
-import { onMindOpen } from "@/proxy/store.js";
+import { onAction } from "@/query/store.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
 import { OverviewRecord } from "../index.js";
 import styles from "./overview_item_full.module.css";
@@ -76,7 +76,7 @@ export function OverviewItemFull(props) {
           <Show when={canOpenMind} fallback={<></>}>
             <button
               title="open"
-              onClick={() => onMindOpen(api, props.item.mind)}
+              onClick={() => onAction(api, "open", props.item)}
             >
               open{" "}
             </button>

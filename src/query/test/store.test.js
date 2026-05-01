@@ -6,7 +6,6 @@ import {
   getSpoilerOpen,
   setSpoilerOpen,
   onRecordEdit,
-  appendRecord,
   getSortedRecords,
   getFilterQueries,
   getFilterOptions,
@@ -78,11 +77,8 @@ describe("store", () => {
       setQueryStore("recordSet", ["value1"]);
 
       const api = {
-        crud: {
-          u: vi.fn(() => 1),
-          d: vi.fn(() => 1),
-        },
-        getOrigin: vi.fn(),
+        u: vi.fn(() => 1),
+        d: vi.fn(() => 1),
       };
 
       const recordOld = { _: "mind", mind: "value1" };
@@ -91,9 +87,9 @@ describe("store", () => {
 
       await onRecordSave(api, recordOld, recordNew);
 
-      expect(api.crud.d).toHaveBeenCalledWith("root", recordOld);
+      expect(api.d).toHaveBeenCalledWith("root", recordOld);
 
-      expect(api.crud.u).toHaveBeenCalledWith("root", recordNew);
+      expect(api.u).toHaveBeenCalledWith("root", recordNew);
 
       expect(queryStore.recordSet).toStrictEqual(["value2"]);
     });
@@ -102,25 +98,14 @@ describe("store", () => {
   describe("onRecordWipe", () => {
     test("", async () => {
       const api = {
-        crud: {
-          d: vi.fn(() => 1),
-        },
-        getOrigin: vi.fn(),
+        d: vi.fn(() => 1),
       };
 
       await onRecordWipe(api, {});
 
-      expect(api.crud.d).toHaveBeenCalledWith("root", {});
+      expect(api.d).toHaveBeenCalledWith("root", {});
 
       expect(queryStore.recordSet).toStrictEqual([]);
-    });
-  });
-
-  describe("appendRecord", () => {
-    test("", async () => {
-      appendRecord({});
-
-      expect(queryStore.recordSet).toStrictEqual([{}]);
     });
   });
 
@@ -162,17 +147,14 @@ describe("store", () => {
   describe("onSearch", () => {
     test("searches", async () => {
       const api = {
-        crud: {
-          r: vi.fn(() => ({ done: "ok", value: {} })),
-        },
-        appendRecord: vi.fn(),
+        r: vi.fn(() => ({ done: "ok", value: {} })),
       };
 
       await onSearch(api);
 
       expect(queryStore.recordSet).toStrictEqual([]);
 
-      expect(api.crud.r).toHaveBeenCalled();
+      expect(api.r).toHaveBeenCalled();
     });
   });
 

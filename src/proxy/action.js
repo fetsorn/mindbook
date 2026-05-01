@@ -1,6 +1,7 @@
 import { find, clone } from "@/proxy/open.js";
 import { readSchema } from "@/proxy/record.js";
 import { getDefaultBase, pickDefaultSortBy } from "@/proxy/pure.js";
+import defaultMindRecord from "@/proxy/default_mind_record.json";
 
 /**
  * This
@@ -12,6 +13,8 @@ import { getDefaultBase, pickDefaultSortBy } from "@/proxy/pure.js";
  */
 export async function changeMind(api, pathname, searchString) {
   const mind = pathname === "/" ? "root" : pathname.replace("/", "");
+
+  const template = mind === "root" ? defaultMindRecord : {};
 
   const searchParams = new URLSearchParams(searchString);
 
@@ -51,5 +54,6 @@ export async function changeMind(api, pathname, searchString) {
     mind: mindRecord,
     schema,
     searchParams,
+    template,
   };
 }

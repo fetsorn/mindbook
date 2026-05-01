@@ -3,7 +3,6 @@ import { userEvent } from "@vitest/browser/context";
 import { cleanup, render } from "@solidjs/testing-library";
 import { ApiProvider } from "@/context.js";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
 import {
   NavigationRevert,
   NavigationSave,
@@ -67,11 +66,9 @@ describe("LayoutProfile", () => {
     setQueryStore("record", { _: "mind", mind: "mind" });
 
     render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <LayoutProfile />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <LayoutProfile />
+      </QueryContext.Provider>
     ));
 
     expect(NavigationRevert).toHaveBeenCalledWith({});
@@ -97,11 +94,9 @@ describe("App", () => {
 
     const { getByText } = render(() => (
       <ApiProvider value={api}>
-        <ProxyContext.Provider value={{ store: proxyStore }}>
-          <QueryContext.Provider value={{ store: queryStore }}>
-            <App />
-          </QueryContext.Provider>
-        </ProxyContext.Provider>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <App />
+        </QueryContext.Provider>
       </ApiProvider>
     ));
 
@@ -122,11 +117,9 @@ describe("App", () => {
 
     render(() => (
       <ApiProvider value={api}>
-        <ProxyContext.Provider value={{ store: proxyStore }}>
-          <QueryContext.Provider value={{ store: queryStore }}>
-            <App />
-          </QueryContext.Provider>
-        </ProxyContext.Provider>
+        <QueryContext.Provider value={{ store: queryStore }}>
+          <App />
+        </QueryContext.Provider>
       </ApiProvider>
     ));
   });

@@ -4,6 +4,7 @@ import { createRoot } from "@/proxy/record.js";
 import { readSchema } from "@/proxy/record.js";
 import { resolve } from "@/proxy/record.js";
 import { changeMind } from "@/proxy/action.js";
+import { queryStore, setQueryStore } from "@/query/store.js";
 import { makeURL, getDefaultBase } from "@/proxy/pure.js";
 
 export const ProxyContext = createContext();
@@ -30,24 +31,18 @@ export async function onStartup(api) {
  * @param {String} searchString -
  */
 export async function onMindChange(api, pathname, searchString) {
-  // TODO remove becaure of re-render, or move to where change is triggered
-  //// or maybe kill query stream from proxy somehow?
-  //// or maybe watch that part of context that causes rerender
-  //// and subscribe end of stream to that
-  //// try to stop the stream before changing minds
-  //await queryStore.abortPreviousStream();
+  await queryStore.abortPreviousStream();
 
-  //// TODO somewhere here in case of error doesn't change url to root
-  //setQueryStore(
-  //  produce((state) => {
-  //    // this updates the overview on change of params
-  //    // and removes focus from the filter
-  //    // erase searchParams to re-render the filter index
-  //    state.searchParams = "";
-  //    // erase records to re-render the overview
-  //    state.recordSet = [];
-  //  }),
-  //);
+  setQueryStore(
+    produce((state) => {
+      // this updates the overview on change of params
+      // and removes focus from the filter
+      // erase searchParams to re-render the filter index
+      state.searchParams = "";
+      // erase records to re-render the overview
+      state.recordSet = [];
+    }),
+  );
 
   let result;
 
@@ -61,7 +56,7 @@ export async function onMindChange(api, pathname, searchString) {
     result = await changeMind(api, "/", "_=mind");
   }
 
-  const { mind, schema, searchParams } = result;
+  const { mind, schema, searchParams, template } = result;
 
   try {
     const syncResult = await resolve(api, mind.mind);
@@ -78,11 +73,14 @@ export async function onMindChange(api, pathname, searchString) {
     setProxyStore("syncError", e?.message ?? String(e));
   }
 
-  const url = makeURL(searchParams, mind);
+  const url = makeURL(searchParams, mind.mind);
 
-  window.history.replaceState(null, null, url);
+  window.history.pushState(null, null, url);
 
-  return { mind, schema, searchParams };
+  setQueryStore("mind", mind);
+  setQueryStore("schema", schema);
+  setQueryStore("searchParams", searchParams);
+  setQueryStore("template", template);
 
   // TODO move to onMount if config true
   //// only search by default in the root mind

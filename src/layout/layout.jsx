@@ -3,7 +3,6 @@ import { onMount, useContext } from "solid-js";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { useApi } from "@/context.js";
 import { QueryContext } from "@/query/store.js";
-import { ProxyContext } from "@/proxy/store.js";
 import {
   NavigationRevert,
   NavigationSave,
@@ -62,7 +61,6 @@ export function LayoutOverview() {
 
 export function LayoutProfile() {
   const { store: queryStore } = useContext(QueryContext);
-  const { store: proxyStore } = useContext(ProxyContext);
 
   return (
     <Show when={queryStore.record !== undefined} fallback={<></>}>
@@ -96,6 +94,8 @@ export function App() {
   const api = useApi();
 
   const { store: queryStore } = useContext(QueryContext);
+
+  // TODO onSearch onMount if config true
 
   return (
     <>

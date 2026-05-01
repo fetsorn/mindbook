@@ -1,14 +1,31 @@
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import schemaRoot from "@/proxy/default_root_schema.json";
 import { MenuBaseQuery } from "./menu_base_query.jsx";
 
 describe("MenuBaseQuery", () => {
+  beforeEach(() => {
+    const schemaRoot = {
+      mind: {
+        trunks: [],
+        leaves: ["name", "branch"],
+      },
+      name: {
+        trunks: ["mind"],
+        leaves: [],
+      },
+      branch: {
+        trunks: ["mind"],
+        leaves: [],
+      },
+    };
+
+    setQueryStore("schema", schemaRoot);
+  });
+
   test("", async () => {
     setQueryStore("searchParams", "_=mind");
-    setQueryStore("schema", schemaRoot);
 
     const { getByRole, getAllByRole } = render(() => (
       <QueryContext.Provider value={{ store: queryStore }}>
@@ -18,7 +35,7 @@ describe("MenuBaseQuery", () => {
 
     expect(getByRole("option", { name: "mind" }).selected).toBe(true);
 
-    expect(getAllByRole("option").length).toBe(14);
+    expect(getAllByRole("option").length).toBe(3);
 
     await userEvent.selectOptions(
       getByRole("combobox"),

@@ -1,14 +1,34 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import { ProxyContext, proxyStore } from "@/proxy/store.js";
 import { OverviewField } from "./overview_field.jsx";
-import schemaRoot from "@/proxy/default_root_schema.json";
 
 describe("OverviewField", () => {
-  test("no items", async () => {
+  beforeEach(() => {
+    const schemaRoot = {
+      mind: {
+        trunks: [],
+        leaves: ["name", "branch"],
+      },
+      name: {
+        trunks: ["mind"],
+        leaves: [],
+      },
+      branch: {
+        trunks: ["mind"],
+        leaves: ["task"],
+      },
+      task: {
+        trunks: ["branch"],
+        leaves: [],
+      },
+    };
+
     setQueryStore("schema", schemaRoot);
+  });
+
+  test("no items", async () => {
     const index = "";
 
     const branch = "branch";
@@ -18,11 +38,9 @@ describe("OverviewField", () => {
     const items = [];
 
     const { getByText } = render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <OverviewField index={index} branch={branch} items={items} />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <OverviewField index={index} branch={branch} items={items} />
+      </QueryContext.Provider>
     ));
 
     expect(() => getByText("field no items")).toThrowError();
@@ -40,11 +58,9 @@ describe("OverviewField", () => {
     const baseRecord = { _: "mind", mind: "mind", branch: items };
 
     const { getByText } = render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <OverviewField index={index} branch={branch} items={items} />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <OverviewField index={index} branch={branch} items={items} />
+      </QueryContext.Provider>
     ));
 
     expect(() => getByText("a")).not.toThrowError();

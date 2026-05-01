@@ -57,11 +57,15 @@ describe("updateRecord", () => {
 
     saveMindRecord.mockReset();
 
-    await updateRecord({}, "root", "mind", {});
+    const api = {};
 
-    expect(updateMind).toHaveBeenCalledWith({}, {});
+    const record = { _: "mind" };
 
-    expect(saveMindRecord).toHaveBeenCalledWith({}, {});
+    await updateRecord(api, "root", record);
+
+    expect(updateMind).toHaveBeenCalledWith(api, record);
+
+    expect(saveMindRecord).toHaveBeenCalledWith(api, record);
   });
 
   test("id", async () => {
@@ -69,9 +73,11 @@ describe("updateRecord", () => {
 
     saveMindRecord.mockReset();
 
-    await updateRecord({}, stub.id, stub.trunk, {});
+    const api = {};
 
-    expect(updateEntry).toHaveBeenCalledWith({}, stub.id, {});
+    await updateRecord(api, stub.id, {});
+
+    expect(updateEntry).toHaveBeenCalledWith(api, stub.id, {});
 
     expect(saveMindRecord).not.toHaveBeenCalled();
   });

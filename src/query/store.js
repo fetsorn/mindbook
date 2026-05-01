@@ -24,7 +24,6 @@ export const [queryStore, setQueryStore] = createStore({
   spoilerMap: {},
   loading: false,
   searchBar: "", // remembers the last state of search bar
-  streamCounter: 0,
 });
 
 /**
@@ -61,16 +60,6 @@ export function onRecordEdit(path, value) {
 
 export function getBase() {
   return new URLSearchParams(queryStore.searchParams).get("_");
-}
-
-/**
- * This
- * @name appendRecord
- * @export function
- * @param {object} record -
- */
-export function appendRecord(record) {
-  setQueryStore("recordSet", queryStore.recordSet.length, record);
 }
 
 /**
@@ -306,7 +295,7 @@ export async function getRecord(api, record) {
   const grain = { _: base, [base]: record };
 
   if (queryStore.recordMap[record] === undefined) {
-    const recordNew = await api.crud.describe(queryStore.mind.mind, grain);
+    const recordNew = await api.describe(queryStore.mind.mind, grain);
 
     setQueryStore("recordMap", { [record]: recordNew });
   }
@@ -328,9 +317,9 @@ export async function onRecordSave(api, recordOld, recordNew) {
 
   const base = new URLSearchParams(queryStore.searchParams).get("_");
 
-  await api.crud.d(queryStore.mind.mind, recordOld);
+  await api.d(queryStore.mind.mind, recordOld);
 
-  await api.crud.u(queryStore.mind.mind, recordNew);
+  await api.u(queryStore.mind.mind, recordNew);
 
   const keyOld = recordOld[base];
 
@@ -364,7 +353,7 @@ export async function onRecordSave(api, recordOld, recordNew) {
 export async function onRecordWipe(api, record) {
   setQueryStore("loading", true);
 
-  await api.crud.d(queryStore.mind.mind, record);
+  await api.d(queryStore.mind.mind, record);
 
   const base = new URLSearchParams(queryStore.searchParams).get("_");
 
@@ -390,22 +379,8 @@ export async function onRecordWipe(api, record) {
 export async function onSearch(api) {
   setQueryStore("loading", true);
 
-  setQueryStore("streamCounter", queryStore.streamCounter + 1);
-
-  // TODO: reset loading on the end of the stream
   try {
     const searchParams = new URLSearchParams(queryStore.searchParams);
-
-    // prepare a controller to stop the new stream
-    let isAborted = false;
-
-    const abortController = new AbortController();
-
-    function abortPreviousStream() {
-      isAborted = true;
-
-      abortController.abort();
-    }
 
     // remove all evenor-specific searchParams before passing to csvs
     const searchParamsWithoutCustom = new URLSearchParams(
@@ -419,22 +394,18 @@ export async function onSearch(api) {
       searchParamsWithoutCustom,
     );
 
-    const streamid = queryStore.streamCounter.toString();
+    const fromStrm = await api.r(queryStore.mind.mind, query);
 
-    // construct a new readable stream which calls api.selectStream many times
-    const fromStrm = new ReadableStream({
-      async pull(controller) {
-        const { done, value } = await api.crud.r(queryStore.mind.mind, query);
+    // prepare a controller to stop the new stream
+    let isAborted = false;
 
-        if (done) {
-          controller.close();
+    const abortController = new AbortController();
 
-          return;
-        }
+    function abortPreviousStream() {
+      isAborted = true;
 
-        controller.enqueue(value);
-      },
-    });
+      abortController.abort();
+    }
 
     // create a stream that appends to records
     const toStrm = new WritableStream({
@@ -445,19 +416,14 @@ export async function onSearch(api) {
 
         const key = chunk[chunk._];
 
-        appendRecord(key);
+        // append record
+        setQueryStore("recordSet", queryStore.recordSet.length, key);
       },
 
       abort() {
         // stream interrupted
-        // no need to await on the promise, closing api stream for cleanup
-        //closeHandler();
       },
     });
-
-    async function startStream() {
-      return fromStrm.pipeTo(toStrm, { signal: abortController.signal });
-    }
 
     // stop previous stream
     await queryStore.abortPreviousStream();
@@ -474,7 +440,7 @@ export async function onSearch(api) {
     );
 
     // start appending records
-    await startStream();
+    await fromStrm.pipeTo(toStrm, { signal: abortController.signal });
 
     // TODO does it stop main?
     for (const record of queryStore.recordSet) {
@@ -577,4 +543,14 @@ export async function warp(branch, value, cognate) {
   await onSearch(api, "__", cognate);
 
   await onSearch(api, queryStore.schema[cognate].trunks[0], value);
+}
+
+export async function onAction(api, action, record) {
+  const actionRecord = {
+    _: "action",
+    action,
+    record,
+  };
+
+  api.c(queryStore.mind.mind, actionRecord);
 }

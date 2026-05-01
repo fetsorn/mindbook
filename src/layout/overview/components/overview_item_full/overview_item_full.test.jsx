@@ -2,13 +2,23 @@ import { describe, test, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import { ProxyContext, proxyStore } from "@/proxy/store.js";
-import schemaRoot from "@/proxy/default_root_schema.json";
 import { OverviewItemFull } from "./overview_item_full.jsx";
 
 describe("OverviewItemFull", () => {
   test("", async () => {
+    const schemaRoot = {
+      mind: {
+        trunks: [],
+        leaves: ["name"],
+      },
+      name: {
+        trunks: ["mind"],
+        leaves: [],
+      },
+    };
+
     setQueryStore("schema", schemaRoot);
+
     const index = "";
 
     const value = "a";
@@ -21,11 +31,9 @@ describe("OverviewItemFull", () => {
     const record = baseRecord;
 
     const { getByText } = render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <OverviewItemFull item={record} index={index} />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <OverviewItemFull item={record} index={index} />
+      </QueryContext.Provider>
     ));
 
     expect(() => getByText("mind")).not.toThrowError();

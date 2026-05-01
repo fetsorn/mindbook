@@ -2,7 +2,6 @@ import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
 import { Profile } from "./profile.jsx";
 import { ProfileRecord } from "./components/index.js";
 
@@ -20,11 +19,9 @@ describe("Profile", () => {
     setQueryStore("record", baseRecord);
 
     render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <Profile />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <Profile />
+      </QueryContext.Provider>
     ));
 
     expect(ProfileRecord).toHaveBeenCalledWith({

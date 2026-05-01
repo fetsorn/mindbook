@@ -13,10 +13,10 @@ import {
  * @param {String} base -
  * @param {object} recordNew -
  */
-export async function updateRecord(api, mind, base, recordNew) {
+export async function updateRecord(api, mind, recordNew) {
   const isHomeScreen = mind === "root";
 
-  const isMindBranch = base === "mind";
+  const isMindBranch = recordNew._ === "mind";
 
   const canSaveMind = isHomeScreen && isMindBranch;
 

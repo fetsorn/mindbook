@@ -7,8 +7,6 @@ import {
   setQueryStore,
   onRecordEdit,
 } from "@/query/store.js";
-import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
-import schemaRoot from "@/proxy/default_root_schema.json";
 import { ProfileRecord } from "./profile_record.jsx";
 
 vi.mock("@/query/store.js", async (importOriginal) => {
@@ -21,8 +19,30 @@ vi.mock("@/query/store.js", async (importOriginal) => {
 });
 
 describe("ProfileRecord", () => {
-  test("adds branch", async () => {
+  beforeEach(() => {
+    const schemaRoot = {
+      mind: {
+        trunks: [],
+        leaves: ["name", "branch"],
+      },
+      name: {
+        trunks: ["mind"],
+        leaves: [],
+      },
+      branch: {
+        trunks: ["mind"],
+        leaves: ["description_en"],
+      },
+      description_en: {
+        trunks: ["branch"],
+        leaves: [],
+      },
+    };
+
     setQueryStore("schema", schemaRoot);
+  });
+
+  test("adds branch", async () => {
     const index = "index";
 
     const branch = "branch";
@@ -34,11 +54,9 @@ describe("ProfileRecord", () => {
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <ProfileRecord index={index} record={baseRecord} path={["record"]} />
+      </QueryContext.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -75,7 +93,6 @@ describe("ProfileRecord", () => {
   });
 
   test("adds another branch", async () => {
-    setQueryStore("schema", schemaRoot);
     const index = "index";
 
     const branch = "branch";
@@ -96,11 +113,9 @@ describe("ProfileRecord", () => {
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <ProfileRecord index={index} record={baseRecord} path={["record"]} />
+      </QueryContext.Provider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -131,7 +146,6 @@ describe("ProfileRecord", () => {
   });
 
   test("adds description", async () => {
-    setQueryStore("schema", schemaRoot);
     const index = "index";
 
     const branch = "branch";
@@ -152,15 +166,13 @@ describe("ProfileRecord", () => {
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <ProxyContext.Provider value={{ store: proxyStore }}>
-        <QueryContext.Provider value={{ store: queryStore }}>
-          <ProfileRecord
-            index={index}
-            record={item}
-            path={["record", "branch", 0]}
-          />
-        </QueryContext.Provider>
-      </ProxyContext.Provider>
+      <QueryContext.Provider value={{ store: queryStore }}>
+        <ProfileRecord
+          index={index}
+          record={item}
+          path={["record", "branch", 0]}
+        />
+      </QueryContext.Provider>
     ));
 
     await userEvent.click(getByText("with..."));

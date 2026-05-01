@@ -1,44 +1,50 @@
+import history from "history/hash";
 import { deleteRecord, resolve } from "@/proxy/record.js";
+import { produce } from "solid-js/store";
+import { buildRecord, updateRecord } from "@/proxy/impure.js";
+import {
+  setProxyStore,
+  onMindChange,
+  onStartup,
+  onMindOpen,
+} from "@/proxy/store.js";
 
-import { buildRecord } from "@/proxy/impure.js";
-import { setProxyStore, onMindChange } from "@/proxy/store.js";
-
-// next is update, then select
-
-async function c(api) {}
-
-async function r(api, mind, record) {
-  try {
-    // if search bar can be parsed as url, clone
-    const url = new URL(search);
-
-    if (url.protocol === "http:" || url.protocol === "https:") {
-      const searchString = url.hash.replace("#", "");
-
-      //// reset searchbar to avoid a loop
-      //// after onMindChange calls onSearch
-      //setQueryStore(
-      //  produce((state) => {
-      //    state.searchBar = "";
-      //  }),
-      //);
-
-      await onMindChange(api, "/", search);
-
-      return undefined;
-    }
-
-    const url = makeURL(new URLSearchParams(search), queryStore.mind.mind);
-
-    window.history.replaceState(null, null, url);
-  } catch (e) {
-    console.log(e);
-    // do nothing
+// this posts a record somewhere for special actions
+async function c(api, mind, record) {
+  if (record.action === "open") {
+    await onMindOpen(api, record.record.mind);
   }
 }
 
+async function r(api, mind, record) {
+  return api.selectStream(mind, record);
+
+  // repair url clone
+  //try {
+  //  // if search bar can be parsed as url, clone
+  //  const url = new URL(search);
+  //  if (url.protocol === "http:" || url.protocol === "https:") {
+  //    const searchString = url.hash.replace("#", "");
+  //    //// reset searchbar to avoid a loop
+  //    //// after onMindChange calls onSearch
+  //    //setQueryStore(
+  //    //  produce((state) => {
+  //    //    state.searchBar = "";
+  //    //  }),
+  //    //);
+  //    await onMindChange(api, "/", search);
+  //    return undefined;
+  //  }
+  //  const url = makeURL(new URLSearchParams(search), mind);
+  //  window.history.replaceState(null, null, url);
+  //} catch (e) {
+  //  console.log(e);
+  //  // do nothing
+  //}
+}
+
 async function u(api, mind, record) {
-  await updateRecord(api, mind, base, recordNew);
+  await updateRecord(api, mind, record);
 
   try {
     const syncResult = await resolve(api, mind);
@@ -76,15 +82,31 @@ async function d(api, mind, record) {
 }
 
 async function describe(api, mind, record) {
-  return buildRecord(api, queryStore.mind.mind, grain);
+  return buildRecord(api, mind, record);
 }
 
 // currying for convenience
-export default (provider) => {
+export default async (provider) => {
+  await onStartup(provider);
+
+  await onMindChange(
+    provider,
+    history.location.pathname,
+    history.location.search,
+  );
+
+  window.addEventListener("popstate", async () => {
+    await onMindChange(
+      provider,
+      history.location.pathname,
+      history.location.search,
+    );
+  });
+
   return {
-    c: async () => c(provider),
-    r: async () => r(provider),
-    u: async () => u(provider),
+    c: async (mind, record) => c(provider, mind, record),
+    r: async (mind, record) => r(provider, mind, record),
+    u: async (mind, record) => u(provider, mind, record),
     d: async (mind, record) => d(provider, mind, record),
     describe: async (mind, record) => describe(provider, mind, record),
   };

@@ -8,7 +8,6 @@ import {
   onSearchBar,
 } from "@/query/store.js";
 import { OverviewFilter } from "./overview_filter.jsx";
-import schemaRoot from "@/proxy/default_root_schema.json";
 
 vi.mock("@/query/store.js", async (importOriginal) => {
   const mod = await importOriginal();
@@ -20,8 +19,22 @@ vi.mock("@/query/store.js", async (importOriginal) => {
 });
 
 describe("OverviewFilter", () => {
-  test("", async () => {
+  beforeEach(() => {
+    const schemaRoot = {
+      mind: {
+        trunks: [],
+        leaves: ["name"],
+      },
+      name: {
+        trunks: ["mind"],
+        leaves: [],
+      },
+    };
+
     setQueryStore("schema", schemaRoot);
+  });
+
+  test("", async () => {
     const { getByText, getByRole } = render(() => (
       <QueryContext.Provider value={{ store: queryStore }}>
         <OverviewFilter />

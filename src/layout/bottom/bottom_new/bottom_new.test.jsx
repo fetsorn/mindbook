@@ -1,8 +1,7 @@
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import schemaRoot from "@/proxy/default_root_schema.json";
 import { onRecordCreate } from "@/query/store.js";
 import { BottomNew } from "./bottom_new.jsx";
 
@@ -16,9 +15,22 @@ vi.mock("@/query/store.js", async (importOriginal) => {
 });
 
 describe("BottomNew", () => {
-  test("", async () => {
-    setQueryStore("schema", schemaRoot);
+  beforeEach(() => {
+    const schemaRoot = {
+      mind: {
+        trunks: [],
+        leaves: ["name"],
+      },
+      name: {
+        trunks: ["mind"],
+        leaves: [],
+      },
+    };
 
+    setQueryStore("schema", schemaRoot);
+  });
+
+  test("", async () => {
     const { getByText } = render(() => (
       <QueryContext.Provider value={{ store: queryStore }}>
         <BottomNew />
