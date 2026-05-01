@@ -1,7 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { cleanup, render } from "@solidjs/testing-library";
-import { onMindChange } from "@/store/store.js";
 import { ApiProvider } from "@/context.js";
 import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
 import { ProxyContext, proxyStore, setProxyStore } from "@/proxy/store.js";
@@ -19,15 +18,6 @@ import {
 import { Overview } from "./overview/overview.jsx";
 import { Profile } from "./profile/profile.jsx";
 import { App, LayoutOverview, LayoutProfile } from "./layout.jsx";
-
-vi.mock("@/store/store.js", async (importOriginal) => {
-  const mod = await importOriginal();
-
-  return {
-    ...mod,
-    onMindChange: vi.fn(),
-  };
-});
 
 vi.mock("./navigation/index.js", () => ({
   NavigationRevert: vi.fn(),
@@ -129,8 +119,6 @@ describe("App", () => {
       updateRecord: vi.fn(),
       commit: vi.fn(),
     };
-
-    onMindChange.mockReset();
 
     render(() => (
       <ApiProvider value={api}>

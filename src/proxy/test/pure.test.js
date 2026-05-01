@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   enrichBranchRecords,
   extractSchemaRecords,
+  queryToSearchParams,
   schemaToBranchRecords,
   makeURL,
   pickDefaultSortBy,
@@ -81,5 +82,43 @@ describe("recordsToSchema", () => {
     expect(
       recordsToSchema(testCase.schemaRecord, testCase.metaRecords),
     ).toStrictEqual(testCase.schema);
+  });
+});
+
+describe("queryToSearchParams", () => {
+  test("throws when no base", () => {
+    expect(() => queryToSearchParams(stub.queryObject)).toThrowError();
+  });
+
+  test("query base value", () => {
+    const testCase = stub.cases.baseValue;
+
+    expect(queryToSearchParams(testCase.queryObject).toString()).toStrictEqual(
+      testCase.queryString,
+    );
+  });
+
+  test("query leaf value", () => {
+    const testCase = stub.cases.leafValue;
+
+    expect(queryToSearchParams(testCase.queryObject).toString()).toStrictEqual(
+      testCase.queryString,
+    );
+  });
+
+  test("query nested value", () => {
+    const testCase = stub.cases.nestedValue;
+
+    expect(queryToSearchParams(testCase.queryObject).toString()).toStrictEqual(
+      testCase.queryString,
+    );
+  });
+
+  test("query twig out of order", () => {
+    const testCase = stub.cases.twigOutOfOrder;
+
+    expect(
+      queryToSearchParams(testCase.queryObject).toString(),
+    ).not.toStrictEqual(testCase.queryString);
   });
 });

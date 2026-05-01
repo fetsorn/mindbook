@@ -1,35 +1,6 @@
 import { sow, mow, sortNestingDescending } from "@fetsorn/csvs-js";
 
 /**
- * This returns a query string from a csvs query
- * @name queryToSearchParams
- * @export function
- * @param {Object} query - a csvs query object
- * @returns {URLSearchParams} urlSearchParams - search params from a query string.
- */
-export function queryToSearchParams(query) {
-  if (!query.hasOwnProperty("_")) throw Error("no base in query");
-
-  const searchParams = Object.entries(query).reduce(
-    (withField, [key, value]) => {
-      const params =
-        typeof value === "object"
-          ? queryToSearchParams(value)
-          : new URLSearchParams(`${key}=${value}`);
-
-      return new URLSearchParams([...withField, ...params]);
-    },
-    new URLSearchParams(),
-  );
-
-  searchParams.set("_", query._);
-
-  searchParams.sort();
-
-  return searchParams;
-}
-
-/**
  * This makes sure record has trunk and all trunks of trunk until root
  * @name ensureTrunk
  * @function

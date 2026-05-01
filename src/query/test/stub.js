@@ -4,6 +4,17 @@ export const schema = {
   d: { trunks: ["b"], leaves: [] },
 };
 
+export const schemaRoot = {
+  mind: {
+    trunks: [],
+    leaves: ["name"],
+  },
+  name: {
+    trunks: ["mind"],
+    leaves: [],
+  },
+};
+
 export const root = "a";
 
 export const trunk = "b";
@@ -149,6 +160,7 @@ export const cases = {
 
 export default {
   schema,
+  schemaRoot,
   root,
   trunk,
   twig,

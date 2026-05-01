@@ -2,9 +2,8 @@ import history from "history/hash";
 import { onMount, useContext } from "solid-js";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { useApi } from "@/context.js";
-import { onMindChange } from "@/store/store.js";
 import { QueryContext } from "@/query/store.js";
-import { ProxyContext, onStartup } from "@/proxy/store.js";
+import { ProxyContext } from "@/proxy/store.js";
 import {
   NavigationRevert,
   NavigationSave,

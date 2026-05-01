@@ -1,7 +1,6 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal, createEffect } from "solid-js";
-import { QueryContext } from "@/query/store.js";
-import { getRecord } from "@/store/store.js";
+import { QueryContext, getRecord } from "@/query/store.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
 import { OverviewValue } from "../index.js";
 import styles from "./overview_item_light.module.css";

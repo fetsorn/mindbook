@@ -1,11 +1,15 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { QueryContext, queryStore, setQueryStore } from "@/query/store.js";
-import { onRecordSave } from "@/store/store.js";
+import {
+  QueryContext,
+  queryStore,
+  setQueryStore,
+  onRecordSave,
+} from "@/query/store.js";
 import { NavigationSave } from "./navigation_save.jsx";
 
-vi.mock("@/store/store.js", async (importOriginal) => {
+vi.mock("@/query/store.js", async (importOriginal) => {
   const mod = await importOriginal();
 
   return {

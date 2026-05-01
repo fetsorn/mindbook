@@ -1,5 +1,5 @@
-import { describe, expect, test, afterEach, vi } from "vitest";
-import { onRecordSave, onRecordWipe, onSearch } from "@/store/store.js";
+import { describe, expect, test, beforeEach, vi } from "vitest";
+import { onRecordSave, onRecordWipe, onSearch } from "@/query/store.js";
 import {
   onRecordCreate,
   updateSearchParams,
@@ -12,21 +12,9 @@ import {
   getFilterOptions,
 } from "@/query/store.js";
 import { queryStore, setQueryStore } from "@/query/store.js";
-import { proxyStore, setProxyStore } from "@/proxy/store.js";
-import { makeURL } from "@/proxy/pure.js";
 import { changeSearchParams } from "@/query/pure.js";
-import { selectStream } from "@/store/impure.js";
 import { createRecord } from "@/query/impure.js";
-import schemaRoot from "@/proxy/default_root_schema.json";
-
-vi.mock("@/store/impure.js", async (importOriginal) => {
-  const mod = await importOriginal();
-
-  return {
-    ...mod,
-    selectStream: vi.fn(),
-  };
-});
+import stub from "./stub.js";
 
 vi.mock("@/query/impure.js", async (importOriginal) => {
   const mod = await importOriginal();
@@ -34,15 +22,6 @@ vi.mock("@/query/impure.js", async (importOriginal) => {
   return {
     ...mod,
     createRecord: vi.fn(),
-  };
-});
-
-vi.mock("@/proxy/pure.js", async (importOriginal) => {
-  const mod = await importOriginal();
-
-  return {
-    ...mod,
-    makeURL: vi.fn(),
   };
 });
 
@@ -58,18 +37,15 @@ vi.mock("@/query/pure.js", async (importOriginal) => {
 describe("store", () => {
   // restore after, not before
   // to keep initial state
-  afterEach(() => {
+  beforeEach(() => {
     setQueryStore(undefined);
-    setProxyStore(undefined);
 
     changeSearchParams.mockReset();
-    makeURL.mockReset();
     createRecord.mockReset();
-    selectStream.mockReset();
 
     setQueryStore({
       searchParams: new URLSearchParams("_=mind"),
-      schema: schemaRoot,
+      schema: stub.schemaRoot,
       record: undefined,
       recordSet: [],
       mind: { _: "mind", mind: "root", name: "minds" },
@@ -158,8 +134,6 @@ describe("store", () => {
 
       window.history.replaceState = vi.fn();
 
-      makeURL.mockImplementation(() => 2);
-
       await updateSearchParams(field, value);
 
       expect(queryStore.searchParams.toString()).toStrictEqual("1");
@@ -177,8 +151,6 @@ describe("store", () => {
 
       window.history.replaceState = vi.fn();
 
-      makeURL.mockImplementation(() => 2);
-
       await updateSearchParams(field, value);
 
       expect(queryStore.searchParams).toBe("1");
@@ -189,14 +161,10 @@ describe("store", () => {
 
   describe("onSearch", () => {
     test("searches", async () => {
-      const startStream = vi.fn();
-
-      selectStream.mockImplementation(() => ({
-        abortPreviousStream: () => 3,
-        startStream,
-      }));
-
       const api = {
+        crud: {
+          r: vi.fn(() => ({ done: "ok", value: {} })),
+        },
         appendRecord: vi.fn(),
       };
 
@@ -204,11 +172,7 @@ describe("store", () => {
 
       expect(queryStore.recordSet).toStrictEqual([]);
 
-      expect(startStream).toHaveBeenCalled();
-
-      expect(selectStream).toHaveBeenCalled();
-
-      expect(queryStore.abortPreviousStream()()).toBe(3);
+      expect(api.crud.r).toHaveBeenCalled();
     });
   });
 
@@ -274,16 +238,7 @@ describe("store", () => {
 
   describe("getFilterOptions", () => {
     test("", async () => {
-      expect(getFilterOptions()).toStrictEqual([
-        "name",
-        "category",
-        "branch",
-        "local_tag",
-        "origin_url",
-        "sync_tag",
-        "mind",
-        "__",
-      ]);
+      expect(getFilterOptions()).toStrictEqual(["name", "mind", "__"]);
     });
   });
 });

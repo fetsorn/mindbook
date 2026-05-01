@@ -1,8 +1,7 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal, createEffect } from "solid-js";
 import { useApi } from "@/context.js";
-import { QueryContext, onRecordEdit } from "@/query/store.js";
-import { onRecordWipe } from "@/store/store.js";
+import { QueryContext, onRecordEdit, onRecordWipe } from "@/query/store.js";
 import { onMindOpen } from "@/proxy/store.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
 import { OverviewRecord } from "../index.js";

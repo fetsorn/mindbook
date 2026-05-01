@@ -6,8 +6,8 @@ import {
   QueryContext,
   getSearchBar,
   onSearchBar,
+  onSearch,
 } from "@/query/store.js";
-import { onSearch } from "@/store/store.js";
 import { Spoiler } from "@/layout/components/index.js";
 import styles from "./overview_filter.module.css";
 

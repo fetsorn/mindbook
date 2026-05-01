@@ -1,8 +1,13 @@
+/* try to keep store interactions only in this file */
 import parser from "search-query-parser";
 import diff from "microdiff";
 import { createContext } from "solid-js";
 import { createStore, produce } from "solid-js/store";
-import { sortCallback, changeSearchParams } from "@/query/pure.js";
+import {
+  sortCallback,
+  changeSearchParams,
+  searchParamsToQuery,
+} from "@/query/pure.js";
 import { createRecord } from "@/query/impure.js";
 
 export const QueryContext = createContext();
@@ -293,4 +298,283 @@ export async function onCancel() {
   await queryStore.abortPreviousStream();
 
   setQueryStore("loading", false);
+}
+
+export async function getRecord(api, record) {
+  const base = getBase();
+
+  const grain = { _: base, [base]: record };
+
+  if (queryStore.recordMap[record] === undefined) {
+    const recordNew = await api.crud.describe(queryStore.mind.mind, grain);
+
+    setQueryStore("recordMap", { [record]: recordNew });
+  }
+
+  const recordNew = queryStore.recordMap[record];
+
+  return recordNew;
+}
+
+/**
+ * This
+ * @name onRecordSave
+ * @export function
+ * @param {object} recordOld -
+ * @param {object} recordNew -
+ */
+export async function onRecordSave(api, recordOld, recordNew) {
+  setQueryStore("loading", true);
+
+  const base = new URLSearchParams(queryStore.searchParams).get("_");
+
+  await api.crud.d(queryStore.mind.mind, recordOld);
+
+  await api.crud.u(queryStore.mind.mind, recordNew);
+
+  const keyOld = recordOld[base];
+
+  const keyNew = recordNew[base];
+
+  const records = queryStore.recordSet
+    .filter((r) => r !== keyOld)
+    .concat([keyNew]);
+
+  // force reload
+  setQueryStore("recordSet", []);
+
+  setQueryStore("recordMap", { [keyNew]: recordNew });
+
+  setQueryStore(
+    produce((state) => {
+      state.recordSet = records;
+      state.record = undefined;
+    }),
+  );
+
+  setQueryStore("loading", false);
+}
+
+/**
+ * This
+ * @name onRecordWipe
+ * @export function
+ * @param {object} record -
+ */
+export async function onRecordWipe(api, record) {
+  setQueryStore("loading", true);
+
+  await api.crud.d(queryStore.mind.mind, record);
+
+  const base = new URLSearchParams(queryStore.searchParams).get("_");
+
+  const key = record[base];
+
+  const records = queryStore.recordSet.filter((r) => r !== key);
+
+  setQueryStore(
+    produce((state) => {
+      state.recordSet = records;
+      state.recordMap[record] = undefined;
+    }),
+  );
+
+  setQueryStore("loading", false);
+}
+
+/**
+ * This
+ * @name onSearch
+ * @export function
+ */
+export async function onSearch(api) {
+  setQueryStore("loading", true);
+
+  setQueryStore("streamCounter", queryStore.streamCounter + 1);
+
+  // TODO: reset loading on the end of the stream
+  try {
+    const searchParams = new URLSearchParams(queryStore.searchParams);
+
+    // prepare a controller to stop the new stream
+    let isAborted = false;
+
+    const abortController = new AbortController();
+
+    function abortPreviousStream() {
+      isAborted = true;
+
+      abortController.abort();
+    }
+
+    // remove all evenor-specific searchParams before passing to csvs
+    const searchParamsWithoutCustom = new URLSearchParams(
+      Array.from(searchParams.entries()).filter(
+        ([key]) => !key.startsWith("."),
+      ),
+    );
+
+    const query = searchParamsToQuery(
+      queryStore.schema,
+      searchParamsWithoutCustom,
+    );
+
+    const streamid = queryStore.streamCounter.toString();
+
+    // construct a new readable stream which calls api.selectStream many times
+    const fromStrm = new ReadableStream({
+      async pull(controller) {
+        const { done, value } = await api.crud.r(queryStore.mind.mind, query);
+
+        if (done) {
+          controller.close();
+
+          return;
+        }
+
+        controller.enqueue(value);
+      },
+    });
+
+    // create a stream that appends to records
+    const toStrm = new WritableStream({
+      async write(chunk) {
+        if (isAborted) {
+          return;
+        }
+
+        const key = chunk[chunk._];
+
+        appendRecord(key);
+      },
+
+      abort() {
+        // stream interrupted
+        // no need to await on the promise, closing api stream for cleanup
+        //closeHandler();
+      },
+    });
+
+    async function startStream() {
+      return fromStrm.pipeTo(toStrm, { signal: abortController.signal });
+    }
+
+    // stop previous stream
+    await queryStore.abortPreviousStream();
+
+    setQueryStore(
+      produce((state) => {
+        // solid store tries to call the function, so pass a factory here
+        state.abortPreviousStream = () => () => {
+          return abortPreviousStream();
+        };
+        // erase existing records
+        state.recordSet = [];
+      }),
+    );
+
+    // start appending records
+    await startStream();
+
+    // TODO does it stop main?
+    for (const record of queryStore.recordSet) {
+      await getRecord(api, record);
+    }
+  } catch (e) {
+    console.error(e);
+
+    setQueryStore(
+      produce((state) => {
+        // erase existing records
+        state.recordSet = [];
+      }),
+    );
+  }
+
+  const scroll = new URLSearchParams(queryStore.searchParams).get(".scroll");
+
+  if (scroll !== null) {
+    // SEC-16: null-check before calling scrollIntoView
+    const element = document.getElementById(scroll);
+
+    if (element) {
+      element.scrollIntoView();
+    }
+  }
+
+  setQueryStore("loading", false);
+}
+
+/**
+ * This lateral jumps
+ * @name leapfrog
+ * @export function
+ * @param {String} branch -
+ * @param {String} value -
+ * @param {String} cognate -
+ */
+export async function leapfrog(branch, value, cognate) {
+  await onSearch(api, undefined, undefined);
+
+  await onSearch(
+    api,
+    "_",
+    new URLSearchParams(queryStore.searchParams).get("_"),
+  );
+
+  await onSearch(api, "__", cognate);
+
+  await onSearch(api, branch, value);
+}
+
+/**
+ * This deep jumps
+ * @name backflip
+ * @export function
+ * @param {String} branch -
+ * @param {String} value -
+ * @param {String} cognate -
+ */
+export async function backflip(branch, value, cognate) {
+  await onSearch(api, undefined, undefined);
+
+  await onSearch(api, "_", cognate);
+
+  await onSearch(api, "__", branch);
+
+  await onSearch(api, cognate, value);
+}
+
+/**
+ * This
+ * @name sidestep
+ * @export function
+ * @param {String} branch -
+ * @param {String} value -
+ * @param {String} cognate -
+ */
+export async function sidestep(branch, value, cognate) {
+  await onSearch(api, undefined, undefined);
+
+  await onSearch(api, "_", cognate);
+
+  await onSearch(api, cognate, value);
+}
+
+/**
+ * This side jumps
+ * @name warp
+ * @export function
+ * @param {String} branch -
+ * @param {String} value -
+ * @param {String} cognate -
+ */
+export async function warp(branch, value, cognate) {
+  await onSearch(api, undefined, undefined);
+
+  await onSearch(api, "_", queryStore.schema[cognate].trunks[0]);
+
+  await onSearch(api, "__", cognate);
+
+  await onSearch(api, queryStore.schema[cognate].trunks[0], value);
 }
