@@ -17,7 +17,7 @@ describe("createRecord", () => {
   test("root", async () => {
     const template = { location: "town" };
 
-    const record = await createRecord("root", "mind", template);
+    const record = await createRecord("mind", template);
 
     expect(record).toStrictEqual({
       _: "mind",
@@ -27,7 +27,7 @@ describe("createRecord", () => {
   });
 
   test("id", async () => {
-    const record = await createRecord(stub.id, stub.trunk, {});
+    const record = await createRecord(stub.trunk, {});
 
     expect(record).toStrictEqual({ _: stub.trunk, [stub.trunk]: stub.id });
   });

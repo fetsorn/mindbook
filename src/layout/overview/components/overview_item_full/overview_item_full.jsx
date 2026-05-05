@@ -23,11 +23,7 @@ export function OverviewItemFull(props) {
 
   const [isFold, setIsFold] = createSignal(true);
 
-  const isHomeScreen = store.mind.mind === "root";
-
   const isMind = new URLSearchParams(store.searchParams).get("_") === "mind";
-
-  const canOpenMind = isHomeScreen && isMind;
 
   return (
     <div id={props.item[props.item._]} className={styles.item}>
@@ -77,14 +73,18 @@ export function OverviewItemFull(props) {
             onCancel={() => setShowActions(false)}
           />
 
-          <Show when={canOpenMind} fallback={<></>}>
-            <button
-              title="open"
-              onClick={() => onAction({ store, api }, "open", props.item)}
-            >
-              open{" "}
-            </button>
-          </Show>
+          <For each={store.actions}>
+            {(action, index) => {
+              return (
+                <button
+                  title={action}
+                  onClick={() => onAction({ store, api }, action, props.item)}
+                >
+                  open{" "}
+                </button>
+              );
+            }}
+          </For>
         </>
       </Show>
     </div>

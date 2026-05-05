@@ -34,11 +34,11 @@ export function AssetView(props) {
   async function fetchAsset() {
     let contents;
 
-    try {
-      contents = await fetchAsset(store.mind.mind, filenameFull);
-    } catch (e) {
-      console.log(e);
-    }
+    //try {
+    //  contents = await api.fetchAsset(filenameFull);
+    //} catch (e) {
+    //  console.log(e);
+    //}
 
     if (contents === undefined) {
       console.log("assetView failed", props.record);

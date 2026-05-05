@@ -71,7 +71,7 @@ describe("store", () => {
 
       await onRecordCreate({ store, setStore });
 
-      expect(createRecord).toHaveBeenCalledWith("root", "mind", {});
+      expect(createRecord).toHaveBeenCalledWith("mind", {});
 
       expect(store.record).toStrictEqual(1);
     });
@@ -92,9 +92,9 @@ describe("store", () => {
 
       await onRecordSave({ store, setStore, api }, recordOld, recordNew);
 
-      expect(api.d).toHaveBeenCalledWith("root", recordOld);
+      expect(api.d).toHaveBeenCalledWith(recordOld);
 
-      expect(api.u).toHaveBeenCalledWith("root", recordNew);
+      expect(api.u).toHaveBeenCalledWith(recordNew);
 
       expect(store.recordSet).toStrictEqual(["value2"]);
     });
@@ -108,7 +108,7 @@ describe("store", () => {
 
       await onRecordWipe({ store, setStore, api }, {});
 
-      expect(api.d).toHaveBeenCalledWith("root", {});
+      expect(api.d).toHaveBeenCalledWith({});
 
       expect(store.recordSet).toStrictEqual([]);
     });

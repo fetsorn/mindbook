@@ -16,12 +16,6 @@ export function ProfileRecord(props) {
     return store.schema[props.record._].leaves;
   };
 
-  const isRemote = () => {
-    if (store.mind === undefined) return false;
-
-    return store.mind.mind === "root" && props.record._ === "origin_url";
-  };
-
   function access(field) {
     return props.record !== undefined ? props.record[field] : undefined;
   }

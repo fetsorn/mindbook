@@ -10,5 +10,10 @@ export function OverviewHeader() {
     return str[0].toUpperCase() + str.slice(1);
   }
 
-  return <h1>{capitalize(store.mind.name) ?? "Entries"}</h1>;
+  return (
+    <h1>
+      {capitalize(new URLSearchParams(store.searchParams).get("_")) ??
+        "Entries"}
+    </h1>
+  );
 }

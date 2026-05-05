@@ -97,7 +97,7 @@ export function App() {
   return (
     <>
       <MetaProvider>
-        <Title>{"evenor – " + store.mind.name}</Title>
+        <Title>{"evenor – " + store.title}</Title>
       </MetaProvider>
 
       <main className={styles.main}>

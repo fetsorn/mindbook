@@ -16,13 +16,13 @@ export function makeStore() {
   return createStore({
     abortPreviousStream: async () => {},
     searchParams: "_=mind", // sets the state of search bar
-    mind: { _: "mind", mind: "root", name: "minds" },
     schema: {}, // TODO set schemaRoot somehow
     template: {},
     record: undefined,
     recordSet: [],
     recordMap: {},
     spoilerMap: {},
+    actions: [],
     loading: false,
     searchBar: "", // remembers the last state of search bar
   });
@@ -39,10 +39,10 @@ export function openBook({ setStore }, content) {
 
   setStore(
     produce((state) => {
-      state.mind = content.mind;
       state.schema = content.schema;
       state.searchParams = content.searchParams;
       state.template = content.template;
+      state.actions = content.actions;
     }),
   );
 }
@@ -207,10 +207,6 @@ export function updateSearchParams({ store, setStore }, field, value) {
       value,
     );
 
-    // TODO move to proxy somewhere
-    //const url = makeURL(searchParams, store.mind.mind);
-    //window.history.replaceState(null, null, url);
-
     // do not reset searchParams here to preserve focus on filter
     setStore(
       produce((state) => {
@@ -290,7 +286,6 @@ export async function onSort(context, field, value) {
  */
 export async function onRecordCreate({ store, setStore }) {
   const record = await createRecord(
-    store.mind.mind,
     new URLSearchParams(store.searchParams).get("_"),
     store.template,
   );
@@ -314,7 +309,7 @@ export async function getRecord({ store, setStore, api }, record) {
   const grain = { _: base, [base]: record };
 
   if (store.recordMap[record] === undefined) {
-    const recordNew = await api.describe(store.mind.mind, grain);
+    const recordNew = await api.describe(grain);
 
     setStore("recordMap", { [record]: recordNew });
   }
@@ -340,9 +335,9 @@ export async function onRecordSave(
 
   const base = new URLSearchParams(store.searchParams).get("_");
 
-  await api.d(store.mind.mind, recordOld);
+  await api.d(recordOld);
 
-  await api.u(store.mind.mind, recordNew);
+  await api.u(recordNew);
 
   const keyOld = recordOld[base];
 
@@ -374,7 +369,7 @@ export async function onRecordSave(
 export async function onRecordWipe({ store, setStore, api }, record) {
   setStore("loading", true);
 
-  await api.d(store.mind.mind, record);
+  await api.d(record);
 
   const base = new URLSearchParams(store.searchParams).get("_");
 
@@ -412,7 +407,7 @@ export async function onSearch({ store, setStore, api }) {
 
     const query = searchParamsToQuery(store.schema, searchParamsWithoutCustom);
 
-    const fromStrm = await api.r(store.mind.mind, query);
+    const fromStrm = await api.r(query);
 
     // prepare a controller to stop the new stream
     let isAborted = false;
@@ -570,5 +565,5 @@ export async function onAction({ store, api }, action, record) {
     record,
   };
 
-  api.c(store.mind.mind, actionRecord);
+  api.c(actionRecord);
 }
