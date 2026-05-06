@@ -335,7 +335,11 @@ export async function onRecordSave(
 
   const base = new URLSearchParams(store.searchParams).get("_");
 
-  await api.d(recordOld);
+  try {
+    await api.d(recordOld);
+  } catch {
+    // do nothing
+  }
 
   await api.u(recordNew);
 
