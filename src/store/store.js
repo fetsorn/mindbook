@@ -309,7 +309,7 @@ export async function getRecord({ store, setStore, api }, record) {
   const grain = { _: base, [base]: record };
 
   if (store.recordMap[record] === undefined) {
-    const recordNew = await api.describe(grain);
+    const [recordNew] = await Array.fromAsync(await api.describe(grain));
 
     setStore("recordMap", { [record]: recordNew });
   }
@@ -336,12 +336,12 @@ export async function onRecordSave(
   const base = new URLSearchParams(store.searchParams).get("_");
 
   try {
-    await api.d(recordOld);
+    await Array.fromAsync(await api.d(recordOld));
   } catch {
     // do nothing
   }
 
-  await api.u(recordNew);
+  await Array.fromAsync(await api.u(recordNew));
 
   const keyOld = recordOld[base];
 
@@ -373,7 +373,7 @@ export async function onRecordSave(
 export async function onRecordWipe({ store, setStore, api }, record) {
   setStore("loading", true);
 
-  await api.d(record);
+  await Array.fromAsync(await api.d(record));
 
   const base = new URLSearchParams(store.searchParams).get("_");
 
