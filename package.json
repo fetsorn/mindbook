@@ -27,7 +27,6 @@
     "test": "vitest --run --browser.headless --coverage",
     "tauri": "tauri",
     "lint": "eslint ./src/",
-    "wdio-tauri": "wdio run ./wdio.tauri.conf.js",
     "wdio-browser": "wdio run ./wdio.browser.conf.js"
   },
   "devDependencies": {

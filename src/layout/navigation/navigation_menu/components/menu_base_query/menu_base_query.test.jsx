@@ -28,7 +28,7 @@ describe("MenuBaseQuery", () => {
     setStore("searchParams", "_=mind");
 
     const { getByRole, getAllByRole } = render(() => (
-      <Context.Provider value={{ store }}>
+      <Context.Provider value={{ store, setStore }}>
         <MenuBaseQuery />
       </Context.Provider>
     ));

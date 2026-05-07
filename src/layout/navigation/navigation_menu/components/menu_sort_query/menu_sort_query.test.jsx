@@ -24,7 +24,7 @@ describe("MenuSortQuery", () => {
     setStore("searchParams", "_=mind&.sortBy=mind");
 
     const { getByRole, getAllByRole } = render(() => (
-      <Context.Provider value={{ store }}>
+      <Context.Provider value={{ store, setStore }}>
         <MenuSortQuery />
       </Context.Provider>
     ));

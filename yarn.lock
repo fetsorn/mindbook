@@ -1224,13 +1224,14 @@
   resolved "https://registry.yarnpkg.com/@exodus/bytes/-/bytes-1.15.0.tgz#54479e0f406cbad024d6fe1c3190ecca4468df3b"
   integrity sha512-UY0nlA+feH81UGSHv92sLEPLCeZFjXOuHhrIo0HQydScuQc8s0A7kL/UdgwgDq8g8ilksmuoF35YVTNphV2aBQ==
 
-"@fetsorn/csvs-js@^0.27.2":
-  version "0.27.2"
-  resolved "https://registry.yarnpkg.com/@fetsorn/csvs-js/-/csvs-js-0.27.2.tgz#cba682b9d8ab389d1b931f85026794fb2ee8a873"
-  integrity sha512-PzkSTTIbo7UlJpt+xx8sZlJUPjTuPoXQLwLLWUKTq4PQzGsMjDbkFzPAyvAqOWe1zOLTooiHC/K0TwopS5jq3g==
+"@fetsorn/csvs-js@^0.28.2":
+  version "0.28.2"
+  resolved "https://registry.yarnpkg.com/@fetsorn/csvs-js/-/csvs-js-0.28.2.tgz#e4e5a4501a5d04d9b22805142df1b92962f72fc7"
+  integrity sha512-FiWNwEBafRmB5YrF6DHswN69S98+bwUteFSoHw+swyEMqu7gA2R5xyEd16N/Hh1B3yEycDnlzcRockPlcGgdyQ==
   dependencies:
     "@swimburger/isomorphic-streams" "^1.1.1"
     papaparse "^5.4.1"
+    path-browserify "^1.0.1"
 
 "@humanfs/core@^0.19.2":
   version "0.19.2"
