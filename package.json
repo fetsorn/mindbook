@@ -2,7 +2,7 @@
   "name": "@fetsorn/mindbook",
   "description": "SPARQL in plain text",
   "productName": "mindbook",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "type": "module",
   "files": ["dist"],
   "main": "./dist/mindbook.js",
@@ -60,7 +60,7 @@
     "vitest": "^4.1.0"
   },
   "dependencies": {
-    "@fetsorn/csvs-js": "^0.27.2",
+    "@fetsorn/csvs-js": "^0.28.2",
     "@solid-primitives/resize-observer": "^2.1.5",
     "@solidjs/meta": "^0.29.4",
     "buffer": "^6.0.3",
