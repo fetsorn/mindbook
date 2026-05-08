@@ -41,31 +41,36 @@ export function OverviewItemFull(props) {
 
   return (
     <div id={props.item[props.item._]} className={`${styles.item} ${itemClasses()}`}>
-      <div className={foldClasses()}>
-        <div className={styles.content} ref={setContent}>
-          <OverviewRecord
-            index={props.index}
-            record={props.item}
-            path={props.path || []}
-            rstIndex={rstIndex()}
-            isOpenDefault={true}
-          />
+      <div className={styles.chrome}>
+        <div className={foldClasses()}>
+          <div className={styles.content} ref={setContent}>
+            <OverviewRecord
+              index={props.index}
+              record={props.item}
+              path={props.path || []}
+              rstIndex={rstIndex()}
+              isOpenDefault={true}
+            />
+          </div>
         </div>
+
+        <Show when={size.height > 40}>
+          <Show
+            when={isFold()}
+            fallback={<button onClick={() => setIsFold(true)}>less...</button>}
+          >
+            <button onClick={() => setIsFold(false)}>more...</button>
+          </Show>
+        </Show>
+
+        <Show
+          when={!showActions()}
+        >
+          <button onClick={() => setShowActions(true)}>.</button>
+        </Show>
       </div>
 
-      <Show when={size.height > 40}>
-        <Show
-          when={isFold()}
-          fallback={<button onClick={() => setIsFold(true)}>less...</button>}
-        >
-          <button onClick={() => setIsFold(false)}>more...</button>
-        </Show>
-      </Show>
-
-      <Show
-        when={showActions()}
-        fallback={<button onClick={() => setShowActions(true)}>.</button>}
-      >
+      <Show when={showActions()}>
         <div className={styles.actions}>
           <Show when={!isTwig()}>
             <button

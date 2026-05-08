@@ -1,10 +1,14 @@
 .item {
+  width: 100%;
+}
+
+.chrome {
   display: flex;
   flex-wrap: nowrap;
   width: 100%;
 }
 
-.item > button {
+.chrome > button {
   flex-shrink: 0;
 }
 
@@ -12,7 +16,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  flex-shrink: 0;
 }
 
 .content {
