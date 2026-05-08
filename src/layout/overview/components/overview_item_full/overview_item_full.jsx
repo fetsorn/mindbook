@@ -30,17 +30,17 @@ export function OverviewItemFull(props) {
   const isTwig = () =>
     !store.schema[base()] || store.schema[base()].leaves.length === 0;
 
-  const rstIndex = () =>
-    buildIndex(props.item, store.schema, props.path || []);
+  const rstIndex = () => buildIndex(props.item, store.schema, props.path || []);
 
-  const itemClasses = () =>
-    rhetoric({ isItem: true }).join(" ");
+  const itemClasses = () => rhetoric({ isItem: true }).join(" ");
 
-  const foldClasses = () =>
-    rhetoric({ isFolded: isFold() }).join(" ");
+  const foldClasses = () => rhetoric({ isFolded: isFold() }).join(" ");
 
   return (
-    <div id={props.item[props.item._]} className={`${styles.item} ${itemClasses()}`}>
+    <div
+      id={props.item[props.item._]}
+      className={`${styles.item} ${itemClasses()}`}
+    >
       <div className={styles.chrome}>
         <div className={foldClasses()}>
           <div className={styles.content} ref={setContent}>
@@ -63,9 +63,7 @@ export function OverviewItemFull(props) {
           </Show>
         </Show>
 
-        <Show
-          when={!showActions()}
-        >
+        <Show when={!showActions()}>
           <button onClick={() => setShowActions(true)}>.</button>
         </Show>
       </div>
@@ -91,7 +89,9 @@ export function OverviewItemFull(props) {
             <Confirmation
               action={`delete`}
               question={"really delete?"}
-              onAction={() => onRecordWipe({ store, setStore, api }, props.item)}
+              onAction={() =>
+                onRecordWipe({ store, setStore, api }, props.item)
+              }
               onCancel={() => setShowActions(false)}
             />
           </Show>
@@ -103,7 +103,7 @@ export function OverviewItemFull(props) {
                   title={action}
                   onClick={() => onAction({ store, api }, action, props.item)}
                 >
-                  open{" "}
+                  {action}{" "}
                 </button>
               );
             }}
