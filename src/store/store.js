@@ -22,7 +22,7 @@ export function makeStore() {
     recordSet: [],
     recordMap: {},
     spoilerMap: {},
-    actions: [],
+    actions: {},
     loading: false,
     searchBar: "", // remembers the last state of search bar
   });
@@ -266,7 +266,13 @@ function batchUpdateSearchParams(context, changes) {
 export async function onBase(context, value) {
   updateSearchParams(context, "_", value);
 
-  //await onSearch()
+  context.setStore(
+    produce((state) => {
+      state.recordSet = [];
+      state.recordMap = {};
+      state.record = undefined;
+    }),
+  );
 }
 
 export async function onSort(context, field, value) {

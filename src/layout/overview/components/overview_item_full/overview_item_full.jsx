@@ -23,7 +23,10 @@ export function OverviewItemFull(props) {
 
   const [isFold, setIsFold] = createSignal(true);
 
-  const isMind = new URLSearchParams(store.searchParams).get("_") === "mind";
+  const base = () => props.item._;
+
+  const isTwig = () =>
+    !store.schema[base()] || store.schema[base()].leaves.length === 0;
 
   return (
     <div id={props.item[props.item._]} className={styles.item}>
@@ -51,29 +54,31 @@ export function OverviewItemFull(props) {
         fallback={<button onClick={() => setShowActions(true)}>.</button>}
       >
         <>
-          <button
-            className={"edit"}
-            onClick={() => {
-              onRecordEdit(
-                { setStore },
-                ["record"],
-                JSON.parse(JSON.stringify(props.item)),
-              );
+          <Show when={!isTwig()}>
+            <button
+              className={"edit"}
+              onClick={() => {
+                onRecordEdit(
+                  { setStore },
+                  ["record"],
+                  JSON.parse(JSON.stringify(props.item)),
+                );
 
-              setShowActions(false);
-            }}
-          >
-            edit{" "}
-          </button>
+                setShowActions(false);
+              }}
+            >
+              edit{" "}
+            </button>
 
-          <Confirmation
-            action={`delete`}
-            question={"really delete?"}
-            onAction={() => onRecordWipe({ store, setStore, api }, props.item)}
-            onCancel={() => setShowActions(false)}
-          />
+            <Confirmation
+              action={`delete`}
+              question={"really delete?"}
+              onAction={() => onRecordWipe({ store, setStore, api }, props.item)}
+              onCancel={() => setShowActions(false)}
+            />
+          </Show>
 
-          <For each={store.actions}>
+          <For each={store.actions[base()] || []}>
             {(action, index) => {
               return (
                 <button
