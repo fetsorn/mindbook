@@ -174,7 +174,7 @@ export async function onSearchBar({ store, setStore, api }, searchBar) {
   // in the most naive case we input a letter, and get that letter's
   // field and value
   // but what if the letter is plain text and must match multiple fields?
-  const doSearch = batchUpdateSearchParams(context, changes);
+  const doSearch = batchUpdateSearchParams({ store, setStore }, changes);
 
   // no longer do search on change of search bar
   //if (doSearch) {
@@ -339,6 +339,7 @@ export async function onRecordSave(
 ) {
   setStore("loading", true);
 
+  await store.abortPreviousStream();
   const base = new URLSearchParams(store.searchParams).get("_");
 
   try {
@@ -378,6 +379,8 @@ export async function onRecordSave(
  */
 export async function onRecordWipe({ store, setStore, api }, record) {
   setStore("loading", true);
+
+  await store.abortPreviousStream();
 
   await Array.fromAsync(await api.d(record));
 
@@ -451,12 +454,11 @@ export async function onSearch({ store, setStore, api }) {
     // stop previous stream
     await store.abortPreviousStream();
 
+    // wrap in () => fn so solid stores the function instead of calling it
+    setStore("abortPreviousStream", () => () => abortPreviousStream());
+
     setStore(
       produce((state) => {
-        // solid store tries to call the function, so pass a factory here
-        state.abortPreviousStream = () => () => {
-          return abortPreviousStream();
-        };
         // erase existing records
         state.recordSet = [];
       }),
@@ -466,8 +468,12 @@ export async function onSearch({ store, setStore, api }) {
     await fromStrm.pipeTo(toStrm, { signal: abortController.signal });
 
     // TODO does it stop main?
-    for (const record of store.recordSet) {
-      await getRecord({ store, setStore, api }, record);
+    if (!isAborted) {
+      for (const record of store.recordSet) {
+        if (isAborted) break;
+
+        await getRecord({ store, setStore, api }, record);
+      }
     }
   } catch (e) {
     console.error(e);
