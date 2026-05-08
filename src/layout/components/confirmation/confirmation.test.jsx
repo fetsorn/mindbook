@@ -14,7 +14,12 @@ describe("Confirmation", () => {
     const onCancel = vi.fn();
 
     const { getByText } = render(() => (
-      <Confirmation action={action} question={question} onAction={onAction} onCancel={onCancel} />
+      <Confirmation
+        action={action}
+        question={question}
+        onAction={onAction}
+        onCancel={onCancel}
+      />
     ));
 
     // find remove

@@ -11,7 +11,7 @@ export async function createRecord(base, template) {
   const record = {
     _: base,
     [base]: await newUUID(),
-    ...structuredClone(template),
+    ...JSON.parse(JSON.stringify(template)),
   };
 
   return record;

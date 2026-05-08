@@ -5,6 +5,8 @@ import { OverviewRecord, OverviewValue } from "../index.js";
 export function OverviewFieldItem(props) {
   const { store } = useContext(Context);
 
+  const path = () => props.path || [];
+
   // if base has no leaves, show value
   // otherwise show record
   const baseIsTwig = () => {
@@ -20,11 +22,13 @@ export function OverviewFieldItem(props) {
         <OverviewRecord
           index={`${props.index}-${props.item[props.item._]}`}
           record={props.item}
+          path={path()}
+          rstIndex={props.rstIndex}
         />
       }
     >
       <Match when={baseIsTwig()}>
-        <OverviewValue branch={props.branch} value={props.item} />
+        <OverviewValue branch={props.branch} value={props.item} path={path()} rstIndex={props.rstIndex} />
       </Match>
     </Switch>
   );

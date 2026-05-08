@@ -1,0 +1,170 @@
+/* =====================================================
+   THEME: default
+   =====================================================
+   Maps rhetoric classes (rst-*) to visual appearance.
+   This file is the ONLY place where colors, sizes,
+   spacing, and fonts are decided.
+
+   Rhetoric (rhetoric.js) decides WHAT a node is.
+   This file decides HOW it looks.
+
+   To change the look: edit this file.
+   To change the classification: edit rhetoric.js.
+
+   Design principles:
+   - Reads like prose. Every element is interactive,
+     so interactivity is not marked — it's the default.
+   - line-height is the master rhythm. Vertical touch
+     target space comes from leading, not padding.
+   - Hierarchy through font-size (depth) and font-weight
+     (structure) only. No opacity, no color coding.
+   - Horizontal margin-inline separates nuclei from
+     each other without affecting vertical rhythm.
+   - WCAG: no meaning conveyed by color or opacity alone.
+     Touch targets get ~6px from line-height leading.
+   ===================================================== */
+
+
+/* --- depth: shallower nodes grow from a readable floor.
+   rem keeps sizes absolute for mobile scaling.
+   vertical-align: baseline prevents different rem sizes
+   on the same line from shifting baselines ("flying"). --- */
+
+.rst-depth-0 { font-size: 1.15rem; vertical-align: baseline; }
+.rst-depth-1 { font-size: 1.08rem; vertical-align: baseline; }
+.rst-depth-2 { font-size: 1.02rem; vertical-align: baseline; }
+.rst-depth-3 { font-size: 1rem; vertical-align: baseline; }
+
+
+/* --- role: classes exist for future use, no visual
+   distinction currently. nucleus and satellite read
+   as the same text — hierarchy comes from depth and
+   structure instead. --- */
+
+.rst-nucleus { }
+.rst-satellite { margin-inline: 0.3em; }
+
+
+/* --- value type: visual rhythm by content kind --- */
+
+.rst-type-date {
+  font-variant-numeric: tabular-nums;
+}
+
+.rst-type-number {
+  font-variant-numeric: tabular-nums;
+}
+
+.rst-type-longtext {
+  font-style: italic;
+}
+
+
+/* --- structure: branches are heavier than twigs --- */
+
+.rst-has-leaves { font-weight: 500; }
+.rst-twig { font-weight: 400; }
+
+
+/* --- ordering: css order in flex parent --- */
+
+.rst-order-10  { order: 10; }
+.rst-order-20  { order: 20; }
+.rst-order-30  { order: 30; }
+.rst-order-40  { order: 40; }
+.rst-order-100 { order: 100; }
+
+
+/* --- density: breathing room for crowded nodes --- */
+
+.rst-many-children { gap: 0.3em; }
+
+
+/* --- item border: visual separation between records.
+   line-height sets the vertical rhythm for the whole
+   item — touch targets get their space from leading,
+   not from padding on individual buttons. --- */
+
+.rst-item-border {
+  border-bottom: 1px solid lightgray;
+  line-height: 1.8;
+  font-size: 1.15rem;
+}
+
+
+/* --- value toggle: nuclei separation.
+   everything is interactive, so interactivity is not
+   marked (no underline). margin-inline creates a gap
+   between adjacent values ("ben" "2026-03-02" "new york")
+   wider than word spacing within a value ("new york").
+   horizontal only — vertical rhythm stays with
+   line-height. --- */
+
+.rst-value-toggle {
+  margin-inline: 0.15em;
+  text-align: left;
+}
+
+
+/* --- fold/unfold: overview item clipping --- */
+
+.rst-fold {
+  flex: 1;
+  min-width: 0;
+  max-height: 48px;
+  overflow: hidden;
+}
+
+.rst-unfold {
+  display: inline-block;
+  text-align: left;
+}
+
+
+/* --- editable: profile input sizing --- */
+
+.rst-editable {
+  max-width: 45vw;
+  margin: 0px 5px;
+}
+
+@media (max-width: 600px) {
+  .rst-editable {
+    max-width: 95vw;
+  }
+}
+
+
+/* --- spoiler attachment: "with" is tight to its parent
+   value (elaboration of one item), "and" has more space
+   from the preceding cluster (continuation of the
+   sequence at a higher level).
+   This spacing makes the structural level visible:
+   [new york with: 1624 8336817]   and: [los angeles...]
+   The gap before "and" signals it operates on the array,
+   not on the last leaf of the preceding record. --- */
+
+.spoiler-with {
+  margin-inline-start: 0.1em;
+}
+
+.spoiler-and {
+  margin-inline-start: 0.5em;
+}
+
+
+/* --- interactions --- */
+
+.rst-deep-longtext {
+  font-size: 0.8em;
+}
+
+.rst-prominent {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.rst-crowded-satellite {
+  gap: 0.4em;
+  line-height: 1.8;
+}

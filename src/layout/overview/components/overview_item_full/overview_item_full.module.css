@@ -1,26 +1,18 @@
 .item {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 100%;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-bottom-color: lightgray;
+}
+
+.item > button {
+  flex-shrink: 0;
 }
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-}
-
-.fold {
-  display: inline-block;
-  max-height: 40px;
-  max-width: 85%;
-  overflow: hidden;
-}
-
-.unfold {
-  display: inline-block;
+  flex-shrink: 0;
 }
 
 .content {

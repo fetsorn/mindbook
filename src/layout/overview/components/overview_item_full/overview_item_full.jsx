@@ -6,6 +6,8 @@ import {
   onRecordWipe,
   onAction,
 } from "@/store/store.js";
+import { rhetoric } from "@/style/rhetoric.js";
+import { buildIndex } from "@/style/index_builder.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
 import { OverviewRecord } from "../index.js";
 import styles from "./overview_item_full.module.css";
@@ -28,13 +30,24 @@ export function OverviewItemFull(props) {
   const isTwig = () =>
     !store.schema[base()] || store.schema[base()].leaves.length === 0;
 
+  const rstIndex = () =>
+    buildIndex(props.item, store.schema, props.path || []);
+
+  const itemClasses = () =>
+    rhetoric({ isItem: true }).join(" ");
+
+  const foldClasses = () =>
+    rhetoric({ isFolded: isFold() }).join(" ");
+
   return (
-    <div id={props.item[props.item._]} className={styles.item}>
-      <div className={isFold() ? styles.fold : styles.unfold}>
+    <div id={props.item[props.item._]} className={`${styles.item} ${itemClasses()}`}>
+      <div className={foldClasses()}>
         <div className={styles.content} ref={setContent}>
           <OverviewRecord
             index={props.index}
             record={props.item}
+            path={props.path || []}
+            rstIndex={rstIndex()}
             isOpenDefault={true}
           />
         </div>
@@ -53,7 +66,7 @@ export function OverviewItemFull(props) {
         when={showActions()}
         fallback={<button onClick={() => setShowActions(true)}>.</button>}
       >
-        <>
+        <div className={styles.actions}>
           <Show when={!isTwig()}>
             <button
               className={"edit"}
@@ -90,7 +103,7 @@ export function OverviewItemFull(props) {
               );
             }}
           </For>
-        </>
+        </div>
       </Show>
     </div>
   );

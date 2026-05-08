@@ -18,7 +18,8 @@
     <div id="root" class="root"></div>
     <script type="module">
       import mindbook from "./src/index.jsx";
-      import { makeApi, schema } from "./test/memory-store.js";
+      import schema from "./test/schema.json";
+      import { makeApi } from "./test/memory-store.js";
 
       const api = makeApi();
 
@@ -26,7 +27,7 @@
 
       book.open({
         schema,
-        searchParams: "_=mind",
+        searchParams: "_=event",
         template: {},
         actions: [],
       });

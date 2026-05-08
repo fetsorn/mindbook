@@ -1,20 +1,34 @@
 import { useContext } from "solid-js";
 import { Context } from "@/store/store.js";
+import { rhetoric } from "@/style/rhetoric.js";
+import { pathToKey } from "@/style/index_builder.js";
 import { Spoiler } from "@/layout/components/index.js";
 import { OverviewField, OverviewValue } from "../index.js";
 
 export function OverviewRecord(props) {
   const { store } = useContext(Context);
 
+  const path = () => props.path || [];
+
+  const meta = () => {
+    const key = pathToKey(path());
+    return props.rstIndex?.get(key) || {};
+  };
+
+  const recordClasses = () =>
+    rhetoric(meta()).join(" ");
+
   function recordHasLeaf(leaf) {
     return props.record.hasOwnProperty(leaf);
   }
 
   return (
-    <>
+    <span className={recordClasses()}>
       <OverviewValue
         branch={props.record._}
         value={props.record[props.record._]}
+        path={[...path(), props.record._]}
+        rstIndex={props.rstIndex}
       />
 
       <Show
@@ -47,12 +61,14 @@ export function OverviewRecord(props) {
                   index={`${props.index}-${leaf}`}
                   items={items}
                   branch={leaf}
+                  path={[...path(), leaf]}
+                  rstIndex={props.rstIndex}
                 />
               );
             }}
           </For>
         </Spoiler>
       </Show>
-    </>
+    </span>
   );
 }

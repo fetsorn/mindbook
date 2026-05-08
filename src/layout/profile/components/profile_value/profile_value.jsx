@@ -1,5 +1,6 @@
 import { useContext } from "solid-js";
 import { Context, onRecordEdit } from "@/store/store.js";
+import { rhetoric } from "@/style/rhetoric.js";
 import styles from "./profile_value.module.css";
 
 // https://css-tricks.com/auto-growing-inputs-textareas/
@@ -70,6 +71,9 @@ function calcSize(value, textarea) {
 export function ProfileValue(props) {
   const context = useContext(Context);
 
+  const editClasses = () =>
+    rhetoric({ isEditing: true }).join(" ");
+
   let textarea;
 
   return (
@@ -93,7 +97,7 @@ export function ProfileValue(props) {
           //  selectionDirection || "none",
           //);
         }}
-        className={styles.input}
+        className={editClasses()}
         ref={textarea}
         style={calcSize(props.value, textarea)}
       >

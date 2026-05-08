@@ -1,6 +1,7 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal, createEffect } from "solid-js";
 import { Context, getRecord } from "@/store/store.js";
+import { rhetoric } from "@/style/rhetoric.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
 import { OverviewValue } from "../index.js";
 import styles from "./overview_item_light.module.css";
@@ -14,13 +15,20 @@ export function OverviewItemLight(props) {
 
   const [isFull, setIsFull] = createSignal(false);
 
+  const itemClasses = () =>
+    rhetoric({ isItem: true }).join(" ");
+
+  const foldClasses = () =>
+    rhetoric({ isFolded: true }).join(" ");
+
   return (
-    <div id={props.item[props.item._]} className={styles.item}>
-      <div className={styles.fold}>
+    <div id={props.item[props.item._]} className={`${styles.item} ${itemClasses()}`}>
+      <div className={foldClasses()}>
         <div className={styles.content} ref={setContent}>
           <OverviewValue
             branch={props.item._}
             value={props.item[props.item._]}
+            path={props.path || [props.item._]}
           />
         </div>
       </div>

@@ -4,6 +4,7 @@ import { Context, makeStore, openBook } from "@/store/store.js";
 import { polyfill } from "@/polyfill.js";
 import App from "@/layout/layout.jsx";
 import "@/index.css";
+import "@/style/theme.css";
 
 polyfill();
 

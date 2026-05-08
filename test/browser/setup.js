@@ -1,5 +1,6 @@
 import mindbook from "../../dist/mindbook.js";
-import { makeApi, schema, reset } from "../memory-store.js";
+import { makeApi, reset } from "../memory-store.js";
+import schema from "../schema.json";
 
 export async function setup() {
   // prepare root element

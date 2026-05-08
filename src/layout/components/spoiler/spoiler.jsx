@@ -24,13 +24,13 @@ export function Spoiler(props) {
       /* when={getSpoilerOpen(props.index)} */
       when={isOpen()}
       fallback={
-        <button className={"spoilerOpen"} onClick={open}>
+        <button className={`spoilerOpen spoiler-${props.title}`} onClick={open}>
           {props.title}...{" "}
         </button>
       }
     >
       <>
-        <button className={"spoilerClose"} onClick={close}>
+        <button className={`spoilerClose spoiler-${props.title}`} onClick={close}>
           {props.title}:{" "}
         </button>
 

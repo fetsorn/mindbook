@@ -22,5 +22,62 @@
       "en": "Category",
       "ru": "Категория"
     }
+  },
+  "event": {
+    "trunks": [],
+    "leaves": ["actname", "actdate", "place", "datum"],
+    "description": {
+      "en": "Event",
+      "ru": "Событие"
+    }
+  },
+  "actname": {
+    "trunks": ["event"],
+    "leaves": [],
+    "description": {
+      "en": "Who",
+      "ru": "Кто"
+    }
+  },
+  "actdate": {
+    "trunks": ["event"],
+    "leaves": [],
+    "description": {
+      "en": "When",
+      "ru": "Когда"
+    }
+  },
+  "place": {
+    "trunks": ["event"],
+    "leaves": ["founded", "population"],
+    "description": {
+      "en": "Where",
+      "ru": "Где"
+    }
+  },
+  "founded": {
+    "trunks": ["place"],
+    "leaves": [],
+    "description": {
+      "en": "Founded",
+      "ru": "Основан"
+    }
+  },
+  "population": {
+    "trunks": ["place"],
+    "leaves": [],
+    "description": {
+      "en": "Population",
+      "ru": "Население"
+    }
+  },
+  "datum": {
+    "trunks": ["event"],
+    "leaves": [],
+    "task": "text",
+    "description": {
+      "en": "What",
+      "ru": "Что"
+    }
   }
 }

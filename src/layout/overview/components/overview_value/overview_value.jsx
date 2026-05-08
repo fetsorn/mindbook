@@ -1,5 +1,7 @@
 import { createSignal, useContext } from "solid-js";
 import { Context } from "@/store/store.js";
+import { rhetoric } from "@/style/rhetoric.js";
+import { pathToKey } from "@/style/index_builder.js";
 import { Spoiler } from "@/layout/components/index.js";
 
 export function OverviewValue(props) {
@@ -11,6 +13,16 @@ export function OverviewValue(props) {
   const defaultIsValue = props.defaultShow ? props.defaultShow : !isBase;
 
   const [isValue, setIsValue] = createSignal(defaultIsValue);
+
+  const path = () => props.path || [];
+
+  const meta = () => {
+    const key = pathToKey(path());
+    return props.rstIndex?.get(key) || {};
+  };
+
+  const nucleusClasses = () =>
+    rhetoric({ ...meta(), isValueToggle: true }).join(" ");
 
   // TODO: add schema[base].cognate from branch-cognate.csv
   const basePartial = isBase ? [] : [props.branch];
@@ -44,18 +56,16 @@ export function OverviewValue(props) {
         when={isValue()}
         fallback={
           <button
-            className={`${props.branch}-branch`}
+            className={`${props.branch}-branch ${nucleusClasses()}`}
             onClick={() => setIsValue(true)}
-            style={{ borderBottom: "thin solid" }}
           >
             {props.branch}{" "}
           </button>
         }
       >
         <button
-          className={`${props.branch}-value`}
+          className={`${props.branch}-value ${nucleusClasses()}`}
           onClick={() => setIsValue(false)}
-          style={{ borderBottom: "thin solid" }}
         >
           {props.value}
         </button>
