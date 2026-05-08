@@ -1,3 +1,4 @@
+import schema from "./schema.json";
 // In-memory CRUD api for mindbook
 // Used by both vite dev (index.html) and wdio browser tests
 
@@ -57,21 +58,3 @@ export function makeApi() {
 export function reset() {
   records = [];
 }
-
-export const schema = {
-  mind: {
-    trunks: [],
-    leaves: ["name", "category"],
-    description: { en: "mind", ru: "mind" },
-  },
-  name: {
-    trunks: ["mind"],
-    leaves: [],
-    description: { en: "Name of the mind", ru: "Название" },
-  },
-  category: {
-    trunks: ["mind"],
-    leaves: [],
-    description: { en: "Category", ru: "Категория" },
-  },
-};

@@ -1,0 +1,26 @@
+{
+  "mind": {
+    "trunks": [],
+    "leaves": ["name", "category"],
+    "description": {
+      "en": "mind",
+      "ru": "mind"
+    }
+  },
+  "name": {
+    "trunks": ["mind"],
+    "leaves": [],
+    "description": {
+      "en": "Name of the mind",
+      "ru": "Название"
+    }
+  },
+  "category": {
+    "trunks": ["mind"],
+    "leaves": [],
+    "description": {
+      "en": "Category",
+      "ru": "Категория"
+    }
+  }
+}
