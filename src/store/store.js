@@ -1,12 +1,6 @@
 /* try to keep store interactions only in this file */
-import parser from "search-query-parser";
-import diff from "microdiff";
 import { createStore, produce } from "solid-js/store";
-import {
-  sortCallback,
-  changeSearchParams,
-  searchParamsToQuery,
-} from "@/store/pure.js";
+import { sortCallback, changeSearchParams } from "@/store/pure.js";
 import { createRecord } from "@/store/impure.js";
 import { createContext } from "solid-js";
 
@@ -15,7 +9,8 @@ export const Context = createContext();
 export function makeStore() {
   return createStore({
     abortPreviousStream: async () => {},
-    searchParams: "_=mind", // sets the state of search bar
+    searchParams: "_=mind&.sortBy=mind", // base + sort state
+    query: "", // raw search bar text, source of truth
     schema: {}, // TODO set schemaRoot somehow
     template: {},
     record: undefined,
@@ -24,7 +19,6 @@ export function makeStore() {
     spoilerMap: {},
     actions: {},
     loading: false,
-    searchBar: "", // remembers the last state of search bar
   });
 }
 
@@ -119,7 +113,7 @@ export function getFilterQueries({ store }) {
 
   // convert entries iterator to array for Index
   return Array.from(new URLSearchParams(store.searchParams).entries()).filter(
-    ([key]) => key !== ".sortDirection",
+    ([key]) => !key.startsWith("."),
   );
 }
 
@@ -141,126 +135,33 @@ export function getSortedRecords({ store }) {
   return records;
 }
 
-export async function onSearchBar({ store, setStore, api }, searchBar) {
+/**
+ * Set the raw search bar text. No parsing until search is triggered.
+ * @param {string} query - raw search bar text
+ */
+export function setQuery({ setStore }, query) {
   setStore(
     produce((state) => {
-      state.searchBar = searchBar;
+      state.query = query;
     }),
   );
+}
 
-  const options = {
-    keywords: Object.keys(store.schema),
-  };
-
-  function objectize(q) {
-    return typeof q === "string" ? { text: q } : q;
-  }
-
-  const searchBarOld = objectize(
-    parser.parse(getSearchBar({ store }), options),
+/**
+ * Update internal searchParams for base/sort controls (not the search bar).
+ */
+export function updateSearchParams({ store, setStore }, field, value) {
+  const searchParams = changeSearchParams(
+    new URLSearchParams(store.searchParams),
+    field,
+    value,
   );
 
-  const searchBarNew = objectize(parser.parse(searchBar, options));
-
-  // TODO: rename text to .text in fetsorn/search-query-parser
-  const changes = diff(searchBarOld, searchBarNew, {
-    cyclesFix: false,
-    offsets: false,
-  });
-
-  // what if no change?
-  // can there be no change on input? no, always returns field and value
-  // can there be many changes? yes
-  // in the most naive case we input a letter, and get that letter's
-  // field and value
-  // but what if the letter is plain text and must match multiple fields?
-  const doSearch = batchUpdateSearchParams({ store, setStore }, changes);
-
-  // no longer do search on change of search bar
-  //if (doSearch) {
-  //  await onSearch()
-  //}
-}
-
-export function getSearchBar({ store }) {
-  const searchParams = new URLSearchParams(store.searchParams);
-
-  const options = {
-    keywords: Object.keys(store.schema),
-  };
-
-  const searchBar = Array.from(searchParams.entries())
-    .filter(([field, value]) => !field.startsWith(".") && field !== "_")
-    .reduce((withEntry, [field, value]) => {
-      return { ...withEntry, [field]: value };
-    }, {});
-
-  return parser.stringify(searchBar, options);
-}
-
-export function updateSearchParams({ store, setStore }, field, value) {
-  // NOTE freeform text is not supported by csvs yet
-  if (field !== "text") {
-    const searchParams = changeSearchParams(
-      new URLSearchParams(store.searchParams),
-      field,
-      value,
-    );
-
-    // do not reset searchParams here to preserve focus on filter
-    setStore(
-      produce((state) => {
-        state.searchParams = searchParams.toString();
-      }),
-    );
-
-    return true;
-  }
-
-  return false;
-}
-
-// diff changes to store.searchParams
-function batchUpdateSearchParams(context, changes) {
-  // only search if some field was updated
-  // don't search on freeform text
-  let doSearch = false;
-
-  changes
-    .filter((c) => c.path[0] !== "exclude" && c.path[0] !== "offsets")
-    .forEach((change) => {
-      switch (change.type) {
-        case "REMOVE": {
-          const field = change.path[0];
-
-          doSearch = doSearch
-            ? doSearch
-            : updateSearchParams(context, field, undefined);
-
-          break;
-        }
-        case "CREATE": {
-          const field = change.path[0];
-
-          doSearch = doSearch
-            ? doSearch
-            : updateSearchParams(context, field, change.value);
-
-          break;
-        }
-        case "CHANGE": {
-          const field = change.path[0];
-
-          doSearch = doSearch
-            ? doSearch
-            : updateSearchParams(context, field, change.value);
-
-          break;
-        }
-      }
-    });
-
-  return doSearch;
+  setStore(
+    produce((state) => {
+      state.searchParams = searchParams.toString();
+    }),
+  );
 }
 
 export async function onBase(context, value) {
@@ -409,18 +310,9 @@ export async function onSearch({ store, setStore, api }) {
   setStore("loading", true);
 
   try {
-    const searchParams = new URLSearchParams(store.searchParams);
+    const base = getBase({ store });
 
-    // remove all evenor-specific searchParams before passing to csvs
-    const searchParamsWithoutCustom = new URLSearchParams(
-      Array.from(searchParams.entries()).filter(
-        ([key]) => !key.startsWith("."),
-      ),
-    );
-
-    const query = searchParamsToQuery(store.schema, searchParamsWithoutCustom);
-
-    const fromStrm = await api.r(query);
+    const fromStrm = await api.r(base, store.query);
 
     // prepare a controller to stop the new stream
     let isAborted = false;
@@ -467,7 +359,7 @@ export async function onSearch({ store, setStore, api }) {
     // start appending records
     await fromStrm.pipeTo(toStrm, { signal: abortController.signal });
 
-    // TODO does it stop main?
+    // TODO replace with Intersection Observer
     if (!isAborted) {
       for (const record of store.recordSet) {
         if (isAborted) break;

@@ -1,6 +1,5 @@
 import { useContext } from "solid-js";
-import { Context, getSearchBar, onSearchBar, onSearch } from "@/store/store.js";
-import { Spoiler } from "@/layout/components/index.js";
+import { Context, setQuery, onSearch } from "@/store/store.js";
 import styles from "./overview_filter.module.css";
 
 export function OverviewFilter() {
@@ -11,14 +10,20 @@ export function OverviewFilter() {
       <input
         id="query"
         aria-label="query"
-        value={getSearchBar(context, context.store.searchParams)}
-        onInput={async (event) => {
-          await onSearchBar(context, event.currentTarget.value);
+        placeholder="search or filter with keyword:value"
+        value={context.store.query}
+        onInput={(event) => {
+          setQuery(context, event.currentTarget.value);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            onSearch(context);
+          }
         }}
       />
 
       <button
-        onClick={async (event) => {
+        onClick={async () => {
           await onSearch(context);
         }}
       >

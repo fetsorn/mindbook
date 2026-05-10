@@ -5,6 +5,7 @@ import {
   onSearch,
   onRecordCreate,
   updateSearchParams,
+  setQuery,
   getSpoilerOpen,
   setSpoilerOpen,
   onRecordEdit,
@@ -26,15 +27,6 @@ vi.mock("@/store/impure.js", async (importOriginal) => {
   };
 });
 
-vi.mock("@/store/pure.js", async (importOriginal) => {
-  const mod = await importOriginal();
-
-  return {
-    ...mod,
-    changeSearchParams: vi.fn(),
-  };
-});
-
 const [store, setStore] = makeStore();
 
 describe("store", () => {
@@ -43,12 +35,11 @@ describe("store", () => {
   beforeEach(() => {
     setStore(undefined);
 
-    changeSearchParams.mockReset();
-
     createRecord.mockReset();
 
     setStore({
-      searchParams: new URLSearchParams("_=mind"),
+      searchParams: "_=mind&.sortBy=mind",
+      query: "",
       schema: stub.schemaRoot,
       record: undefined,
       recordSet: [],
@@ -115,37 +106,21 @@ describe("store", () => {
   });
 
   describe("updateSearchParams", () => {
-    test("searches", async () => {
-      const field = "a";
+    test("sets a field", () => {
+      updateSearchParams({ store, setStore }, "name", "foo");
 
-      const value = "b";
+      const params = new URLSearchParams(store.searchParams);
 
-      changeSearchParams.mockImplementation(() => "1");
-
-      window.history.replaceState = vi.fn();
-
-      await updateSearchParams({ store, setStore }, field, value);
-
-      expect(store.searchParams.toString()).toStrictEqual("1");
-
-      // TODO do in proxy
-      //expect(window.history.replaceState).toHaveBeenCalledWith(null, null, 2);
+      expect(params.get("name")).toBe("foo");
+      expect(params.get("_")).toBe("mind");
     });
+  });
 
-    test("ignores evenor specific param", async () => {
-      const field = ".a";
+  describe("setQuery", () => {
+    test("sets raw query text", () => {
+      setQuery({ setStore }, "hello date:2024");
 
-      const value = "b";
-
-      changeSearchParams.mockImplementation(() => "1");
-
-      window.history.replaceState = vi.fn();
-
-      await updateSearchParams({ store, setStore }, field, value);
-
-      expect(store.searchParams).toBe("1");
-
-      // TODO actually check that it ignores
+      expect(store.query).toBe("hello date:2024");
     });
   });
 
@@ -193,10 +168,7 @@ describe("store", () => {
 
       setStore("recordSet", [record1, record2]);
 
-      setStore(
-        "searchParams",
-        new URLSearchParams(".sortBy=mind&.sortDirection=first"),
-      );
+      setStore("searchParams", "_=mind&.sortBy=mind&.sortDirection=first");
 
       expect(getSortedRecords({ store })).toStrictEqual([record1, record2]);
     });
@@ -208,10 +180,7 @@ describe("store", () => {
 
       setStore("recordSet", [record1, record2]);
 
-      setStore(
-        "searchParams",
-        new URLSearchParams(".sortBy=mind&.sortDirection=last"),
-      );
+      setStore("searchParams", "_=mind&.sortBy=mind&.sortDirection=last");
 
       expect(getSortedRecords({ store })).toStrictEqual([record2, record1]);
     });
@@ -222,6 +191,8 @@ describe("store", () => {
       expect(getFilterQueries({ store })).toStrictEqual([["_", "mind"]]);
     });
   });
+
+  // NOTE: getFilterOptions reads leaves from searchParams base, which is still valid
 
   describe("getFilterOptions", () => {
     test("", async () => {

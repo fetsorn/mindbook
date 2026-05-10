@@ -105,20 +105,107 @@ const seed = [
   },
 ];
 
+/**
+ * Simple query string parser for the memory store mock.
+ * Mirrors evenor's parseQueryString: "key:value" tokens become keyword filters,
+ * bare words become freeform terms.
+ */
+function parseQuery(queryString, base) {
+  const filters = {};
+  const freeform = [];
+
+  if (!queryString || !queryString.trim()) return { filters, freeform };
+
+  const keywords = Object.keys(schema);
+  const tokenRegex = /(\S+:"(?:[^"\\]|\\.)*"|\S+:'(?:[^'\\]|\\.)*'|\S+)/g;
+  let match;
+
+  while ((match = tokenRegex.exec(queryString)) !== null) {
+    const token = match[1];
+    const colonIndex = token.indexOf(":");
+
+    if (colonIndex !== -1) {
+      const key = token.slice(0, colonIndex);
+      let value = token.slice(colonIndex + 1);
+      value = value.replace(/^["']|["']$/g, "");
+
+      if (keywords.includes(key)) {
+        filters[key] = value;
+      } else {
+        freeform.push(token);
+      }
+    } else {
+      freeform.push(token);
+    }
+  }
+
+  return { filters, freeform };
+}
+
+/**
+ * Check if a record matches a value by searching all string fields recursively.
+ */
+function matchesFreeform(record, pattern) {
+  const regex = new RegExp(pattern, "i");
+
+  for (const [key, val] of Object.entries(record)) {
+    if (key === "_") continue;
+    if (typeof val === "string" && regex.test(val)) return true;
+    if (Array.isArray(val)) {
+      for (const item of val) {
+        if (typeof item === "object" && matchesFreeform(item, pattern)) return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Check if a record matches a keyword filter, including nested fields.
+ */
+function matchesFilter(record, key, value) {
+  if (record[key] !== undefined) {
+    if (value === "") return true;
+    if (typeof record[key] === "string") {
+      return new RegExp(value, "i").test(record[key]);
+    }
+  }
+
+  // search nested arrays for the key
+  for (const val of Object.values(record)) {
+    if (Array.isArray(val)) {
+      for (const item of val) {
+        if (typeof item === "object" && matchesFilter(item, key, value)) return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 export function makeApi() {
   // start with seed data
   records = JSON.parse(JSON.stringify(seed));
 
   return {
-    r(query) {
-      const base = query._;
+    r(base, queryString) {
+      const { filters, freeform } = parseQuery(queryString, base);
+
       const matching = records.filter((r) => {
         if (r._ !== base) return false;
-        for (const [key, val] of Object.entries(query)) {
-          if (key === "_") continue;
-          if (r[key] === undefined) return false;
-          if (!new RegExp(val).test(r[key])) return false;
+
+        // all keyword filters must match (AND)
+        for (const [key, val] of Object.entries(filters)) {
+          if (!matchesFilter(r, key, val)) return false;
         }
+
+        // freeform terms OR across all fields
+        if (freeform.length > 0) {
+          const pattern = freeform.join("|");
+          if (!matchesFreeform(r, pattern)) return false;
+        }
+
         return true;
       });
 

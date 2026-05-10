@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
-import { Context, makeStore, onSearchBar } from "@/store/store.js";
+import { Context, makeStore, setQuery } from "@/store/store.js";
 import { OverviewFilter } from "./overview_filter.jsx";
 
 vi.mock("@/store/store.js", async (importOriginal) => {
@@ -9,7 +9,7 @@ vi.mock("@/store/store.js", async (importOriginal) => {
 
   return {
     ...mod,
-    onSearchBar: vi.fn(),
+    setQuery: vi.fn(),
   };
 });
 
@@ -42,7 +42,7 @@ describe("OverviewFilter", () => {
 
     await userEvent.keyboard("a");
 
-    expect(onSearchBar).toHaveBeenCalledWith({ store }, "a");
+    expect(setQuery).toHaveBeenCalledWith({ store }, "a");
 
     expect(() => getByText("search")).not.toThrowError();
   });
