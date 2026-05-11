@@ -4,7 +4,6 @@ import {
   onRecordWipe,
   onSearch,
   onRecordCreate,
-  updateSearchParams,
   setQuery,
   getSpoilerOpen,
   setSpoilerOpen,
@@ -14,7 +13,6 @@ import {
   getFilterOptions,
   makeStore,
 } from "@/store/store.js";
-import { changeSearchParams } from "@/store/pure.js";
 import { createRecord } from "@/store/impure.js";
 import stub from "./stub.js";
 
@@ -38,7 +36,6 @@ describe("store", () => {
     createRecord.mockReset();
 
     setStore({
-      searchParams: "_=mind&.sortBy=mind",
       query: "",
       schema: stub.schemaRoot,
       record: undefined,
@@ -105,17 +102,6 @@ describe("store", () => {
     });
   });
 
-  describe("updateSearchParams", () => {
-    test("sets a field", () => {
-      updateSearchParams({ store, setStore }, "name", "foo");
-
-      const params = new URLSearchParams(store.searchParams);
-
-      expect(params.get("name")).toBe("foo");
-      expect(params.get("_")).toBe("mind");
-    });
-  });
-
   describe("setQuery", () => {
     test("sets raw query text", () => {
       setQuery({ setStore }, "hello date:2024");
@@ -168,8 +154,6 @@ describe("store", () => {
 
       setStore("recordSet", [record1, record2]);
 
-      setStore("searchParams", "_=mind&.sortBy=mind&.sortDirection=first");
-
       expect(getSortedRecords({ store })).toStrictEqual([record1, record2]);
     });
 
@@ -180,23 +164,9 @@ describe("store", () => {
 
       setStore("recordSet", [record1, record2]);
 
-      setStore("searchParams", "_=mind&.sortBy=mind&.sortDirection=last");
+      setStore("sortDirection", "last");
 
       expect(getSortedRecords({ store })).toStrictEqual([record2, record1]);
-    });
-  });
-
-  describe("getFilterQueries", () => {
-    test("", async () => {
-      expect(getFilterQueries({ store })).toStrictEqual([["_", "mind"]]);
-    });
-  });
-
-  // NOTE: getFilterOptions reads leaves from searchParams base, which is still valid
-
-  describe("getFilterOptions", () => {
-    test("", async () => {
-      expect(getFilterOptions({ store })).toStrictEqual(["name", "mind", "__"]);
     });
   });
 });

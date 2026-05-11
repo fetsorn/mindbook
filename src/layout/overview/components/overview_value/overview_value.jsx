@@ -8,7 +8,7 @@ export function OverviewValue(props) {
   const { store } = useContext(Context);
 
   const isBase =
-    props.branch === new URLSearchParams(store.searchParams).get("_");
+    props.branch === store.base;
 
   const defaultIsValue = props.defaultShow ? props.defaultShow : !isBase;
 

@@ -1,41 +1,4 @@
 /**
- * This
- * @name changeSearchParams
- * @function
- * @param {SearchParams} searchParams -
- * @param {String} field -
- * @param {String} value -
- * @returns {SearchParams}
- */
-export function changeSearchParams(searchParams, field, value) {
-  // if query field is undefined, delete searchParams
-  if (field === undefined) {
-    return new URLSearchParams();
-  } else if (field === "_") {
-    // if query field is base, update default sort by
-    // TODO pick default sortBy from task === "date"
-    const sortBy = value;
-
-    return new URLSearchParams(`_=${value}&.sortBy=${sortBy}`);
-  } else if (field !== "") {
-    // if query field is defined, update searchParams
-    if (value === undefined) {
-      // if query value is undefined, remove query field
-      searchParams.delete(field);
-
-      return searchParams;
-    } else {
-      // if query value is defined, set query field
-      searchParams.set(field, value);
-
-      return searchParams;
-    }
-  }
-
-  return searchParams;
-}
-
-/**
  * This finds first available string value for sorting
  * @name findFirstSortBy
  * @function

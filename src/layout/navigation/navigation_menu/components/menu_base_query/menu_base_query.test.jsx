@@ -25,7 +25,7 @@ describe("MenuBaseQuery", () => {
 
     setStore("schema", schemaRoot);
 
-    setStore("searchParams", "_=mind");
+    setStore("base", "mind");
 
     const { getByRole, getAllByRole } = render(() => (
       <Context.Provider value={{ store, setStore }}>

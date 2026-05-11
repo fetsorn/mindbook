@@ -14,7 +14,7 @@ export function MenuSortQuery(props) {
       <select
         id="selectSort"
         className={styles.select}
-        value={new URLSearchParams(store.searchParams).get(".sortBy")}
+        value={store.sortBy}
         onChange={({ target: { value } }) =>
           onSort({ store, setStore }, ".sortBy", value)
         }
@@ -22,21 +22,16 @@ export function MenuSortQuery(props) {
         <For
           each={Object.keys(store.schema)
             .filter((branch) =>
-              store.schema[branch].trunks.includes(
-                new URLSearchParams(store.searchParams).get("_"),
-              ),
+              store.schema[branch].trunks.includes(store.base),
             )
-            .concat([new URLSearchParams(store.searchParams).get("_")])}
+            .concat([store.base])}
         >
           {(field) => <option value={field}>{field}</option>}
         </For>
       </select>
 
       <Show
-        when={
-          new URLSearchParams(store.searchParams).get(".sortDirection") ===
-          "last"
-        }
+        when={store.sortDirection === "last"}
         fallback={
           <button
             id="sortDirectionFirst"

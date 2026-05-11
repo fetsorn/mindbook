@@ -12,8 +12,7 @@ export function OverviewHeader() {
 
   return (
     <h1>
-      {capitalize(new URLSearchParams(store.searchParams).get("_")) ??
-        "Entries"}
+      {capitalize(store.base) ?? "Entries"}
     </h1>
   );
 }

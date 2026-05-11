@@ -1,6 +1,6 @@
 /* try to keep store interactions only in this file */
 import { createStore, produce } from "solid-js/store";
-import { sortCallback, changeSearchParams } from "@/store/pure.js";
+import { sortCallback } from "@/store/pure.js";
 import { createRecord } from "@/store/impure.js";
 import { createContext } from "solid-js";
 
@@ -9,9 +9,12 @@ export const Context = createContext();
 export function makeStore() {
   return createStore({
     abortPreviousStream: async () => {},
-    searchParams: "_=mind&.sortBy=mind", // base + sort state
+    base: "mind",
+    sortBy: "mind",
+    sortDirection: undefined,
+    scroll: undefined,
     query: "", // raw search bar text, source of truth
-    schema: {}, // TODO set schemaRoot somehow
+    schema: {},
     template: {},
     record: undefined,
     recordSet: [],
@@ -34,9 +37,14 @@ export function openBook({ setStore }, content) {
   setStore(
     produce((state) => {
       state.schema = content.schema;
-      state.searchParams = content.searchParams;
       state.template = content.template;
       state.actions = content.actions;
+
+      if (content.base !== undefined) state.base = content.base;
+      if (content.sortBy !== undefined) state.sortBy = content.sortBy;
+      if (content.sortDirection !== undefined) state.sortDirection = content.sortDirection;
+      if (content.scroll !== undefined) state.scroll = content.scroll;
+      if (content.query !== undefined) state.query = content.query;
     }),
   );
 }
@@ -74,47 +82,7 @@ export function onRecordEdit({ setStore }, path, value) {
 }
 
 export function getBase({ store }) {
-  return new URLSearchParams(store.searchParams).get("_");
-}
-
-/**
- * This
- * @name getFilterOptions
- * @export function
- * @returns {String[]}
- */
-export function getFilterOptions({ store }) {
-  if (store.schema === undefined || store.searchParams === undefined) return [];
-
-  // find all fields name
-  const leafFields = store.schema[
-    new URLSearchParams(store.searchParams).get("_")
-  ].leaves.concat([new URLSearchParams(store.searchParams).get("_"), "__"]);
-
-  // find field name which is added to filter search params
-  const addedFields = Array.from(
-    new URLSearchParams(store.searchParams).keys(),
-  );
-
-  // find name fields which is not added to filter search params
-  const notAddedFields = leafFields.filter((key) => !addedFields.includes(key));
-
-  return notAddedFields;
-}
-
-/**
- * This
- * @name getFilterQueries
- * @export function
- * @returns {String[]}
- */
-export function getFilterQueries({ store }) {
-  if (store.searchParams === undefined) return [];
-
-  // convert entries iterator to array for Index
-  return Array.from(new URLSearchParams(store.searchParams).entries()).filter(
-    ([key]) => !key.startsWith("."),
-  );
+  return store.base;
 }
 
 /**
@@ -124,13 +92,9 @@ export function getFilterQueries({ store }) {
  * @returns {Function}
  */
 export function getSortedRecords({ store }) {
-  const sortBy = new URLSearchParams(store.searchParams).get(".sortBy");
-
-  const sortDirection = new URLSearchParams(store.searchParams).get(
-    ".sortDirection",
+  const records = store.recordSet.toSorted(
+    sortCallback(store.sortBy, store.sortDirection),
   );
-
-  const records = store.recordSet.toSorted(sortCallback(sortBy, sortDirection));
 
   return records;
 }
@@ -147,28 +111,10 @@ export function setQuery({ setStore }, query) {
   );
 }
 
-/**
- * Update internal searchParams for base/sort controls (not the search bar).
- */
-export function updateSearchParams({ store, setStore }, field, value) {
-  const searchParams = changeSearchParams(
-    new URLSearchParams(store.searchParams),
-    field,
-    value,
-  );
-
-  setStore(
-    produce((state) => {
-      state.searchParams = searchParams.toString();
-    }),
-  );
-}
-
 export async function onBase(context, value) {
-  updateSearchParams(context, "_", value);
-
   context.setStore(
     produce((state) => {
+      state.base = value;
       state.recordSet = [];
       state.recordMap = {};
       state.record = undefined;
@@ -177,7 +123,12 @@ export async function onBase(context, value) {
 }
 
 export async function onSort(context, field, value) {
-  updateSearchParams(context, field, value);
+  context.setStore(
+    produce((state) => {
+      if (field === ".sortBy") state.sortBy = value;
+      if (field === ".sortDirection") state.sortDirection = value;
+    }),
+  );
 
   context.setStore(
     produce((state) => {
@@ -192,10 +143,7 @@ export async function onSort(context, field, value) {
  * @export function
  */
 export async function onRecordCreate({ store, setStore }) {
-  const record = await createRecord(
-    new URLSearchParams(store.searchParams).get("_"),
-    store.template,
-  );
+  const record = await createRecord(store.base, store.template);
 
   setStore(
     produce((state) => {
@@ -211,7 +159,7 @@ export async function onCancel({ store, setStore }) {
 }
 
 export async function getRecord({ store, setStore, api }, record) {
-  const base = getBase({ store });
+  const base = store.base;
 
   const grain = { _: base, [base]: record };
 
@@ -241,7 +189,7 @@ export async function onRecordSave(
   setStore("loading", true);
 
   await store.abortPreviousStream();
-  const base = new URLSearchParams(store.searchParams).get("_");
+  const base = store.base;
 
   try {
     await Array.fromAsync(await api.d(recordOld));
@@ -285,7 +233,7 @@ export async function onRecordWipe({ store, setStore, api }, record) {
 
   await Array.fromAsync(await api.d(record));
 
-  const base = new URLSearchParams(store.searchParams).get("_");
+  const base = store.base;
 
   const key = record[base];
 
@@ -310,7 +258,7 @@ export async function onSearch({ store, setStore, api }) {
   setStore("loading", true);
 
   try {
-    const base = getBase({ store });
+    const base = store.base;
 
     const fromStrm = await api.r(base, store.query);
 
@@ -378,11 +326,8 @@ export async function onSearch({ store, setStore, api }) {
     );
   }
 
-  const scroll = new URLSearchParams(store.searchParams).get(".scroll");
-
-  if (scroll !== null) {
-    // SEC-16: null-check before calling scrollIntoView
-    const element = document.getElementById(scroll);
+  if (store.scroll !== undefined && store.scroll !== null) {
+    const element = document.getElementById(store.scroll);
 
     if (element) {
       element.scrollIntoView();
@@ -403,11 +348,7 @@ export async function onSearch({ store, setStore, api }) {
 export async function leapfrog(context, branch, value, cognate) {
   await onSearch(context, undefined, undefined);
 
-  await onSearch(
-    context,
-    "_",
-    new URLSearchParams(store.searchParams).get("_"),
-  );
+  await onSearch(context, "_", store.base);
 
   await onSearch(context, "__", cognate);
 

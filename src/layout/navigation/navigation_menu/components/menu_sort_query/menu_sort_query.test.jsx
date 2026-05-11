@@ -21,7 +21,9 @@ describe("MenuSortQuery", () => {
 
     setStore("schema", schemaRoot);
 
-    setStore("searchParams", "_=mind&.sortBy=mind");
+    setStore("base", "mind");
+
+    setStore("sortBy", "mind");
 
     const { getByRole, getAllByRole } = render(() => (
       <Context.Provider value={{ store, setStore }}>

@@ -9,13 +9,12 @@ export function BottomNew() {
   // we can add new values to csvs only if base has some connections
   const canAdd = () => {
     // store is set to undefined for a short moment to overwrite data
-    if (store.schema === undefined || store.searchParams === undefined)
+    if (store.schema === undefined || store.base === undefined)
       return false;
 
     return (
-      store.schema[new URLSearchParams(store.searchParams).get("_")] &&
-      store.schema[new URLSearchParams(store.searchParams).get("_")].leaves
-        .length > 0
+      store.schema[store.base] &&
+      store.schema[store.base].leaves.length > 0
     );
   };
   return (

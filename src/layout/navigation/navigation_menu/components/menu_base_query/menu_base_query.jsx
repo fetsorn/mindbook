@@ -14,7 +14,7 @@ export function MenuBaseQuery(props) {
       <select
         id="selectBase"
         className={styles.select}
-        value={new URLSearchParams(store.searchParams).get("_")}
+        value={store.base}
         onChange={({ target: { value } }) => onBase({ store, setStore }, value)}
       >
         <For each={Object.keys(store.schema)}>
