@@ -1,9 +1,9 @@
 import { useContext } from "solid-js";
-import { Context } from "@/store/store.js";
+import { Context, onRecordEdit } from "@/store/store.js";
 import { ProfileRecord, ProfileValue } from "../index.js";
 
 export function ProfileFieldItem(props) {
-  const { store } = useContext(Context);
+  const { store, setStore } = useContext(Context);
 
   // if base has no leaves, show value
   // otherwise show record with buttons that can add leaves
@@ -12,6 +12,11 @@ export function ProfileFieldItem(props) {
       return true;
 
     return store.schema[props.branch].leaves.length === 0;
+  };
+
+  const proseKeys = () => {
+    if (typeof props.item !== "object" || props.item === null) return [];
+    return Object.keys(props.item).filter((k) => k.startsWith("@"));
   };
 
   return (
@@ -36,6 +41,51 @@ export function ProfileFieldItem(props) {
           branch={props.branch}
           path={props.path}
         />
+
+        <Show when={
+          typeof props.item !== "object"
+            || (props.item !== null && props.item["@"] === undefined)
+        }>
+          <button
+            onClick={() => {
+              if (typeof props.item === "object" && props.item !== null) {
+                onRecordEdit(
+                  { setStore },
+                  [...props.path, "@"],
+                  "",
+                );
+              } else {
+                onRecordEdit(
+                  { setStore },
+                  props.path,
+                  { _: props.branch, [props.branch]: props.item, "@": "" },
+                );
+              }
+            }}
+          >
+            @
+          </button>
+        </Show>
+
+        <For each={proseKeys()}>
+          {(key) => (
+            <>
+              <label for={`profile-${props.branch}-${key}`}>{key} - </label>
+              <textarea
+                id={`profile-${props.branch}-${key}`}
+                onInput={async (event) => {
+                  await onRecordEdit(
+                    { setStore },
+                    [...props.path, key],
+                    event.target.value,
+                  );
+                }}
+              >
+                {props.item[key]}
+              </textarea>
+            </>
+          )}
+        </For>
       </Match>
     </Switch>
   );

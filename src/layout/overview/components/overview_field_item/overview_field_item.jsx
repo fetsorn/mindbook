@@ -28,7 +28,22 @@ export function OverviewFieldItem(props) {
       }
     >
       <Match when={baseIsTwig()}>
-        <OverviewValue branch={props.branch} value={props.item} path={path()} rstIndex={props.rstIndex} />
+        <OverviewValue
+          branch={props.branch}
+          value={typeof props.item === "object" ? props.item[props.item._] : props.item}
+          path={path()}
+          rstIndex={props.rstIndex}
+        />
+
+        <Show when={typeof props.item === "object" && props.item !== null}>
+          <For each={Object.entries(props.item ?? {}).filter(([k]) => k.startsWith("@"))}>
+            {([key, text]) => (
+              <span className={`${props.branch}-prose`}>
+                {text}
+              </span>
+            )}
+          </For>
+        </Show>
       </Match>
     </Switch>
   );

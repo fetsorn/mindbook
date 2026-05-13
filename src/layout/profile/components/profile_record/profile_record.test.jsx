@@ -28,9 +28,13 @@ describe("ProfileRecord", () => {
       },
       branch: {
         trunks: ["mind"],
-        leaves: ["description_en"],
+        leaves: ["trunk", "task"],
       },
-      description_en: {
+      trunk: {
+        trunks: ["branch"],
+        leaves: [],
+      },
+      task: {
         trunks: ["branch"],
         leaves: [],
       },
@@ -147,10 +151,8 @@ describe("ProfileRecord", () => {
     });
   });
 
-  test("adds description", async () => {
+  test("adds trunk", async () => {
     const index = "index";
-
-    const branch = "branch";
 
     const item = {
       _: "branch",
@@ -181,15 +183,15 @@ describe("ProfileRecord", () => {
 
     await userEvent.click(getByText("add..."));
 
-    await userEvent.click(getByText("description_en"));
+    await userEvent.click(getByText("trunk"));
 
     expect(onRecordEdit).toHaveBeenCalledWith(
       { setStore },
-      ["record", "branch", 0, "description_en"],
+      ["record", "branch", 0, "trunk"],
       [
         {
-          _: "description_en",
-          description_en: "",
+          _: "trunk",
+          trunk: "",
         },
       ],
     );
@@ -201,10 +203,10 @@ describe("ProfileRecord", () => {
         {
           _: "branch",
           branch: "",
-          description_en: [
+          trunk: [
             {
-              _: "description_en",
-              description_en: "",
+              _: "trunk",
+              trunk: "",
             },
           ],
         },

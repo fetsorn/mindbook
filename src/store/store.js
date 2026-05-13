@@ -42,7 +42,8 @@ export function openBook({ setStore }, content) {
 
       if (content.base !== undefined) state.base = content.base;
       if (content.sortBy !== undefined) state.sortBy = content.sortBy;
-      if (content.sortDirection !== undefined) state.sortDirection = content.sortDirection;
+      if (content.sortDirection !== undefined)
+        state.sortDirection = content.sortDirection;
       if (content.scroll !== undefined) state.scroll = content.scroll;
       if (content.query !== undefined) state.query = content.query;
     }),
@@ -181,6 +182,21 @@ export async function getRecord({ store, setStore, api }, record) {
  * @param {object} recordOld -
  * @param {object} recordNew -
  */
+function stripEmptyProse(obj) {
+  if (obj === null || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(stripEmptyProse);
+
+  const result = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (key.startsWith("@") && value === "") continue;
+
+    result[key] = stripEmptyProse(value);
+  }
+
+  return result;
+}
+
 export async function onRecordSave(
   { store, setStore, api },
   recordOld,
@@ -191,24 +207,26 @@ export async function onRecordSave(
   await store.abortPreviousStream();
   const base = store.base;
 
+  const recordCleaned = stripEmptyProse(recordNew);
+
   try {
     await Array.fromAsync(await api.d(recordOld));
   } catch {
     // do nothing
   }
 
-  await Array.fromAsync(await api.u(recordNew));
+  await Array.fromAsync(await api.u(recordCleaned));
 
   const keyOld = recordOld[base];
 
-  const keyNew = recordNew[base];
+  const keyNew = recordCleaned[base];
 
   const records = store.recordSet.filter((r) => r !== keyOld).concat([keyNew]);
 
   // force reload
   setStore("recordSet", []);
 
-  setStore("recordMap", { [keyNew]: recordNew });
+  setStore("recordMap", { [keyNew]: recordCleaned });
 
   setStore(
     produce((state) => {

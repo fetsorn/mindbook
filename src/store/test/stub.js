@@ -89,7 +89,7 @@ export const cases = {
     },
     schemaRecord: { _: "_", event: ["datum"] },
     metaRecords: [
-      { _: "branch", branch: "event", description_en: "", description_ru: "" },
+      { _: "branch", branch: "event", "@en": "", "@ru": "" },
       { _: "branch", branch: "datum" },
     ],
   },

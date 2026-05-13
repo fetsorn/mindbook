@@ -31,6 +31,14 @@ export function OverviewRecord(props) {
         rstIndex={props.rstIndex}
       />
 
+      <For each={Object.entries(props.record).filter(([k]) => k.startsWith("@"))}>
+        {([key, text]) => (
+          <span className={`${props.record._}-prose`}>
+            {text}
+          </span>
+        )}
+      </For>
+
       <Show
         when={
           store.schema[props.record._].leaves.filter(recordHasLeaf).length > 0

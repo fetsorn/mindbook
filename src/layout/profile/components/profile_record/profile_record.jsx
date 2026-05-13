@@ -28,6 +28,36 @@ export function ProfileRecord(props) {
         path={[...props.path, access("_")]}
       />
 
+      <Show when={access("@") === undefined}>
+        <button
+          onClick={() =>
+            onRecordEdit({ setStore }, [...props.path, "@"], "")
+          }
+        >
+          @
+        </button>
+      </Show>
+
+      <For each={Object.keys(props.record ?? {}).filter((k) => k.startsWith("@"))}>
+        {(key) => (
+          <>
+            <label for={`profile-${access("_")}-${key}`}>{key} - </label>
+            <textarea
+              id={`profile-${access("_")}-${key}`}
+              onInput={async (event) => {
+                await onRecordEdit(
+                  { setStore },
+                  [...props.path, key],
+                  event.target.value,
+                );
+              }}
+            >
+              {access(key)}
+            </textarea>
+          </>
+        )}
+      </For>
+
       <Spoiler
         index={`${props.index}-spoilerfield`}
         title={"with"}

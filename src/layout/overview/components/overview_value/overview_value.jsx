@@ -48,8 +48,6 @@ export function OverviewValue(props) {
 
   const laterals = [];
 
-  //const valueEscaped = props.value.replace("\\n", "\n");
-
   return (
     <>
       <Show
