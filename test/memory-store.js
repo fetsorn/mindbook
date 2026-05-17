@@ -103,6 +103,15 @@ const seed = [
     name: "magic book interface",
     category: "software",
   },
+  // place has leaves but record only has the base value
+  {
+    _: "event",
+    event: "ate bread",
+    actname: "ben",
+    actdate: "2022-03-02",
+    place: "miami",
+    datum: "with garlic",
+  },
 ];
 
 /**

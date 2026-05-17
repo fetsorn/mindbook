@@ -21,7 +21,11 @@ export function OverviewFieldItem(props) {
       fallback={
         <OverviewRecord
           index={`${props.index}-${props.item[props.item._]}`}
-          record={props.item}
+          record={
+            typeof props.item === "object"
+              ? props.item
+              : { _: props.branch, [props.branch]: props.item }
+          }
           path={path()}
           rstIndex={props.rstIndex}
         />

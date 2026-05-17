@@ -159,6 +159,35 @@ export async function onCancel({ store, setStore }) {
   setStore("loading", false);
 }
 
+// Ensure branches with leaves are objects, not bare strings.
+// If schema says "place" has leaves and the value is "new york",
+// wrap it into { _: "place", place: "new york" }.
+// move to csvs-js
+function normalizeBranches(record, schema) {
+  if (!schema || typeof record !== "object" || record === null) return record;
+
+  for (const [key, value] of Object.entries(record)) {
+    if (key === "_" || key.startsWith("@") || key === record._) continue;
+
+    const branchSchema = schema[key];
+    if (!branchSchema || branchSchema.leaves.length === 0) continue;
+
+    if (Array.isArray(value)) {
+      record[key] = value.map((item) =>
+        typeof item === "string"
+          ? { _: key, [key]: item }
+          : normalizeBranches(item, schema),
+      );
+    } else if (typeof value === "string") {
+      record[key] = { _: key, [key]: value };
+    } else if (typeof value === "object" && value !== null) {
+      normalizeBranches(value, schema);
+    }
+  }
+
+  return record;
+}
+
 export async function getRecord({ store, setStore, api }, record) {
   const base = store.base;
 
@@ -167,7 +196,9 @@ export async function getRecord({ store, setStore, api }, record) {
   if (store.recordMap[record] === undefined) {
     const [recordNew] = await Array.fromAsync(await api.describe(grain));
 
-    setStore("recordMap", { [record]: recordNew });
+    setStore("recordMap", {
+      [record]: normalizeBranches(recordNew, store.schema),
+    });
   }
 
   const recordNew = store.recordMap[record];
