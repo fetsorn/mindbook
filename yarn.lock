@@ -1224,15 +1224,6 @@
   resolved "https://registry.yarnpkg.com/@exodus/bytes/-/bytes-1.15.0.tgz#54479e0f406cbad024d6fe1c3190ecca4468df3b"
   integrity sha512-UY0nlA+feH81UGSHv92sLEPLCeZFjXOuHhrIo0HQydScuQc8s0A7kL/UdgwgDq8g8ilksmuoF35YVTNphV2aBQ==
 
-"@fetsorn/csvs-js@^0.28.2":
-  version "0.28.2"
-  resolved "https://registry.yarnpkg.com/@fetsorn/csvs-js/-/csvs-js-0.28.2.tgz#e4e5a4501a5d04d9b22805142df1b92962f72fc7"
-  integrity sha512-FiWNwEBafRmB5YrF6DHswN69S98+bwUteFSoHw+swyEMqu7gA2R5xyEd16N/Hh1B3yEycDnlzcRockPlcGgdyQ==
-  dependencies:
-    "@swimburger/isomorphic-streams" "^1.1.1"
-    papaparse "^5.4.1"
-    path-browserify "^1.0.1"
-
 "@humanfs/core@^0.19.2":
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/@humanfs/core/-/core-0.19.2.tgz#a8272ca03b2acf492670222b2320b6c421bfde60"
@@ -2109,11 +2100,6 @@
   version "1.15.32"
   resolved "https://registry.yarnpkg.com/@swc/wasm/-/wasm-1.15.32.tgz#98969c5e38af6be2a1660f05ce1d4548ebdf88d7"
   integrity sha512-e3bWWhLEPki4cHZpMO+jFWdX3rC4sWp2cCVRGR4N6zSb8bInrP3zXuV7i1SuZjdumIrczKFz0DTgI+Q19xxSBA==
-
-"@swimburger/isomorphic-streams@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@swimburger/isomorphic-streams/-/isomorphic-streams-1.1.1.tgz#27ad84b20be631012b0a6babbceae706f74cdd0b"
-  integrity sha512-E4ZHqsSA5A/xRRmi/rgnR84qPhiqHAjprBmwRtwiPC63mtMOUk/eYClRV69MuZWt6dsvgijHCdfdDCCrfy39nQ==
 
 "@testing-library/dom@^10.4.0":
   version "10.4.1"
@@ -6195,11 +6181,6 @@ pako@~1.0.2:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
-
-papaparse@^5.4.1:
-  version "5.5.3"
-  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.5.3.tgz#07f8994dec516c6dab266e952bed68e1de59fa9a"
-  integrity sha512-5QvjGxYVjxO59MGU2lHVYpRWBBtKHnlIAcSe1uNFCkkptUh63NFRj0FJQm7nR67puEruUci/ZkjmEFrjCAyP4A==
 
 parse-json@^7.0.0:
   version "7.1.1"

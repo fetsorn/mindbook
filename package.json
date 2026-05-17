@@ -27,7 +27,7 @@
     "test": "vitest --run --browser.headless --coverage",
     "tauri": "tauri",
     "lint": "eslint ./src/",
-    "wdio-browser": "wdio run ./wdio.browser.conf.js"
+    "wdio": "wdio run ./wdio.browser.conf.js"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.6",

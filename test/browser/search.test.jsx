@@ -1,5 +1,5 @@
 import { setup, cleanup } from "./setup.js";
-import { createMind, search } from "./actions.js";
+import { setValue, createMind, search } from "./actions.js";
 
 describe("search", () => {
   before(async () => {
@@ -8,6 +8,8 @@ describe("search", () => {
 
   it("should search for a record", async () => {
     await createMind("foobar");
+
+    await setValue(await $("aria/query"), "philosophy");
 
     await search();
 
