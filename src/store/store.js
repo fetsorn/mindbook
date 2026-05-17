@@ -112,7 +112,7 @@ export function setQuery({ setStore }, query) {
   );
 }
 
-export async function onBase(context, value) {
+export function onBase(context, value) {
   context.setStore(
     produce((state) => {
       state.base = value;
@@ -123,7 +123,7 @@ export async function onBase(context, value) {
   );
 }
 
-export async function onSort(context, field, value) {
+export function onSort(context, field, value) {
   context.setStore(
     produce((state) => {
       if (field === ".sortBy") state.sortBy = value;
@@ -205,6 +205,7 @@ export async function onRecordSave(
   setStore("loading", true);
 
   await store.abortPreviousStream();
+
   const base = store.base;
 
   const recordCleaned = stripEmptyProse(recordNew);
@@ -433,4 +434,12 @@ export async function onAction({ store, api }, action, record) {
   };
 
   api.c(actionRecord);
+}
+
+export async function searchBook(context, base, query) {
+  onBase(context, base);
+
+  setQuery(context, query);
+
+  await onSearch(context);
 }

@@ -1,6 +1,6 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
-import { Context, makeStore, openBook } from "@/store/store.js";
+import { Context, makeStore, openBook, searchBook } from "@/store/store.js";
 import { polyfill } from "@/polyfill.js";
 import App from "@/layout/layout.jsx";
 import "@/index.css";
@@ -31,6 +31,7 @@ export function create(api) {
   return {
     open: (content) => openBook({ setStore }, content),
     bind: (element) => bindBook({ store, setStore, api }, element),
+    find: (base, query) => searchBook({ store, setStore, api }, base, query),
   };
 }
 
