@@ -8,7 +8,7 @@ let records = [];
 // - flat record (mind with name, category)
 // - nested record (event with place that has founded/population)
 // - arrays (event with multiple places)
-// - long text (datum)
+// - long text (@)
 // - dates, numbers
 // - twig values (no children)
 // - branch values (have children)
@@ -30,7 +30,8 @@ const seed = [
   {
     _: "event",
     event: "walked-shore",
-    actname: "ben",
+    "@": "walked on the shore and found a small crab hiding under a rock near the tide pools",
+    actname: "me",
     actdate: "2026-03-02",
     place: [
       {
@@ -40,13 +41,13 @@ const seed = [
         population: "8336817",
       },
     ],
-    datum: "walked on the shore and found a small crab hiding under a rock near the tide pools",
   },
   // array: event with multiple places, some with leaves, some without
   {
     _: "event",
     event: "grand-tour",
-    actname: "alice",
+    "@": "traveled across four cities in three weeks",
+    actname: "granma",
     actdate: "2025-07-15",
     place: [
       {
@@ -71,20 +72,20 @@ const seed = [
         population: "13960000",
       },
     ],
-    datum: "traveled across four cities in three weeks",
   },
   // minimal: event with only a name and date, no nesting
   {
     _: "event",
     event: "sunrise",
-    actname: "eve",
+    actname: "son",
     actdate: "2026-01-01",
   },
   // deep nesting: event with a single place that has all leaves
   {
     _: "event",
     event: "founded-city",
-    actname: "peter",
+    "@": "laid the foundation stone for the peter and paul fortress on hare island in the neva river delta establishing what would become the capital of the russian empire for over two centuries",
+    actname: "father",
     actdate: "1703-05-27",
     place: [
       {
@@ -94,7 +95,6 @@ const seed = [
         population: "5384342",
       },
     ],
-    datum: "laid the foundation stone for the peter and paul fortress on hare island in the neva river delta establishing what would become the capital of the russian empire for over two centuries",
   },
   // many leaves: mind with name and category both present
   {
@@ -107,10 +107,39 @@ const seed = [
   {
     _: "event",
     event: "ate bread",
-    actname: "ben",
+    "@": "with garlic",
+    actname: "me",
     actdate: "2022-03-02",
     place: "miami",
-    datum: "with garlic",
+  },
+  // chain-friendly: events that reference each other via actname
+  // granma → father → me → son (actname points to parent event)
+  {
+    _: "event",
+    event: "granma",
+    "@": "born in the village by the river",
+    actdate: "1925",
+  },
+  {
+    _: "event",
+    event: "father",
+    "@": "born to granma in the city",
+    actname: "granma",
+    actdate: "1950",
+  },
+  {
+    _: "event",
+    event: "me",
+    "@": "born to father and mother",
+    actname: "father",
+    actdate: "1990",
+  },
+  {
+    _: "event",
+    event: "son",
+    "@": "born in the new world",
+    actname: "me",
+    actdate: "2020",
   },
 ];
 
@@ -162,7 +191,8 @@ function matchesFreeform(record, pattern) {
     if (typeof val === "string" && regex.test(val)) return true;
     if (Array.isArray(val)) {
       for (const item of val) {
-        if (typeof item === "object" && matchesFreeform(item, pattern)) return true;
+        if (typeof item === "object" && matchesFreeform(item, pattern))
+          return true;
       }
     }
   }
@@ -185,7 +215,8 @@ function matchesFilter(record, key, value) {
   for (const val of Object.values(record)) {
     if (Array.isArray(val)) {
       for (const item of val) {
-        if (typeof item === "object" && matchesFilter(item, key, value)) return true;
+        if (typeof item === "object" && matchesFilter(item, key, value))
+          return true;
       }
     }
   }

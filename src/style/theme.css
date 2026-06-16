@@ -168,3 +168,24 @@
   gap: 0.4em;
   line-height: 1.8;
 }
+
+
+/* --- chain role: SDRT inter-record relations.
+   Cause and result are neighbours of the focused record
+   in a cohesive chain. Focus needs no special styling —
+   it renders as a normal OverviewItemFull. Neighbours
+   are Light items (just the base value).
+   Italic on cause hints at "what came before" — the
+   premise, the antecedent, the Cb. Result is plain but
+   lighter weight — a candidate for what comes next. --- */
+
+.rst-chain-cause {
+  font-weight: 400;
+  font-style: italic;
+}
+
+.rst-chain-focus { }
+
+.rst-chain-result {
+  font-weight: 400;
+}

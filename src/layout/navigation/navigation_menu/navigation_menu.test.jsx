@@ -4,6 +4,7 @@ import { render } from "@solidjs/testing-library";
 import {
   MenuSortQuery,
   MenuBaseQuery,
+  MenuChainQuery,
 } from "@/layout/navigation/navigation_menu/components/index.js";
 import { NavigationMenu } from "./navigation_menu.jsx";
 
@@ -16,6 +17,7 @@ vi.mock(
       ...mod,
       MenuSortQuery: vi.fn(),
       MenuBaseQuery: vi.fn(),
+      MenuChainQuery: vi.fn(),
     };
   },
 );

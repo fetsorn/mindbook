@@ -314,6 +314,57 @@ export function crowdedSatellite(meta) {
 
 
 // =====================================================
+// CHAIN: SDRT inter-record relations
+// =====================================================
+//
+// Where RST describes within-record structure (nucleus
+// and satellite within a single SON record), SDRT
+// (Segmented Discourse Representation Theory, Asher &
+// Lascarides 2003) describes relations BETWEEN discourse
+// segments — here, between records in a chain.
+//
+// Centering Theory (Grosz, Joshi & Weinstein 1995)
+// tracks which entity is in focus across the chain:
+//   Cb  — backward-looking center (the cause record)
+//   Cp  — preferred center (the focus record)
+//   Cf  — forward-looking centers (result records)
+//
+// Loseva's chain connection of cohesion provides the
+// linguistic grounding: records are linked through a
+// shared referent (the chainBy branch value), forming
+// identity chains across the discourse.
+//
+// Guard: chainRole is only set by chain view components.
+// Normal overview items and profile views have no
+// chainRole — they are not part of a chain.
+
+
+// -- What role does this record play in the chain?
+//
+// cause-nucleus: the focused record. The preferred
+// center (Cp) — what the discourse is currently "about."
+//
+// cause-satellite: the record the focus points back to.
+// The backward-looking center (Cb) — the entity carried
+// from the previous utterance. In SDRT, this is in a
+// Cause relation with the focus.
+//
+// result-satellite: a record that points to the focus.
+// A forward-looking center (Cf) — a candidate for what
+// the discourse might be about next. In SDRT, this is
+// in a Result relation with the focus.
+
+export function chainRole(meta) {
+  if (meta.chainRole === undefined) return [];
+
+  if (meta.chainRole === "cause-nucleus") return ["rst-chain-focus"];
+  if (meta.chainRole === "cause-satellite") return ["rst-chain-cause"];
+  if (meta.chainRole === "result-satellite") return ["rst-chain-result"];
+  return [];
+}
+
+
+// =====================================================
 // COMPOSE
 // =====================================================
 
@@ -329,6 +380,7 @@ const classFunctions = [
   fold,
   valueToggle,
   editable,
+  chainRole,
   // interactions
   deepLongtext,
   prominent,

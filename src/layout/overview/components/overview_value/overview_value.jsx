@@ -10,7 +10,7 @@ export function OverviewValue(props) {
   const isBase =
     props.branch === store.base;
 
-  const defaultIsValue = props.defaultShow ? props.defaultShow : !isBase;
+  const defaultIsValue = props.defaultShow ?? !isBase;
 
   const [isValue, setIsValue] = createSignal(defaultIsValue);
 

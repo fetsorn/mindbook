@@ -1,15 +1,11 @@
-import { useContext } from "solid-js";
-import { Context } from "@/store/store.js";
 import {
-  OverviewItem,
   OverviewFilter,
   OverviewHeader,
+  OverviewChainFeed,
 } from "./components/index.js";
 import styles from "./overview.module.css";
 
 export function Overview() {
-  const { store } = useContext(Context);
-
   return (
     <>
       <OverviewHeader />
@@ -18,18 +14,9 @@ export function Overview() {
 
       <div className={styles.container}>
         <div className={styles.items}>
-          <For
-            each={store.recordSet}
-            fallback={
-              <span>press "new" in the top right corner to add entries</span>
-            }
-          >
-            {(item, index) => (
-              <div className={styles.item}>
-                <OverviewItem index={`overview_item_${index}`} item={item} />
-              </div>
-            )}
-          </For>
+          {/* always an overview of chains of items: with no chainBy
+              every record is its own singleton chain (a flat feed) */}
+          <OverviewChainFeed />
         </div>
       </div>
     </>

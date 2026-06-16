@@ -39,14 +39,7 @@ describe("Overview", () => {
 
     setStore("schema", schemaRoot);
 
-    const item = {
-      _: "mind",
-      mind: "mind",
-    };
-
-    const items = [item];
-
-    setStore("recordSet", items);
+    setStore("recordSet", ["mind"]);
 
     const { getByText } = render(() => (
       <Context.Provider value={{ store }}>

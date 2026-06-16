@@ -2,6 +2,7 @@
 import { createStore, produce } from "solid-js/store";
 import { sortCallback } from "@/store/pure.js";
 import { createRecord } from "@/store/impure.js";
+import { buildGraph, pickFoci, neighbours } from "@/store/chain.js";
 import { createContext } from "solid-js";
 
 export const Context = createContext();
@@ -22,6 +23,8 @@ export function makeStore() {
     spoilerMap: {},
     actions: {},
     loading: false,
+    chainBy: null,
+    chainPins: new Set(),
   });
 }
 
@@ -31,6 +34,8 @@ export function openBook({ setStore }, content) {
       state.recordSet = [];
       state.recordMap = {};
       state.record = undefined;
+      state.chainBy = null;
+      state.chainPins = new Set();
     }),
   );
 
@@ -387,76 +392,6 @@ export async function onSearch({ store, setStore, api }) {
   setStore("loading", false);
 }
 
-/**
- * This lateral jumps
- * @name leapfrog
- * @export function
- * @param {String} branch -
- * @param {String} value -
- * @param {String} cognate -
- */
-export async function leapfrog(context, branch, value, cognate) {
-  await onSearch(context, undefined, undefined);
-
-  await onSearch(context, "_", store.base);
-
-  await onSearch(context, "__", cognate);
-
-  await onSearch(context, branch, value);
-}
-
-/**
- * This deep jumps
- * @name backflip
- * @export function
- * @param {String} branch -
- * @param {String} value -
- * @param {String} cognate -
- */
-export async function backflip(context, branch, value, cognate) {
-  await onSearch(context, undefined, undefined);
-
-  await onSearch(context, "_", cognate);
-
-  await onSearch(context, "__", branch);
-
-  await onSearch(context, cognate, value);
-}
-
-/**
- * This
- * @name sidestep
- * @export function
- * @param {String} branch -
- * @param {String} value -
- * @param {String} cognate -
- */
-export async function sidestep(context, branch, value, cognate) {
-  await onSearch(context, undefined, undefined);
-
-  await onSearch(context, "_", cognate);
-
-  await onSearch(context, cognate, value);
-}
-
-/**
- * This side jumps
- * @name warp
- * @export function
- * @param {String} branch -
- * @param {String} value -
- * @param {String} cognate -
- */
-export async function warp(context, branch, value, cognate) {
-  await onSearch(context, undefined, undefined);
-
-  await onSearch(context, "_", store.schema[cognate].trunks[0]);
-
-  await onSearch(context, "__", cognate);
-
-  await onSearch(context, store.schema[cognate].trunks[0], value);
-}
-
 export async function onAction({ store, api }, action, record) {
   const actionRecord = {
     _: "action",
@@ -465,6 +400,56 @@ export async function onAction({ store, api }, action, record) {
   };
 
   api.c(actionRecord);
+}
+
+// Chain graph getters: the view never imports chain.js. It reads
+// the graph, foci and neighbours through these, so store.js stays
+// the only boundary to the chain implementation. getChainGraph is
+// meant to be wrapped in a memo by the caller (it rebuilds from
+// recordSet); foci and neighbours then read off that one graph.
+export function getChainGraph({ store }) {
+  return buildGraph(store.recordSet, store.recordMap, store.chainBy);
+}
+
+export function getChainFoci({ store }, graph) {
+  return [...pickFoci(graph.snapshot(), {}, store.chainPins)];
+}
+
+export function getChainNeighbours(_context, graph, focusKey) {
+  return neighbours(graph, focusKey);
+}
+
+// Choose which branch to chain by. The graph and foci are
+// derived in the view from chainBy + recordSet, so this only
+// sets chainBy and clears the user's pins. Clearing pins is the
+// whole reset: switching date -> datum -> place re-derives from
+// scratch instead of accumulating.
+export function onChain({ store, setStore }, value) {
+  const chainBy = value || null;
+
+  setStore(
+    produce((state) => {
+      state.chainBy = chainBy;
+      state.chainPins = new Set();
+    }),
+  );
+}
+
+// Centre a component on the neighbour the user clicked. oldFocusKey
+// and newFocusKey are in the same component, so replacing one with
+// the other keeps exactly one pin per component. Only present
+// records are ever shown as neighbours, so there is nothing to load.
+export function onChainRecenter({ store, setStore }, oldFocusKey, newFocusKey) {
+  setStore(
+    produce((state) => {
+      const next = new Set(state.chainPins);
+
+      next.delete(oldFocusKey);
+      next.add(newFocusKey);
+
+      state.chainPins = next;
+    }),
+  );
 }
 
 export async function searchBook(context, base, query) {

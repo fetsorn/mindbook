@@ -23,18 +23,9 @@ describe("OverviewItem", () => {
 
     const index = "";
 
-    const value = "a";
-
-    const baseRecord = {
-      _: "mind",
-      mind: "mind",
-    };
-
-    const record = baseRecord;
-
     const { getByText } = render(() => (
       <Context.Provider value={{ store }}>
-        <OverviewItem item={record} index={index} />
+        <OverviewItem item={"mind"} index={index} />
       </Context.Provider>
     ));
 
