@@ -25,7 +25,7 @@
   },
   "event": {
     "trunks": [],
-    "leaves": ["actname", "actdate", "place", "datum"],
+    "leaves": ["actname", "actdate", "place"],
     "description": {
       "en": "Event",
       "ru": "Событие"
@@ -69,15 +69,6 @@
     "description": {
       "en": "Population",
       "ru": "Население"
-    }
-  },
-  "datum": {
-    "trunks": ["event"],
-    "leaves": [],
-    "task": "text",
-    "description": {
-      "en": "What",
-      "ru": "Что"
     }
   }
 }
