@@ -1,96 +1,79 @@
-import { useContext, createMemo } from "solid-js";
-import {
-  Context,
-  getBase,
-  getChainGraph,
-  getChainFoci,
-  getChainNeighbours,
-  onChainRecenter,
-} from "@/store/store.js";
+import { useContext } from "solid-js";
+import { Context, getBase, setFocus } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { OverviewItem, OverviewItemLight } from "../index.js";
 
-// The overview, one abstraction up: an overview of chains of items.
+// The overview feed with inline ego network.
 //
-// This renders always, whether or not a chain branch is chosen.
-// With no chainBy there are no edges, so every record is its own
-// singleton component -> a flat feed. With a chainBy chosen, each
-// connected component collapses to one focus and its immediate
-// neighbours.
+// Every record in recordSet renders as a flat feed item.
+// When a record is the current focus AND chainBy is set,
+// its ego network (causes above, results below) renders
+// as shadow nodes around it inline in the feed.
 //
-// Everything is derived from recordSet + chainBy, so switching the
-// chain branch re-derives from scratch (no accumulation).
+// egoCauses and egoResults are arrays of keys. Records
+// are read from recordMap (shared cache with the feed).
 export function OverviewChainFeed() {
   const context = useContext(Context);
   const { store } = context;
 
   const base = () => getBase({ store });
 
-  const graph = createMemo(() => getChainGraph(context));
-
-  const foci = createMemo(() => getChainFoci(context, graph()));
-
   const chainClasses = (chainRole) => rhetoric({ chainRole }).join(" ");
+
+  const isFocused = (key) => store.focus === key && store.chainBy !== null;
 
   const lightItem = (key) => ({ _: base(), [base()]: key });
 
   return (
     <Show
-      when={foci().length}
-      fallback={
-        <span>press "new" in the top right corner to add entries</span>
-      }
+      when={store.recordSet.length}
+      fallback={<span>press "new" in the top right corner to add entries</span>}
     >
-      <For each={foci()}>
-        {(focusKey, focusIndex) => {
-          const near = () => getChainNeighbours(context, graph(), focusKey);
-
-          return (
-            <div>
-              {/* causes: the records this focus points to */}
-              <For each={near().causes}>
+      <For each={store.recordSet}>
+        {(key, keyIndex) => (
+          <div>
+            {/* ego causes: shown above the focused record */}
+            <Show when={isFocused(key)}>
+              <For each={store.egoCauses}>
                 {(causeKey, causeIndex) => (
                   <div className={chainClasses("cause-satellite")}>
                     <OverviewItemLight
-                      index={`chain_cause_${focusIndex()}_${causeIndex()}`}
+                      index={`ego_cause_${keyIndex()}_${causeIndex()}`}
                       item={lightItem(causeKey)}
                       chainRole="cause-satellite"
-                      actionLabel="choose"
-                      onSelect={() =>
-                        onChainRecenter(context, focusKey, causeKey)
-                      }
+                      actionLabel="."
+                      onSelect={() => setFocus(context, causeKey)}
                     />
                   </div>
                 )}
               </For>
+            </Show>
 
-              {/* focus: the centered record */}
-              <div className={chainClasses("cause-nucleus")}>
-                <OverviewItem
-                  index={`chain_focus_${focusIndex()}`}
-                  item={focusKey}
-                />
-              </div>
+            {/* the record itself */}
+            <div
+              className={isFocused(key) ? chainClasses("cause-nucleus") : ""}
+            >
+              <OverviewItem index={`feed_${keyIndex()}`} item={key} />
+            </div>
 
-              {/* results: through-nodes that point to this focus */}
-              <For each={near().results}>
+            {/* ego results: shown below the focused record */}
+            <Show when={isFocused(key)}>
+              <For each={store.egoResults}>
                 {(resultKey, resultIndex) => (
                   <div className={chainClasses("result-satellite")}>
                     <OverviewItemLight
-                      index={`chain_result_${focusIndex()}_${resultIndex()}`}
+                      index={`ego_result_${keyIndex()}_${resultIndex()}`}
                       item={lightItem(resultKey)}
                       chainRole="result-satellite"
-                      actionLabel="choose"
-                      onSelect={() =>
-                        onChainRecenter(context, focusKey, resultKey)
-                      }
+                      actionLabel="."
+                      onSelect={() => setFocus(context, resultKey)}
                     />
                   </div>
                 )}
               </For>
-            </div>
-          );
-        }}
+            </Show>
+          </div>
+        )}
       </For>
     </Show>
   );

@@ -2,7 +2,7 @@
 import { createStore, produce } from "solid-js/store";
 import { sortCallback } from "@/store/pure.js";
 import { createRecord } from "@/store/impure.js";
-import { buildGraph, pickFoci, neighbours } from "@/store/chain.js";
+import { sonKeys, normalizeBranches } from "@/store/pure.js";
 import { createContext } from "solid-js";
 
 export const Context = createContext();
@@ -24,7 +24,10 @@ export function makeStore() {
     actions: {},
     loading: false,
     chainBy: null,
-    chainPins: new Set(),
+    focus: null, // key of the focused record, or null
+    // ego network: populated by queries when focus + chainBy are set
+    egoCauses: [], // records the focus points to (outlinks)
+    egoResults: [], // records pointing to the focus (inlinks)
   });
 }
 
@@ -35,7 +38,9 @@ export function openBook({ setStore }, content) {
       state.recordMap = {};
       state.record = undefined;
       state.chainBy = null;
-      state.chainPins = new Set();
+      state.focus = null;
+      state.egoCauses = [];
+      state.egoResults = [];
     }),
   );
 
@@ -164,35 +169,6 @@ export async function onCancel({ store, setStore }) {
   setStore("loading", false);
 }
 
-// Ensure branches with leaves are objects, not bare strings.
-// If schema says "place" has leaves and the value is "new york",
-// wrap it into { _: "place", place: "new york" }.
-// move to csvs-js
-function normalizeBranches(record, schema) {
-  if (!schema || typeof record !== "object" || record === null) return record;
-
-  for (const [key, value] of Object.entries(record)) {
-    if (key === "_" || key.startsWith("@") || key === record._) continue;
-
-    const branchSchema = schema[key];
-    if (!branchSchema || branchSchema.leaves.length === 0) continue;
-
-    if (Array.isArray(value)) {
-      record[key] = value.map((item) =>
-        typeof item === "string"
-          ? { _: key, [key]: item }
-          : normalizeBranches(item, schema),
-      );
-    } else if (typeof value === "string") {
-      record[key] = { _: key, [key]: value };
-    } else if (typeof value === "object" && value !== null) {
-      normalizeBranches(value, schema);
-    }
-  }
-
-  return record;
-}
-
 export async function getRecord({ store, setStore, api }, record) {
   const base = store.base;
 
@@ -211,13 +187,6 @@ export async function getRecord({ store, setStore, api }, record) {
   return recordNew;
 }
 
-/**
- * This
- * @name onRecordSave
- * @export function
- * @param {object} recordOld -
- * @param {object} recordNew -
- */
 function stripEmptyProse(obj) {
   if (obj === null || typeof obj !== "object") return obj;
   if (Array.isArray(obj)) return obj.map(stripEmptyProse);
@@ -233,6 +202,13 @@ function stripEmptyProse(obj) {
   return result;
 }
 
+/**
+ * This
+ * @name onRecordSave
+ * @export function
+ * @param {object} recordOld -
+ * @param {object} recordNew -
+ */
 export async function onRecordSave(
   { store, setStore, api },
   recordOld,
@@ -315,7 +291,7 @@ export async function onSearch({ store, setStore, api }) {
   try {
     const base = store.base;
 
-    const fromStrm = await api.r(base, store.query);
+    const fromStrm = await api.r(base, store.query, { register: true });
 
     // prepare a controller to stop the new stream
     let isAborted = false;
@@ -370,6 +346,21 @@ export async function onSearch({ store, setStore, api }) {
         await getRecord({ store, setStore, api }, record);
       }
     }
+
+    // validate focus: if the focused key is not in the new
+    // result set, clear it — focus is subordinate to query
+    if (store.focus !== null && !store.recordSet.includes(store.focus)) {
+      setStore(
+        produce((state) => {
+          state.focus = null;
+          state.egoCauses = [];
+          state.egoResults = [];
+        }),
+      );
+    } else if (store.focus !== null && store.chainBy !== null) {
+      // focus survived the search and chainBy is set — refresh ego
+      await queryEgoNetwork({ store, setStore, api });
+    }
   } catch (e) {
     console.error(e);
 
@@ -402,52 +393,144 @@ export async function onAction({ store, api }, action, record) {
   api.c(actionRecord);
 }
 
-// Chain graph getters: the view never imports chain.js. It reads
-// the graph, foci and neighbours through these, so store.js stays
-// the only boundary to the chain implementation. getChainGraph is
-// meant to be wrapped in a memo by the caller (it rebuilds from
-// recordSet); foci and neighbours then read off that one graph.
-export function getChainGraph({ store }) {
-  return buildGraph(store.recordSet, store.recordMap, store.chainBy);
+// -- Focus: set the centered record
+//
+// When the key is in the current recordSet, focus is set
+// directly. When it's not (e.g. clicking a shadow node
+// from a filtered feed), a search for that key is run so
+// the feed navigates to include it.
+//
+// When both focus and chainBy are set, the ego network
+// is queried from the dataset: causes (outlinks) from
+// the focus record itself, results (inlinks) via a
+// search for records whose chainBy value equals the
+// focus key.
+
+export async function setFocus({ store, setStore, api }, key) {
+  if (key === null) {
+    setStore(
+      produce((state) => {
+        state.focus = null;
+        state.egoCauses = [];
+        state.egoResults = [];
+      }),
+    );
+
+    return;
+  }
+
+  // key not in current results — search for it
+  if (!store.recordSet.includes(key)) {
+    const base = store.base;
+
+    setStore(
+      produce((state) => {
+        state.focus = key;
+        state.egoCauses = [];
+        state.egoResults = [];
+        state.query = `${base}:${key}`;
+      }),
+    );
+
+    await onSearch({ store, setStore, api });
+
+    return;
+  }
+
+  setStore(
+    produce((state) => {
+      state.focus = key;
+      state.egoCauses = [];
+      state.egoResults = [];
+    }),
+  );
+
+  if (store.chainBy !== null) {
+    await queryEgoNetwork({ store, setStore, api });
+  }
 }
 
-export function getChainFoci({ store }, graph) {
-  return [...pickFoci(graph.snapshot(), {}, store.chainPins)];
-}
-
-export function getChainNeighbours(_context, graph, focusKey) {
-  return neighbours(graph, focusKey);
-}
-
-// Choose which branch to chain by. The graph and foci are
-// derived in the view from chainBy + recordSet, so this only
-// sets chainBy and clears the user's pins. Clearing pins is the
-// whole reset: switching date -> datum -> place re-derives from
-// scratch instead of accumulating.
-export function onChain({ store, setStore }, value) {
+// Choose which branch to chain by. When chainBy changes
+// and a focus is set, re-query the ego network along the
+// new axis.
+export async function onChain({ store, setStore, api }, value) {
   const chainBy = value || null;
 
   setStore(
     produce((state) => {
       state.chainBy = chainBy;
-      state.chainPins = new Set();
+      state.egoCauses = [];
+      state.egoResults = [];
     }),
   );
+
+  if (chainBy !== null && store.focus !== null) {
+    await queryEgoNetwork({ store, setStore, api });
+  }
 }
 
-// Centre a component on the neighbour the user clicked. oldFocusKey
-// and newFocusKey are in the same component, so replacing one with
-// the other keeps exactly one pin per component. Only present
-// records are ever shown as neighbours, so there is nothing to load.
-export function onChainRecenter({ store, setStore }, oldFocusKey, newFocusKey) {
+// Query the ego network of the current focus along the
+// current chainBy axis.
+//
+// Two queries:
+//   1. DESCRIBE focus → read its chainBy targets (causes)
+//   2. SELECT where chainBy = focusKey → inlinks (results)
+//
+// The dataset answers both without needing a pre-built graph.
+async function queryEgoNetwork({ store, setStore, api }) {
+  const { base, focus, chainBy } = store;
+
+  if (!focus || !chainBy) return;
+
+  // 1. Get the focus record (may already be hydrated via recordMap)
+  const focusRecord = await getRecord({ store, setStore, api }, focus);
+
+  // Causes: records the focus points to via chainBy
+  const causeKeys = sonKeys(focusRecord, chainBy);
+
+  // Hydrate each cause through getRecord (fills recordMap cache)
+  for (const causeKey of causeKeys) {
+    try {
+      await getRecord({ store, setStore, api }, causeKey);
+    } catch {
+      // cause not found in dataset — skip
+    }
+  }
+
+  // 2. Results: records whose chainBy value equals focus
+  //    Query as "chainBy:focusKey" — evenor parses keyword:value
+  const resultKeys = [];
+
+  try {
+    const queryString = `${chainBy}:${focus}`;
+
+    const resultStream = await api.r(base, queryString);
+
+    const resultRecords = await Array.fromAsync(resultStream);
+
+    for (const record of resultRecords) {
+      const key = record[record._];
+
+      // don't include focus itself as a result
+      if (key !== focus) {
+        resultKeys.push(key);
+
+        // cache in recordMap
+        if (store.recordMap[key] === undefined) {
+          setStore("recordMap", {
+            [key]: normalizeBranches(record, store.schema),
+          });
+        }
+      }
+    }
+  } catch {
+    // query failed — leave results empty
+  }
+
   setStore(
     produce((state) => {
-      const next = new Set(state.chainPins);
-
-      next.delete(oldFocusKey);
-      next.add(newFocusKey);
-
-      state.chainPins = next;
+      state.egoCauses = causeKeys;
+      state.egoResults = resultKeys;
     }),
   );
 }

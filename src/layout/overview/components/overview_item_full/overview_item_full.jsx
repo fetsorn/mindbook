@@ -1,10 +1,11 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
-import { useContext, createSignal, createEffect } from "solid-js";
+import { useContext, createSignal } from "solid-js";
 import {
   Context,
   onRecordEdit,
   onRecordWipe,
   onAction,
+  setFocus,
 } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { buildIndex } from "@/style/index_builder.js";
@@ -19,13 +20,13 @@ export function OverviewItemFull(props) {
 
   const size = createElementSize(content);
 
-  const [showActions, setShowActions] = createSignal(false);
-
-  const [isBigItem, setIsBigItem] = createSignal(false);
-
   const [isFold, setIsFold] = createSignal(true);
 
   const base = () => props.item._;
+
+  const key = () => props.item[props.item._];
+
+  const isFocused = () => store.focus === key();
 
   const isTwig = () =>
     !store.schema[base()] || store.schema[base()].leaves.length === 0;
@@ -37,10 +38,7 @@ export function OverviewItemFull(props) {
   const foldClasses = () => rhetoric({ isFolded: isFold() }).join(" ");
 
   return (
-    <div
-      id={props.item[props.item._]}
-      className={`${styles.item} ${itemClasses()}`}
-    >
+    <div id={key()} className={`${styles.item} ${itemClasses()}`}>
       <div className={styles.chrome}>
         <div className={foldClasses()}>
           <div className={styles.content} ref={setContent}>
@@ -63,12 +61,16 @@ export function OverviewItemFull(props) {
           </Show>
         </Show>
 
-        <Show when={!showActions()}>
-          <button onClick={() => setShowActions(true)}>.</button>
-        </Show>
+        <button
+          onClick={() =>
+            setFocus({ store, setStore, api }, isFocused() ? null : key())
+          }
+        >
+          .
+        </button>
       </div>
 
-      <Show when={showActions()}>
+      <Show when={isFocused()}>
         <div className={styles.actions}>
           <Show when={!isTwig()}>
             <button
@@ -79,8 +81,6 @@ export function OverviewItemFull(props) {
                   ["record"],
                   JSON.parse(JSON.stringify(props.item)),
                 );
-
-                setShowActions(false);
               }}
             >
               edit{" "}
@@ -92,7 +92,7 @@ export function OverviewItemFull(props) {
               onAction={() =>
                 onRecordWipe({ store, setStore, api }, props.item)
               }
-              onCancel={() => setShowActions(false)}
+              onCancel={() => setFocus({ store, setStore, api }, null)}
             />
           </Show>
 

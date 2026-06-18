@@ -3,12 +3,10 @@ import { Context, onChain } from "@/store/store.js";
 import styles from "./menu_chain_query.module.css";
 
 export function MenuChainQuery(props) {
-  const { store, setStore } = useContext(Context);
+  const { store, setStore, api } = useContext(Context);
 
   const chainOptions = () =>
-    store.schema[store.base]
-      ? store.schema[store.base].leaves
-      : [];
+    store.schema[store.base] ? store.schema[store.base].leaves : [];
 
   return (
     <div id="menuChain" className={styles.dropdown}>
@@ -21,7 +19,7 @@ export function MenuChainQuery(props) {
         className={styles.select}
         value={store.chainBy ?? ""}
         onChange={({ target: { value } }) =>
-          onChain({ store, setStore }, value)
+          onChain({ store, setStore, api }, value)
         }
       >
         <option value="">—</option>

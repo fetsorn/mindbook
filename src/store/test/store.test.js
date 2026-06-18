@@ -9,8 +9,8 @@ import {
   setSpoilerOpen,
   onRecordEdit,
   getSortedRecords,
-  getFilterQueries,
-  getFilterOptions,
+  setFocus,
+  onChain,
   makeStore,
 } from "@/store/store.js";
 import { createRecord } from "@/store/impure.js";
@@ -42,6 +42,10 @@ describe("store", () => {
       recordSet: [],
       mind: { _: "mind", mind: "root", name: "minds" },
       abortPreviousStream: () => {},
+      chainBy: null,
+      focus: null,
+      egoCauses: [],
+      egoResults: [],
     });
   });
 
@@ -114,6 +118,7 @@ describe("store", () => {
     test("searches", async () => {
       const api = {
         r: vi.fn(() => ({ done: "ok", value: {} })),
+        c: vi.fn(),
       };
 
       await onSearch({ store, setStore, api });
@@ -167,6 +172,79 @@ describe("store", () => {
       setStore("sortDirection", "last");
 
       expect(getSortedRecords({ store })).toStrictEqual([record2, record1]);
+    });
+  });
+
+  describe("setFocus", () => {
+    test("sets focus when key is in recordSet", async () => {
+      setStore("recordSet", ["father", "me", "son"]);
+
+      const api = {
+        describe: vi.fn(() => []),
+        r: vi.fn(() => new ReadableStream({
+          start(controller) { controller.close(); }
+        })),
+      };
+
+      await setFocus({ store, setStore, api }, "father");
+
+      expect(store.focus).toBe("father");
+    });
+
+    test("searches when key is not in recordSet", async () => {
+      setStore("recordSet", ["me", "son"]);
+      setStore("base", "mind");
+
+      const api = {
+        r: vi.fn(() => new ReadableStream({
+          start(controller) {
+            controller.enqueue({ _: "mind", mind: "father" });
+            controller.close();
+          }
+        })),
+        describe: vi.fn(() => [{ _: "mind", mind: "father" }]),
+      };
+
+      await setFocus({ store, setStore, api }, "father");
+
+      // focus is set, and a search was triggered
+      expect(store.focus).toBe("father");
+      expect(store.query).toBe("mind:father");
+      expect(api.r).toHaveBeenCalled();
+    });
+
+    test("clears focus when set to null", async () => {
+      setStore("focus", "father");
+      setStore("egoCauses", ["granma"]);
+      setStore("egoResults", ["me"]);
+
+      const api = {};
+
+      await setFocus({ store, setStore, api }, null);
+
+      expect(store.focus).toBe(null);
+      expect(store.egoCauses).toStrictEqual([]);
+      expect(store.egoResults).toStrictEqual([]);
+    });
+  });
+
+  describe("onChain", () => {
+    test("sets chainBy", async () => {
+      const api = {};
+
+      await onChain({ store, setStore, api }, "parent");
+
+      expect(store.chainBy).toBe("parent");
+    });
+
+    test("clears chainBy with empty string", async () => {
+      setStore("chainBy", "parent");
+
+      const api = {};
+
+      await onChain({ store, setStore, api }, "");
+
+      expect(store.chainBy).toBe(null);
     });
   });
 });
