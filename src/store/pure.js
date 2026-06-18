@@ -78,7 +78,7 @@ export function sortCallback(sortBy, sortDirection) {
 // If schema says "place" has leaves and the value is "new york",
 // wrap it into { _: "place", place: "new york" }.
 // TODO move to csvs-js
-function normalizeBranches(record, schema) {
+export function normalizeBranches(record, schema) {
   if (!schema || typeof record !== "object" || record === null) return record;
 
   for (const [key, value] of Object.entries(record)) {

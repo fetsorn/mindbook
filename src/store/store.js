@@ -338,14 +338,8 @@ export async function onSearch({ store, setStore, api }) {
     // start appending records
     await fromStrm.pipeTo(toStrm, { signal: abortController.signal });
 
-    // TODO replace with Intersection Observer
-    if (!isAborted) {
-      for (const record of store.recordSet) {
-        if (isAborted) break;
-
-        await getRecord({ store, setStore, api }, record);
-      }
-    }
+    // Records are hydrated lazily by IntersectionObserver
+    // in OverviewItem as they scroll into view.
 
     // validate focus: if the focused key is not in the new
     // result set, clear it — focus is subordinate to query
