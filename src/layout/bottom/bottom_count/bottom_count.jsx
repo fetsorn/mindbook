@@ -1,8 +1,10 @@
 import { useContext } from "solid-js";
+import { useLingui } from "@lingui/solid/macro";
 import { Context } from "@/store/store.js";
 
 export function BottomCount() {
   const { store } = useContext(Context);
+  const { t } = useLingui();
 
-  return <span>found {store.recordSet.length} </span>;
+  return <span>{t`found ${store.recordSet.length}`} </span>;
 }

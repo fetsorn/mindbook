@@ -1,16 +1,18 @@
 import { useContext } from "solid-js";
+import { useLingui } from "@lingui/solid/macro";
 import { Context, setQuery, onSearch } from "@/store/store.js";
 import styles from "./overview_filter.module.css";
 
 export function OverviewFilter() {
   const context = useContext(Context);
+  const { t } = useLingui();
 
   return (
     <div>
       <input
         id="query"
         aria-label="query"
-        placeholder="search or filter with keyword:value"
+        placeholder={t`search or filter with keyword:value`}
         value={context.store.query}
         onInput={(event) => {
           setQuery(context, event.currentTarget.value);
@@ -27,7 +29,7 @@ export function OverviewFilter() {
           await onSearch(context);
         }}
       >
-        search
+        {t`search`}
       </button>
     </div>
   );

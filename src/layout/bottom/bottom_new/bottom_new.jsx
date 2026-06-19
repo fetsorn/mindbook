@@ -1,11 +1,11 @@
 import { useContext } from "solid-js";
-import { useLingui } from "@lingui/solid";
+import { useLingui } from "@lingui/solid/macro";
 import { Context } from "@/store/store.js";
 import { onRecordCreate } from "@/store/store.js";
 
 export function BottomNew() {
   const { store, setStore } = useContext(Context);
-  const { _ } = useLingui();
+  const { t } = useLingui();
 
   // if base is twig, it has no connections
   // we can add new values to csvs only if base has some connections
@@ -25,7 +25,7 @@ export function BottomNew() {
         className="bottomNew"
         onClick={() => onRecordCreate({ store, setStore })}
       >
-        {_({ id: "button.new", message: "new" })}
+        {t`new`}
       </button>
     </Show>
   );

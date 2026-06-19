@@ -1,11 +1,14 @@
-import { i18n } from "@lingui/core";
-import { messages as enMessages } from "./locales/en/messages.js";
+import { setupI18n } from "@lingui/core";
 
 export const locales = {
   en: "English",
+  ar: "العربية",
 };
 
-i18n.load("en", enMessages);
-i18n.activate("en");
+export async function loadCatalog(locale, i18n) {
+  const catalog = await import(`./locales/${locale}.po`);
+  i18n.loadAndActivate({ locale, messages: catalog.messages });
+}
 
-export { i18n };
+export const i18n = setupI18n();
+await loadCatalog("en", i18n);

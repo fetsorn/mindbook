@@ -1,0 +1,95 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-06-19 11:51+0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ar\n"
+
+#: src/layout/profile/components/profile_record/profile_record.jsx:60
+msgid "add"
+msgstr "إضافة"
+
+#: src/layout/navigation/navigation_menu/components/menu_base_query/menu_base_query.jsx:13
+msgid "base:"
+msgstr "الأساس:"
+
+#: src/layout/navigation/navigation_menu/components/menu_chain_query/menu_chain_query.jsx:16
+msgid "chain:"
+msgstr "السلسلة:"
+
+#: src/layout/bottom/bottom_sync/bottom_sync.jsx:11
+msgid "Conflict"
+msgstr "تعارض"
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:92
+msgid "delete"
+msgstr "حذف"
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:88
+msgid "edit"
+msgstr "تعديل"
+
+#. placeholder {0}: store.recordSet.length
+#: src/layout/bottom/bottom_count/bottom_count.jsx:9
+msgid "found {0}"
+msgstr "تم العثور على {0}"
+
+#: src/layout/overview/components/overview_record/overview_record.jsx:41
+msgid "is"
+msgstr "يكون"
+
+#: src/layout/navigation/navigation_menu/components/menu_lang_query/menu_lang_query.jsx:18
+msgid "lang:"
+msgstr "اللغة:"
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:60
+msgid "less..."
+msgstr "أقل..."
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:62
+#: src/layout/overview/components/overview_item/overview_item.jsx:51
+msgid "more..."
+msgstr "المزيد..."
+
+#: src/layout/bottom/bottom_new/bottom_new.jsx:28
+msgid "new"
+msgstr "جديد"
+
+#: src/layout/overview/components/overview_chain_feed/overview_chain_feed.jsx:39
+msgid "press \"new\" in the top right corner to add entries"
+msgstr "اضغط على \"جديد\" في الزاوية العلوية اليمنى لإضافة مدخلات"
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:93
+msgid "really delete?"
+msgstr "هل تريد الحذف حقًا؟"
+
+#: src/layout/overview/components/overview_record/overview_record.jsx:72
+msgid "record no items"
+msgstr "السجل لا يحتوي على عناصر"
+
+#: src/layout/navigation/navigation_revert/navigation_revert.jsx:15
+msgid "revert"
+msgstr "تراجع"
+
+#: src/layout/navigation/navigation_save/navigation_save.jsx:19
+msgid "save"
+msgstr "حفظ"
+
+#: src/layout/overview/components/overview_filter/overview_filter.jsx:32
+msgid "search"
+msgstr "بحث"
+
+#: src/layout/overview/components/overview_filter/overview_filter.jsx:15
+msgid "search or filter with keyword:value"
+msgstr "ابحث أو صَفِّ بـ الكلمة_المفتاحية:القيمة"
+
+#: src/layout/navigation/navigation_menu/components/menu_sort_query/menu_sort_query.jsx:13
+msgid "sort:"
+msgstr "فرز:"
+
+#: src/layout/overview/components/overview_record/overview_record.jsx:62
+#: src/layout/profile/components/profile_record/profile_record.jsx:57
+msgid "with"
+msgstr "مع"

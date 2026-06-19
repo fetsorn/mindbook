@@ -1,5 +1,4 @@
 import { createSignal, useContext } from "solid-js";
-import { useLingui } from "@lingui/solid";
 import { Context } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
@@ -7,7 +6,6 @@ import { Spoiler } from "@/layout/components/index.js";
 
 export function OverviewValue(props) {
   const { store } = useContext(Context);
-  const { _ } = useLingui();
 
   const isBase = props.branch === store.base;
 

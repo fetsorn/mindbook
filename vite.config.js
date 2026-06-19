@@ -31,7 +31,14 @@ function getBuildMode() {
 }
 
 export default defineConfig({
-  plugins: [solidPlugin(), lingui()],
+  plugins: [
+    solidPlugin({
+      babel: {
+        plugins: ["@lingui/babel-plugin-lingui-macro"],
+      },
+    }),
+    lingui(),
+  ],
   publicDir: "public",
   optimizeDeps: {
     exclude: ["classnames", "js-sha256"],

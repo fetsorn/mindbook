@@ -1,11 +1,11 @@
 import { useContext, For } from "solid-js";
-import { useLingui } from "@lingui/solid";
+import { useLingui } from "@lingui/solid/macro";
 import { Context, onChain } from "@/store/store.js";
 import styles from "./menu_chain_query.module.css";
 
 export function MenuChainQuery(props) {
   const { store, setStore, api } = useContext(Context);
-  const { _ } = useLingui();
+  const { t } = useLingui();
 
   const chainOptions = () =>
     store.schema[store.base] ? store.schema[store.base].leaves : [];
@@ -13,7 +13,7 @@ export function MenuChainQuery(props) {
   return (
     <div id="menuChain" className={styles.dropdown}>
       <label id="labelChain" for="selectChain">
-        {_({ id: "label.chain", message: "chain:" })}
+        {t`chain:`}
       </label>
 
       <select
