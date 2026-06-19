@@ -1,7 +1,7 @@
 import { useContext } from "solid-js";
 import { Context, getBase, setFocus } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
-import { OverviewItem, OverviewItemLight } from "../index.js";
+import { OverviewItem, OverviewItemLight, OverviewItemFull } from "../index.js";
 
 // The overview feed with inline ego network.
 //
@@ -37,13 +37,23 @@ export function OverviewChainFeed() {
               <For each={store.egoCauses}>
                 {(causeKey, causeIndex) => (
                   <div className={chainClasses("cause-satellite")}>
-                    <OverviewItemLight
-                      index={`ego_cause_${keyIndex()}_${causeIndex()}`}
-                      item={lightItem(causeKey)}
-                      chainRole="cause-satellite"
-                      actionLabel="."
-                      onSelect={() => setFocus(context, causeKey)}
-                    />
+                    <Show
+                      when={store.recordMap[causeKey]}
+                      fallback={
+                        <OverviewItemLight
+                          index={`ego_cause_${keyIndex()}_${causeIndex()}`}
+                          item={lightItem(causeKey)}
+                          chainRole="cause-satellite"
+                          actionLabel="."
+                          onSelect={() => setFocus(context, causeKey)}
+                        />
+                      }
+                    >
+                      <OverviewItemFull
+                        index={`ego_cause_${keyIndex()}_${causeIndex()}`}
+                        item={store.recordMap[causeKey]}
+                      />
+                    </Show>
                   </div>
                 )}
               </For>
@@ -61,13 +71,23 @@ export function OverviewChainFeed() {
               <For each={store.egoResults}>
                 {(resultKey, resultIndex) => (
                   <div className={chainClasses("result-satellite")}>
-                    <OverviewItemLight
-                      index={`ego_result_${keyIndex()}_${resultIndex()}`}
-                      item={lightItem(resultKey)}
-                      chainRole="result-satellite"
-                      actionLabel="."
-                      onSelect={() => setFocus(context, resultKey)}
-                    />
+                    <Show
+                      when={store.recordMap[resultKey]}
+                      fallback={
+                        <OverviewItemLight
+                          index={`ego_result_${keyIndex()}_${resultIndex()}`}
+                          item={lightItem(resultKey)}
+                          chainRole="result-satellite"
+                          actionLabel="."
+                          onSelect={() => setFocus(context, resultKey)}
+                        />
+                      }
+                    >
+                      <OverviewItemFull
+                        index={`ego_result_${keyIndex()}_${resultIndex()}`}
+                        item={store.recordMap[resultKey]}
+                      />
+                    </Show>
                   </div>
                 )}
               </For>

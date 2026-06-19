@@ -228,6 +228,80 @@ describe("store", () => {
     });
   });
 
+  describe("ego network", () => {
+    test("excludes causes when describe returns empty", async () => {
+      setStore("recordSet", ["me"]);
+      setStore("base", "mind");
+      setStore("chainBy", "name");
+      setStore("recordMap", {
+        me: { _: "mind", mind: "me", name: "study of being" },
+      });
+
+      const api = {
+        describe: vi.fn(() => []),
+        r: vi.fn(() => new ReadableStream({
+          start(controller) { controller.close(); }
+        })),
+      };
+
+      await setFocus({ store, setStore, api }, "me");
+
+      expect(store.focus).toBe("me");
+      expect(store.egoCauses).toStrictEqual([]);
+    });
+
+    test("excludes causes when describe echoes back the grain", async () => {
+      // api.describe may return the bare grain { _: "mind", mind: "study of being" }
+      // even though no such record exists — getRecord caches it and
+      // returns a truthy object, so the cause slips through
+      setStore("recordSet", ["me"]);
+      setStore("base", "mind");
+      setStore("chainBy", "name");
+      setStore("recordMap", {
+        me: { _: "mind", mind: "me", name: "study of being" },
+      });
+
+      const api = {
+        // describe echoes back the grain with no extra fields
+        describe: vi.fn(() => [{ _: "mind", mind: "study of being" }]),
+        r: vi.fn(() => new ReadableStream({
+          start(controller) { controller.close(); }
+        })),
+      };
+
+      await setFocus({ store, setStore, api }, "me");
+
+      expect(store.focus).toBe("me");
+      // "study of being" must NOT appear as a cause — it's not a real record
+      expect(store.egoCauses).toStrictEqual([]);
+    });
+
+    test("includes causes that are real records", async () => {
+      setStore("recordSet", ["son"]);
+      setStore("base", "mind");
+      setStore("chainBy", "parent");
+      setStore("recordMap", {
+        son: { _: "mind", mind: "son", parent: "father" },
+      });
+
+      const api = {
+        // describe for "father" returns a full record
+        describe: vi.fn(() => [
+          { _: "mind", mind: "father", parent: "grandpa" },
+        ]),
+        // inlink query returns nothing
+        r: vi.fn(() => new ReadableStream({
+          start(controller) { controller.close(); }
+        })),
+      };
+
+      await setFocus({ store, setStore, api }, "son");
+
+      expect(store.focus).toBe("son");
+      expect(store.egoCauses).toStrictEqual(["father"]);
+    });
+  });
+
   describe("onChain", () => {
     test("sets chainBy", async () => {
       const api = {};

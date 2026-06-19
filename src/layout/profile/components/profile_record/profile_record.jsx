@@ -1,7 +1,7 @@
 import { useContext } from "solid-js";
 import { Context, onRecordEdit } from "@/store/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
-import { ProfileField, ProfileValue } from "../index.js";
+import { ProfileField, ProfileProse, ProfileValue } from "../index.js";
 
 export function ProfileRecord(props) {
   const { store, setStore } = useContext(Context);
@@ -40,21 +40,13 @@ export function ProfileRecord(props) {
 
       <For each={Object.keys(props.record ?? {}).filter((k) => k.startsWith("@"))}>
         {(key) => (
-          <>
-            <label for={`profile-${access("_")}-${key}`}>{key} - </label>
-            <textarea
-              id={`profile-${access("_")}-${key}`}
-              onInput={async (event) => {
-                await onRecordEdit(
-                  { setStore },
-                  [...props.path, key],
-                  event.target.value,
-                );
-              }}
-            >
-              {access(key)}
-            </textarea>
-          </>
+          <ProfileProse
+            label={key}
+            value={access(key)}
+            onInput={(html) =>
+              onRecordEdit({ setStore }, [...props.path, key], html)
+            }
+          />
         )}
       </For>
 

@@ -63,7 +63,10 @@ export function OverviewValue(props) {
       >
         <button
           className={`${props.branch}-value ${nucleusClasses()}`}
-          onClick={() => setIsValue(false)}
+          onClick={() => {
+            navigator.clipboard.writeText(props.value);
+            setIsValue(false);
+          }}
         >
           {props.value}
         </button>

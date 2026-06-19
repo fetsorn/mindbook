@@ -1,4 +1,4 @@
-import { useContext, For } from "solid-js";
+import { useContext, For, Show } from "solid-js";
 import { Context, onSort } from "@/store/store.js";
 import styles from "./menu_sort_query.module.css";
 
@@ -35,7 +35,7 @@ export function MenuSortQuery(props) {
         fallback={
           <button
             id="sortDirectionFirst"
-            onClick={() => onSort(".sortDirection", "last")}
+            onClick={() => onSort({ store, setStore }, ".sortDirection", "last")}
           >
             ▲
           </button>
@@ -43,7 +43,7 @@ export function MenuSortQuery(props) {
       >
         <button
           id="sortDirectionLast"
-          onClick={() => onSort(".sortDirection", "first")}
+          onClick={() => onSort({ store, setStore }, ".sortDirection", "first")}
         >
           ▼
         </button>

@@ -12,6 +12,7 @@
 
 .container {
   overflow: scroll;
+  padding-right: 1.5em;
 }
 
 .items {

@@ -31,13 +31,23 @@ export function OverviewRecord(props) {
         rstIndex={props.rstIndex}
       />
 
-      <For each={Object.entries(props.record).filter(([k]) => k.startsWith("@"))}>
-        {([key, text]) => (
-          <span className={`${props.record._}-prose`}>
-            {text}
-          </span>
-        )}
-      </For>
+      <Show
+        when={Object.entries(props.record).filter(([k]) => k.startsWith("@")).length > 0}
+      >
+        <Spoiler
+          index={`${props.index}-prose`}
+          title={"is"}
+          isOpenDefault={false}
+        >
+          <For each={Object.entries(props.record).filter(([k]) => k.startsWith("@"))}>
+            {([key, text]) => (
+              <span className={`${props.record._}-prose`}>
+                {text}
+              </span>
+            )}
+          </For>
+        </Spoiler>
+      </Show>
 
       <Show
         when={

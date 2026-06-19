@@ -177,8 +177,16 @@ export async function getRecord({ store, setStore, api }, record) {
   if (store.recordMap[record] === undefined) {
     const [recordNew] = await Array.fromAsync(await api.describe(grain));
 
+    // A bare grain ({ _: base, [base]: key }) echoed back by describe
+    // means no real record exists — treat as not found.
+    const hasContent =
+      recordNew &&
+      Object.keys(recordNew).some((k) => k !== "_" && k !== base);
+
     setStore("recordMap", {
-      [record]: normalizeBranches(recordNew, store.schema),
+      [record]: hasContent
+        ? normalizeBranches(recordNew, store.schema)
+        : undefined,
     });
   }
 
@@ -479,15 +487,18 @@ async function queryEgoNetwork({ store, setStore, api }) {
   // 1. Get the focus record (may already be hydrated via recordMap)
   const focusRecord = await getRecord({ store, setStore, api }, focus);
 
-  // Causes: records the focus points to via chainBy
-  const causeKeys = sonKeys(focusRecord, chainBy);
+  // Causes: records the focus points to via chainBy.
+  // Only keep keys that resolve to actual records in the dataset —
+  // plain-word values (e.g. "father") are silently dropped.
+  const rawCauseKeys = sonKeys(focusRecord, chainBy);
+  const causeKeys = [];
 
-  // Hydrate each cause through getRecord (fills recordMap cache)
-  for (const causeKey of causeKeys) {
+  for (const causeKey of rawCauseKeys) {
     try {
-      await getRecord({ store, setStore, api }, causeKey);
+      const rec = await getRecord({ store, setStore, api }, causeKey);
+      if (rec) causeKeys.push(causeKey);
     } catch {
-      // cause not found in dataset — skip
+      // not a record in the dataset — skip
     }
   }
 
