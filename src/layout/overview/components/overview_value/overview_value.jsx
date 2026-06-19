@@ -1,4 +1,5 @@
 import { createSignal, useContext } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import { Context } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
@@ -6,9 +7,9 @@ import { Spoiler } from "@/layout/components/index.js";
 
 export function OverviewValue(props) {
   const { store } = useContext(Context);
+  const { _ } = useLingui();
 
-  const isBase =
-    props.branch === store.base;
+  const isBase = props.branch === store.base;
 
   const defaultIsValue = props.defaultShow ?? !isBase;
 
@@ -46,8 +47,6 @@ export function OverviewValue(props) {
       cognatePartial.some((p) => store.schema[cognate].trunks.includes(p)),
   );
 
-  const laterals = [];
-
   return (
     <>
       <Show
@@ -70,51 +69,6 @@ export function OverviewValue(props) {
         >
           {props.value}
         </button>
-      </Show>
-
-      <Show
-        when={
-          laterals.length > 0 || recurses.length > 0 || neighbours.length > 0
-        }
-        fallback={<></>}
-      >
-        <Spoiler index={`${props.index}-to`} title={"to"}>
-          <Show when={laterals.length > 0} fallback={<></>}>
-            <span>lateral </span>
-
-            <For each={laterals}>
-              {(cognate, index) => (
-                <button key={index()} onClick={() => leapfrog(cognate)}>
-                  {cognate}{" "}
-                </button>
-              )}
-            </For>
-          </Show>
-
-          <Show when={recurses.length > 0} fallback={<></>}>
-            <span>deep </span>
-
-            <For each={recurses}>
-              {(recurse, index) => (
-                <button key={index()} onClick={() => backflip(recurse)}>
-                  {recurse}{" "}
-                </button>
-              )}
-            </For>
-          </Show>
-
-          <Show when={neighbours.length > 0} fallback={<></>}>
-            <span>side </span>
-
-            <For each={neighbours}>
-              {(neighbour, index) => (
-                <button key={index()} onClick={() => warp(neighbour)}>
-                  {neighbour}
-                </button>
-              )}
-            </For>
-          </Show>
-        </Spoiler>
       </Show>
     </>
   );

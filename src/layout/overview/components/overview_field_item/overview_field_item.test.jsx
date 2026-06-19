@@ -1,6 +1,8 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Context, makeStore } from "@/store/store.js";
 import { OverviewFieldItem } from "./overview_field_item.jsx";
 
@@ -36,9 +38,11 @@ describe("OverviewFieldItem", () => {
     const item = "a";
 
     const { getByText } = render(() => (
-      <Context.Provider value={{ store }}>
-        <OverviewFieldItem index={index} branch={branch} item={item} />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store }}>
+          <OverviewFieldItem index={index} branch={branch} item={item} />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     expect(() => getByText("a")).not.toThrowError();
@@ -56,9 +60,11 @@ describe("OverviewFieldItem", () => {
     const item = { _: "branch", branch: "a" };
 
     const { getByText } = render(() => (
-      <Context.Provider value={{ store }}>
-        <OverviewFieldItem index={index} branch={branch} item={item} />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store }}>
+          <OverviewFieldItem index={index} branch={branch} item={item} />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     expect(() => getByText("a")).not.toThrowError();

@@ -1,6 +1,8 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Context, makeStore } from "@/store/store.js";
 import { MenuSortQuery } from "./menu_sort_query.jsx";
 
@@ -26,9 +28,11 @@ describe("MenuSortQuery", () => {
     setStore("sortBy", "mind");
 
     const { getByRole, getAllByRole } = render(() => (
-      <Context.Provider value={{ store, setStore }}>
-        <MenuSortQuery />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store, setStore }}>
+          <MenuSortQuery />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     expect(getByRole("option", { name: "name" }).selected).toBe(false);

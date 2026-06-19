@@ -1,4 +1,5 @@
 import { useContext, onCleanup } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import { Context, getBase, getRecord } from "@/store/store.js";
 import { OverviewItemLight, OverviewItemFull } from "../index.js";
 import styles from "./overview_item.module.css";
@@ -6,6 +7,7 @@ import styles from "./overview_item.module.css";
 export function OverviewItem(props) {
   const context = useContext(Context);
   const { store } = context;
+  const { _ } = useLingui();
 
   const base = getBase({ store });
 
@@ -46,7 +48,7 @@ export function OverviewItem(props) {
             index={props.index}
             item={grain}
             onSelect={() => getRecord(context, props.item)}
-            actionLabel="more..."
+            actionLabel={_({ id: "button.more", message: "more..." })}
           />
         }
       >

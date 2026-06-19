@@ -1,6 +1,8 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Context, makeStore, onRecordEdit } from "@/store/store.js";
 import { ProfileRecord } from "./profile_record.jsx";
 
@@ -55,9 +57,11 @@ describe("ProfileRecord", () => {
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <Context.Provider value={{ store, setStore }}>
-        <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store, setStore }}>
+          <ProfileRecord index={index} record={baseRecord} path={["record"]} />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -115,9 +119,11 @@ describe("ProfileRecord", () => {
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <Context.Provider value={{ store, setStore }}>
-        <ProfileRecord index={index} record={baseRecord} path={["record"]} />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store, setStore }}>
+          <ProfileRecord index={index} record={baseRecord} path={["record"]} />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     await userEvent.click(getByText("with..."));
@@ -170,13 +176,15 @@ describe("ProfileRecord", () => {
     onRecordEdit.mockReset();
 
     const { getByRole, getByText } = render(() => (
-      <Context.Provider value={{ store, setStore }}>
-        <ProfileRecord
-          index={index}
-          record={item}
-          path={["record", "branch", 0]}
-        />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store, setStore }}>
+          <ProfileRecord
+            index={index}
+            record={item}
+            path={["record", "branch", 0]}
+          />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     await userEvent.click(getByText("with..."));

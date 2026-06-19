@@ -34,6 +34,9 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.6",
     "@babel/preset-env": "^7.29.0",
+    "@lingui/babel-plugin-lingui-macro": "^6.4.0",
+    "@lingui/cli": "^6.4.0",
+    "@lingui/vite-plugin": "^6.4.0",
     "@solidjs/testing-library": "^0.8.10",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@testing-library/jest-dom": "^6.9.1",
@@ -61,6 +64,8 @@
     "vitest": "^4.1.0"
   },
   "dependencies": {
+    "@lingui/core": "^6.4.0",
+    "@lingui/solid": "^6.4.0",
     "@solid-primitives/resize-observer": "^2.1.5",
     "@solidjs/meta": "^0.29.4",
     "@tiptap/core": "^3.27.1",

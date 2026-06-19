@@ -1,10 +1,12 @@
 import { useContext } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import { Context, onRecordEdit } from "@/store/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
 import { ProfileField, ProfileProse, ProfileValue } from "../index.js";
 
 export function ProfileRecord(props) {
   const { store, setStore } = useContext(Context);
+  const { _ } = useLingui();
 
   const leaves = () => {
     if (
@@ -52,10 +54,10 @@ export function ProfileRecord(props) {
 
       <Spoiler
         index={`${props.index}-spoilerfield`}
-        title={"with"}
+        title={_({ id: "spoiler.with", message: "with" })}
         isOpenDefault={props.isOpenDefault}
       >
-        <Spoiler index={`${props.index}-spoileradd`} title={"add"}>
+        <Spoiler index={`${props.index}-spoileradd`} title={_({ id: "spoiler.add", message: "add" })}>
           <Index each={leaves()} fallback={<>...</>}>
             {(leaf, index) => {
               const addNew = () =>

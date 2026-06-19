@@ -1,4 +1,5 @@
 import { useContext } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import { Context } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
@@ -7,6 +8,7 @@ import { OverviewField, OverviewValue } from "../index.js";
 
 export function OverviewRecord(props) {
   const { store } = useContext(Context);
+  const { _ } = useLingui();
 
   const path = () => props.path || [];
 
@@ -36,7 +38,7 @@ export function OverviewRecord(props) {
       >
         <Spoiler
           index={`${props.index}-prose`}
-          title={"is"}
+          title={_({ id: "spoiler.is", message: "is" })}
           isOpenDefault={false}
         >
           <For each={Object.entries(props.record).filter(([k]) => k.startsWith("@"))}>
@@ -57,7 +59,7 @@ export function OverviewRecord(props) {
       >
         <Spoiler
           index={props.index}
-          title={"with"}
+          title={_({ id: "spoiler.with", message: "with" })}
           isOpenDefault={props.isOpenDefault}
         >
           <For
@@ -67,7 +69,7 @@ export function OverviewRecord(props) {
               store.schema[props.record._] !== undefined &&
               store.schema[props.record._].leaves.filter(recordHasLeaf)
             }
-            fallback={<span>record no items</span>}
+            fallback={<span>{_({ id: "fallback.noItems", message: "record no items" })}</span>}
           >
             {(leaf, index) => {
               const value = props.record[leaf];

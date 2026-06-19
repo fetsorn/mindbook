@@ -1,5 +1,5 @@
 import { createSignal, createEffect } from "solid-js";
-import { MenuSortQuery, MenuBaseQuery, MenuChainQuery } from "./components/index.js";
+import { MenuSortQuery, MenuBaseQuery, MenuChainQuery, MenuLangQuery } from "./components/index.js";
 import styles from "./navigation_menu.module.css";
 
 export function NavigationMenu() {
@@ -13,14 +13,17 @@ export function NavigationMenu() {
       "selectSort",
       "selectBase",
       "selectChain",
+      "selectLang",
       "sortDirectionFirst",
       "sortDirectionLast",
       "menuSort",
       "menuBase",
       "menuChain",
+      "menuLang",
       "labelSort",
       "labelBase",
       "labelChain",
+      "labelLang",
     ];
 
     if (ids.includes(e.target.id)) {
@@ -59,6 +62,9 @@ export function NavigationMenu() {
 
         {/*chain query dropdown*/}
         <MenuChainQuery />
+
+        {/*language dropdown*/}
+        <MenuLangQuery />
       </div>
     </div>
   );

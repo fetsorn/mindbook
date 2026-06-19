@@ -1,5 +1,7 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Context, makeStore, openBook, searchBook } from "@/store/store.js";
 import { polyfill } from "@/polyfill.js";
 import App from "@/layout/layout.jsx";
@@ -17,9 +19,11 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 function bindBook(context, element) {
   render(
     () => (
-      <Context.Provider value={context}>
-        <App />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={context}>
+          <App />
+        </Context.Provider>
+      </I18nProvider>
     ),
     element,
   );

@@ -5,6 +5,7 @@ import {
   MenuSortQuery,
   MenuBaseQuery,
   MenuChainQuery,
+  MenuLangQuery,
 } from "@/layout/navigation/navigation_menu/components/index.js";
 import { NavigationMenu } from "./navigation_menu.jsx";
 
@@ -18,6 +19,7 @@ vi.mock(
       MenuSortQuery: vi.fn(),
       MenuBaseQuery: vi.fn(),
       MenuChainQuery: vi.fn(),
+      MenuLangQuery: vi.fn(),
     };
   },
 );

@@ -1,14 +1,16 @@
 import { useContext, For } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import { Context, onBase } from "@/store/store.js";
 import styles from "./menu_base_query.module.css";
 
 export function MenuBaseQuery(props) {
   const { store, setStore } = useContext(Context);
+  const { _ } = useLingui();
 
   return (
     <div id="menuBase" className={styles.dropdown}>
       <label id="labelBase" for="selectBase">
-        base:
+        {_({ id: "label.base", message: "base:" })}
       </label>
 
       <select

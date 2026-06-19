@@ -1,4 +1,5 @@
 import solidPlugin from "vite-plugin-solid";
+import { lingui } from "@lingui/vite-plugin";
 import { defineConfig } from "vite";
 import { dirname, resolve } from "path";
 import { webdriverio } from "@vitest/browser-webdriverio";
@@ -30,7 +31,7 @@ function getBuildMode() {
 }
 
 export default defineConfig({
-  plugins: [solidPlugin()],
+  plugins: [solidPlugin(), lingui()],
   publicDir: "public",
   optimizeDeps: {
     exclude: ["classnames", "js-sha256"],

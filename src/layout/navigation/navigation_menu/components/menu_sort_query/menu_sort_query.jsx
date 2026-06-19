@@ -1,14 +1,16 @@
 import { useContext, For, Show } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import { Context, onSort } from "@/store/store.js";
 import styles from "./menu_sort_query.module.css";
 
 export function MenuSortQuery(props) {
   const { store, setStore } = useContext(Context);
+  const { _ } = useLingui();
 
   return (
     <div id="menuSort" className={styles.dropdown}>
       <label id="labelSort" for="selectSort">
-        sort:
+        {_({ id: "label.sort", message: "sort:" })}
       </label>
 
       <select

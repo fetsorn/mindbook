@@ -1,5 +1,6 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import {
   Context,
   onRecordEdit,
@@ -15,6 +16,7 @@ import styles from "./overview_item_full.module.css";
 
 export function OverviewItemFull(props) {
   const { store, setStore, api } = useContext(Context);
+  const { _ } = useLingui();
 
   const [content, setContent] = createSignal();
 
@@ -55,9 +57,9 @@ export function OverviewItemFull(props) {
         <Show when={size.height > 40}>
           <Show
             when={isFold()}
-            fallback={<button onClick={() => setIsFold(true)}>less...</button>}
+            fallback={<button onClick={() => setIsFold(true)}>{_({ id: "button.less", message: "less..." })}</button>}
           >
-            <button onClick={() => setIsFold(false)}>more...</button>
+            <button onClick={() => setIsFold(false)}>{_({ id: "button.more", message: "more..." })}</button>
           </Show>
         </Show>
 
@@ -83,12 +85,12 @@ export function OverviewItemFull(props) {
                 );
               }}
             >
-              edit{" "}
+              {_({ id: "button.edit", message: "edit" })}{" "}
             </button>
 
             <Confirmation
-              action={`delete`}
-              question={"really delete?"}
+              action={_({ id: "button.delete", message: "delete" })}
+              question={_({ id: "confirm.delete", message: "really delete?" })}
               onAction={() =>
                 onRecordWipe({ store, setStore, api }, props.item)
               }

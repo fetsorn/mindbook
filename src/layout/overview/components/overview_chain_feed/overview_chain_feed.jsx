@@ -1,4 +1,5 @@
 import { useContext, createEffect } from "solid-js";
+import { useLingui } from "@lingui/solid";
 import { Context, getBase, setFocus } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { OverviewItem, OverviewItemLight, OverviewItemFull } from "../index.js";
@@ -15,6 +16,7 @@ import { OverviewItem, OverviewItemLight, OverviewItemFull } from "../index.js";
 export function OverviewChainFeed() {
   const context = useContext(Context);
   const { store } = context;
+  const { _ } = useLingui();
 
   const base = () => getBase({ store });
 
@@ -34,7 +36,7 @@ export function OverviewChainFeed() {
   return (
     <Show
       when={store.recordSet.length}
-      fallback={<span>press "new" in the top right corner to add entries</span>}
+      fallback={<span>{_({ id: "fallback.empty", message: "press \"new\" in the top right corner to add entries" })}</span>}
     >
       <For each={store.recordSet}>
         {(key, keyIndex) => (
