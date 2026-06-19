@@ -1,4 +1,4 @@
-import { useContext } from "solid-js";
+import { useContext, createEffect } from "solid-js";
 import { Context, getBase, setFocus } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { OverviewItem, OverviewItemLight, OverviewItemFull } from "../index.js";
@@ -23,6 +23,13 @@ export function OverviewChainFeed() {
   const isFocused = (key) => store.focus === key && store.chainBy !== null;
 
   const lightItem = (key) => ({ _: base(), [base()]: key });
+
+  createEffect(() => {
+    const key = store.focus;
+    if (key === null) return;
+    const el = document.getElementById(key);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 
   return (
     <Show
