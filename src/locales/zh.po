@@ -50,6 +50,11 @@ msgstr "是"
 msgid "lang:"
 msgstr "语言："
 
+#: src/layout/overview/components/overview_value/overview_value.jsx
+#: src/layout/profile/components/profile_value/profile_value.jsx
+msgid "like"
+msgstr "如同"
+
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:60
 msgid "less..."
 msgstr "收起…"

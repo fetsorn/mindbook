@@ -2,6 +2,12 @@ import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, onRecordEdit, branchTitle } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
+import {
+  Spoiler,
+  URLPreview,
+  isURL,
+  isShowable,
+} from "@/layout/components/index.js";
 import styles from "./profile_value.module.css";
 
 // https://css-tricks.com/auto-growing-inputs-textareas/
@@ -72,16 +78,19 @@ function calcSize(value, textarea) {
 export function ProfileValue(props) {
   const context = useContext(Context);
   const { store } = context;
-  const { i18n } = useLingui();
+  const { i18n, t } = useLingui();
 
-  const editClasses = () =>
-    rhetoric({ isEditing: true }).join(" ");
+  const editClasses = () => rhetoric({ isEditing: true }).join(" ");
+
+  const showPreview = () => isURL(props.value) && isShowable(props.value);
 
   let textarea;
 
   return (
     <>
-      <label for={`profile-${props.branch}`}>{branchTitle(store.schema, props.branch, i18n().locale)} - </label>
+      <label for={`profile-${props.branch}`}>
+        {branchTitle(store.schema, props.branch, i18n().locale)} -{" "}
+      </label>
 
       <textarea
         id={`profile-${props.branch}`}
@@ -106,6 +115,12 @@ export function ProfileValue(props) {
       >
         {props.value}
       </textarea>
+
+      <Show when={showPreview()}>
+        <Spoiler title={t`like`}>
+          <URLPreview url={props.value} />
+        </Spoiler>
+      </Show>
     </>
   );
 }

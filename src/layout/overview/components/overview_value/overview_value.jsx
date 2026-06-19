@@ -3,11 +3,16 @@ import { useLingui } from "@lingui/solid/macro";
 import { Context, branchTitle } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
-import { Spoiler } from "@/layout/components/index.js";
+import {
+  Spoiler,
+  URLPreview,
+  isURL,
+  isShowable,
+} from "@/layout/components/index.js";
 
 export function OverviewValue(props) {
   const { store } = useContext(Context);
-  const { i18n } = useLingui();
+  const { i18n, t } = useLingui();
 
   const title = () => branchTitle(store.schema, props.branch, i18n().locale);
 
@@ -49,6 +54,8 @@ export function OverviewValue(props) {
       cognatePartial.some((p) => store.schema[cognate].trunks.includes(p)),
   );
 
+  const showPreview = () => isURL(props.value) && isShowable(props.value);
+
   return (
     <>
       <Show
@@ -71,6 +78,12 @@ export function OverviewValue(props) {
         >
           {props.value}
         </button>
+
+        <Show when={showPreview()}>
+          <Spoiler title={t`like`}>
+            <URLPreview url={props.value} />
+          </Spoiler>
+        </Show>
       </Show>
     </>
   );

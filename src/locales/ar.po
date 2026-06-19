@@ -50,6 +50,11 @@ msgstr "يكون"
 msgid "lang:"
 msgstr "اللغة:"
 
+#: src/layout/overview/components/overview_value/overview_value.jsx
+#: src/layout/profile/components/profile_value/profile_value.jsx
+msgid "like"
+msgstr "مثل"
+
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:60
 msgid "less..."
 msgstr "أقل..."

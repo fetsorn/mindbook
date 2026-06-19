@@ -112,6 +112,13 @@ const seed = [
     actdate: "2022-03-02",
     place: "miami",
   },
+  // URL value: showable image link
+  {
+    _: "mind",
+    mind: "random-photo",
+    name: "https://picsum.photos/id/237/200/300.jpg",
+    category: "image",
+  },
   // chain-friendly: events that reference each other via actname
   // granma → father → me → son (actname points to parent event)
   {
