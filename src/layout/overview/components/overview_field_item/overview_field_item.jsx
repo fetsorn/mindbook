@@ -1,9 +1,11 @@
 import { useContext } from "solid-js";
+import { useLingui } from "@lingui/solid/macro";
 import { Context } from "@/store/store.js";
 import { OverviewRecord, OverviewValue } from "../index.js";
 
 export function OverviewFieldItem(props) {
   const { store } = useContext(Context);
+  const { i18n } = useLingui();
 
   const path = () => props.path || [];
 
@@ -39,14 +41,11 @@ export function OverviewFieldItem(props) {
           rstIndex={props.rstIndex}
         />
 
-        <Show when={typeof props.item === "object" && props.item !== null}>
-          <For each={Object.entries(props.item ?? {}).filter(([k]) => k.startsWith("@"))}>
-            {([key, text]) => (
-              <span className={`${props.branch}-prose`}>
-                {text}
-              </span>
-            )}
-          </For>
+        <Show when={typeof props.item === "object" && props.item !== null
+          && Object.keys(props.item).some((k) => k.startsWith("@"))}>
+          <span className={`${props.branch}-prose`}>
+            {props.item[`@${i18n().locale}`] ?? props.item["@"]}
+          </span>
         </Show>
       </Match>
     </Switch>

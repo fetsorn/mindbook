@@ -8,7 +8,7 @@ import { OverviewField, OverviewValue } from "../index.js";
 
 export function OverviewRecord(props) {
   const { store } = useContext(Context);
-  const { t } = useLingui();
+  const { t, i18n } = useLingui();
 
   const path = () => props.path || [];
 
@@ -41,13 +41,9 @@ export function OverviewRecord(props) {
           title={t`is`}
           isOpenDefault={false}
         >
-          <For each={Object.entries(props.record).filter(([k]) => k.startsWith("@"))}>
-            {([key, text]) => (
-              <span className={`${props.record._}-prose`}>
-                {text}
-              </span>
-            )}
-          </For>
+          <span className={`${props.record._}-prose`}>
+            {props.record[`@${i18n().locale}`] ?? props.record["@"]}
+          </span>
         </Spoiler>
       </Show>
 

@@ -1,9 +1,12 @@
 import { useContext } from "solid-js";
+import { useLingui } from "@lingui/solid/macro";
 import { Context, onRecordEdit } from "@/store/store.js";
+import { Spoiler } from "@/layout/components/index.js";
 import { ProfileRecord, ProfileValue } from "../index.js";
 
 export function ProfileFieldItem(props) {
   const { store, setStore } = useContext(Context);
+  const { t } = useLingui();
 
   // if base has no leaves, show value
   // otherwise show record with buttons that can add leaves
@@ -42,50 +45,56 @@ export function ProfileFieldItem(props) {
           path={props.path}
         />
 
-        <Show when={
-          typeof props.item !== "object"
-            || (props.item !== null && props.item["@"] === undefined)
-        }>
-          <button
-            onClick={() => {
-              if (typeof props.item === "object" && props.item !== null) {
-                onRecordEdit(
-                  { setStore },
-                  [...props.path, "@"],
-                  "",
-                );
-              } else {
-                onRecordEdit(
-                  { setStore },
-                  props.path,
-                  { _: props.branch, [props.branch]: props.item, "@": "" },
-                );
-              }
-            }}
-          >
-            @
-          </button>
-        </Show>
-
-        <For each={proseKeys()}>
-          {(key) => (
-            <>
-              <label for={`profile-${props.branch}-${key}`}>{key} - </label>
-              <textarea
-                id={`profile-${props.branch}-${key}`}
-                onInput={async (event) => {
-                  await onRecordEdit(
+        <Spoiler
+          index={`${props.index}-prose`}
+          title={t`is`}
+          isOpenDefault={false}
+        >
+          <Show when={
+            typeof props.item !== "object"
+              || (props.item !== null && props.item["@"] === undefined)
+          }>
+            <button
+              onClick={() => {
+                if (typeof props.item === "object" && props.item !== null) {
+                  onRecordEdit(
                     { setStore },
-                    [...props.path, key],
-                    event.target.value,
+                    [...props.path, "@"],
+                    "",
                   );
-                }}
-              >
-                {props.item[key]}
-              </textarea>
-            </>
-          )}
-        </For>
+                } else {
+                  onRecordEdit(
+                    { setStore },
+                    props.path,
+                    { _: props.branch, [props.branch]: props.item, "@": "" },
+                  );
+                }
+              }}
+            >
+              +
+            </button>
+          </Show>
+
+          <For each={proseKeys()}>
+            {(key) => (
+              <>
+                <label for={`profile-${props.branch}-${key}`}>{key} - </label>
+                <textarea
+                  id={`profile-${props.branch}-${key}`}
+                  onInput={async (event) => {
+                    await onRecordEdit(
+                      { setStore },
+                      [...props.path, key],
+                      event.target.value,
+                    );
+                  }}
+                >
+                  {props.item[key]}
+                </textarea>
+              </>
+            )}
+          </For>
+        </Spoiler>
       </Match>
     </Switch>
   );

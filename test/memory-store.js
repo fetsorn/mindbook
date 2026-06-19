@@ -125,7 +125,13 @@ const seed = [
     _: "event",
     event: "granma",
     "@": "born in the village by the river",
-    actdate: "1925",
+    "@ru": "родилась в деревне у реки",
+    actdate: {
+      _: "actdate",
+      actdate: "1925",
+      "@ru": "год рождения",
+      "@en": "year of birth",
+    },
   },
   {
     _: "event",
