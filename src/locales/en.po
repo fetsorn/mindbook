@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/layout/profile/components/profile_record/profile_record.jsx:60
 msgid "add"
@@ -40,7 +46,7 @@ msgstr "found {0}"
 msgid "is"
 msgstr "is"
 
-#: src/layout/navigation/navigation_menu/components/menu_lang_query/menu_lang_query.jsx:18
+#: src/layout/navigation/navigation_menu/components/menu_lang_query/menu_lang_query.jsx:15
 msgid "lang:"
 msgstr "lang:"
 

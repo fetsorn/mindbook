@@ -1,6 +1,8 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Context, makeStore, onRecordEdit } from "@/store/store.js";
 import { ProfileField } from "./profile_field.jsx";
 
@@ -44,14 +46,16 @@ describe("ProfileField", () => {
     setStore("record", baseRecord);
 
     const { getByRole, getByText } = render(() => (
-      <Context.Provider value={{ store, setStore }}>
-        <ProfileField
-          index={index}
-          branch={branch}
-          items={items}
-          path={["record", "branch"]}
-        />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store, setStore }}>
+          <ProfileField
+            index={index}
+            branch={branch}
+            items={items}
+            path={["record", "branch"]}
+          />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     const input = getByRole("textbox");

@@ -2,6 +2,8 @@ import { test, expect, vi } from "vitest";
 import { createSignal } from "solid-js";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Context, makeStore, onRecordEdit } from "@/store/store.js";
 import { ProfileValue } from "./profile_value.jsx";
 
@@ -24,9 +26,11 @@ test("profile value", async () => {
   const path = ["record", "mind"];
 
   const { getByText, getByRole } = render(() => (
-    <Context.Provider value={{ store, setStore }}>
-      <ProfileValue value={store.record.mind} branch="mind" path={path} />
-    </Context.Provider>
+    <I18nProvider i18n={i18n}>
+      <Context.Provider value={{ store, setStore }}>
+        <ProfileValue value={store.record.mind} branch="mind" path={path} />
+      </Context.Provider>
+    </I18nProvider>
   ));
 
   const input = getByRole("textbox");

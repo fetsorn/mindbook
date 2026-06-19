@@ -1,7 +1,7 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
 import { I18nProvider } from "@lingui/solid";
-import { i18n } from "@/i18n.js";
+import { i18n, detectLocale, loadCatalog } from "@/i18n.js";
 import { Context, makeStore, openBook, searchBook } from "@/store/store.js";
 import { polyfill } from "@/polyfill.js";
 import App from "@/layout/layout.jsx";
@@ -16,7 +16,11 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-function bindBook(context, element) {
+async function bindBook(context, element) {
+  const detected = detectLocale();
+  if (detected !== "en") {
+    await loadCatalog(detected, i18n);
+  }
   render(
     () => (
       <I18nProvider i18n={i18n}>

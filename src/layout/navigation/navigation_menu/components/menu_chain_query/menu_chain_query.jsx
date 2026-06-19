@@ -1,11 +1,11 @@
 import { useContext, For } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
-import { Context, onChain } from "@/store/store.js";
+import { Context, onChain, branchTitle } from "@/store/store.js";
 import styles from "./menu_chain_query.module.css";
 
 export function MenuChainQuery(props) {
   const { store, setStore, api } = useContext(Context);
-  const { t } = useLingui();
+  const { i18n, t } = useLingui();
 
   const chainOptions = () =>
     store.schema[store.base] ? store.schema[store.base].leaves : [];
@@ -27,7 +27,7 @@ export function MenuChainQuery(props) {
         <option value="">—</option>
 
         <For each={chainOptions()}>
-          {(field) => <option value={field}>{field}</option>}
+          {(field) => <option value={field}>{branchTitle(store.schema, field, i18n().locale)}</option>}
         </For>
       </select>
     </div>

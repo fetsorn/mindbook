@@ -1,12 +1,12 @@
 import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
-import { Context, onRecordEdit } from "@/store/store.js";
+import { Context, onRecordEdit, branchTitle } from "@/store/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
 import { ProfileField, ProfileProse, ProfileValue } from "../index.js";
 
 export function ProfileRecord(props) {
   const { store, setStore } = useContext(Context);
-  const { t } = useLingui();
+  const { i18n, t } = useLingui();
 
   const leaves = () => {
     if (
@@ -91,7 +91,7 @@ export function ProfileRecord(props) {
                       : addNew()
                   }
                 >
-                  {leaf()}{" "}
+                  {branchTitle(store.schema, leaf(), i18n().locale)}{" "}
                 </button>
               );
             }}

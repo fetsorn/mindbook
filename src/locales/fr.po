@@ -1,101 +1,99 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-06-19 11:51+0300\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: ar\n"
+"Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Content-Type: \n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
 #: src/layout/profile/components/profile_record/profile_record.jsx:60
 msgid "add"
-msgstr "إضافة"
+msgstr "ajouter"
 
 #: src/layout/navigation/navigation_menu/components/menu_base_query/menu_base_query.jsx:13
 msgid "base:"
-msgstr "الأساس:"
+msgstr "base :"
 
 #: src/layout/navigation/navigation_menu/components/menu_chain_query/menu_chain_query.jsx:16
 msgid "chain:"
-msgstr "السلسلة:"
+msgstr "chaîne :"
 
 #: src/layout/bottom/bottom_sync/bottom_sync.jsx:11
 msgid "Conflict"
-msgstr "تعارض"
+msgstr "Conflit"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:92
 msgid "delete"
-msgstr "حذف"
+msgstr "supprimer"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:88
 msgid "edit"
-msgstr "تعديل"
+msgstr "modifier"
 
 #. placeholder {0}: store.recordSet.length
 #: src/layout/bottom/bottom_count/bottom_count.jsx:9
 msgid "found {0}"
-msgstr "تم العثور على {0}"
+msgstr "{0} trouvés"
 
 #: src/layout/overview/components/overview_record/overview_record.jsx:41
 msgid "is"
-msgstr "يكون"
+msgstr "est"
 
 #: src/layout/navigation/navigation_menu/components/menu_lang_query/menu_lang_query.jsx:15
 msgid "lang:"
-msgstr "اللغة:"
+msgstr "langue :"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:60
 msgid "less..."
-msgstr "أقل..."
+msgstr "moins…"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:62
 #: src/layout/overview/components/overview_item/overview_item.jsx:51
 msgid "more..."
-msgstr "المزيد..."
+msgstr "plus…"
 
 #: src/layout/bottom/bottom_new/bottom_new.jsx:28
 msgid "new"
-msgstr "جديد"
+msgstr "nouveau"
 
 #: src/layout/overview/components/overview_chain_feed/overview_chain_feed.jsx:39
 msgid "press \"new\" in the top right corner to add entries"
-msgstr "اضغط على \"جديد\" في الزاوية العلوية اليمنى لإضافة مدخلات"
+msgstr "cliquez sur « nouveau » en haut à droite pour ajouter des entrées"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:93
 msgid "really delete?"
-msgstr "هل تريد الحذف حقًا؟"
+msgstr "vraiment supprimer ?"
 
 #: src/layout/overview/components/overview_record/overview_record.jsx:72
 msgid "record no items"
-msgstr "السجل لا يحتوي على عناصر"
+msgstr "aucun élément"
 
 #: src/layout/navigation/navigation_revert/navigation_revert.jsx:15
 msgid "revert"
-msgstr "تراجع"
+msgstr "annuler"
 
 #: src/layout/navigation/navigation_save/navigation_save.jsx:19
 msgid "save"
-msgstr "حفظ"
+msgstr "enregistrer"
 
 #: src/layout/overview/components/overview_filter/overview_filter.jsx:32
 msgid "search"
-msgstr "بحث"
+msgstr "chercher"
 
 #: src/layout/overview/components/overview_filter/overview_filter.jsx:15
 msgid "search or filter with keyword:value"
-msgstr "ابحث أو صَفِّ بـ الكلمة_المفتاحية:القيمة"
+msgstr "chercher ou filtrer avec clé:valeur"
 
 #: src/layout/navigation/navigation_menu/components/menu_sort_query/menu_sort_query.jsx:13
 msgid "sort:"
-msgstr "فرز:"
+msgstr "tri :"
 
 #: src/layout/overview/components/overview_record/overview_record.jsx:62
 #: src/layout/profile/components/profile_record/profile_record.jsx:57
 msgid "with"
-msgstr "مع"
+msgstr "avec"

@@ -3,7 +3,14 @@
     "trunks": [],
     "leaves": ["name", "category"],
     "description": {
+      "zh": "思维",
       "en": "mind",
+      "hi": "मन",
+      "es": "mente",
+      "ar": "عقل",
+      "fr": "esprit",
+      "bn": "মন",
+      "pt": "mente",
       "ru": "mind"
     }
   },
@@ -11,7 +18,14 @@
     "trunks": ["mind"],
     "leaves": [],
     "description": {
+      "zh": "名称",
       "en": "Name of the mind",
+      "hi": "नाम",
+      "es": "Nombre",
+      "ar": "الاسم",
+      "fr": "Nom",
+      "bn": "নাম",
+      "pt": "Nome",
       "ru": "Название"
     }
   },
@@ -19,7 +33,14 @@
     "trunks": ["mind"],
     "leaves": [],
     "description": {
+      "zh": "类别",
       "en": "Category",
+      "hi": "श्रेणी",
+      "es": "Categoría",
+      "ar": "الفئة",
+      "fr": "Catégorie",
+      "bn": "বিভাগ",
+      "pt": "Categoria",
       "ru": "Категория"
     }
   },
@@ -27,7 +48,14 @@
     "trunks": [],
     "leaves": ["actname", "actdate", "place"],
     "description": {
+      "zh": "事件",
       "en": "Event",
+      "hi": "घटना",
+      "es": "Evento",
+      "ar": "حدث",
+      "fr": "Événement",
+      "bn": "ঘটনা",
+      "pt": "Evento",
       "ru": "Событие"
     }
   },
@@ -35,7 +63,14 @@
     "trunks": ["event"],
     "leaves": [],
     "description": {
+      "zh": "谁",
       "en": "Who",
+      "hi": "कौन",
+      "es": "Quién",
+      "ar": "من",
+      "fr": "Qui",
+      "bn": "কে",
+      "pt": "Quem",
       "ru": "Кто"
     }
   },
@@ -43,7 +78,14 @@
     "trunks": ["event"],
     "leaves": [],
     "description": {
+      "zh": "何时",
       "en": "When",
+      "hi": "कब",
+      "es": "Cuándo",
+      "ar": "متى",
+      "fr": "Quand",
+      "bn": "কখন",
+      "pt": "Quando",
       "ru": "Когда"
     }
   },
@@ -51,7 +93,14 @@
     "trunks": ["event"],
     "leaves": ["founded", "population"],
     "description": {
+      "zh": "地点",
       "en": "Where",
+      "hi": "कहाँ",
+      "es": "Dónde",
+      "ar": "أين",
+      "fr": "Où",
+      "bn": "কোথায়",
+      "pt": "Onde",
       "ru": "Где"
     }
   },
@@ -59,7 +108,14 @@
     "trunks": ["place"],
     "leaves": [],
     "description": {
+      "zh": "成立于",
       "en": "Founded",
+      "hi": "स्थापित",
+      "es": "Fundado",
+      "ar": "تأسس",
+      "fr": "Fondé",
+      "bn": "প্রতিষ্ঠিত",
+      "pt": "Fundado",
       "ru": "Основан"
     }
   },
@@ -67,7 +123,14 @@
     "trunks": ["place"],
     "leaves": [],
     "description": {
+      "zh": "人口",
       "en": "Population",
+      "hi": "जनसंख्या",
+      "es": "Población",
+      "ar": "السكان",
+      "fr": "Population",
+      "bn": "জনসংখ্যা",
+      "pt": "População",
       "ru": "Население"
     }
   }

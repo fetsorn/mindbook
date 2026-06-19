@@ -31,6 +31,10 @@ export function makeStore() {
   });
 }
 
+export function branchTitle(schema, branch, locale) {
+  return schema[branch]?.description?.[locale] ?? branch;
+}
+
 export function openBook({ setStore }, content) {
   setStore(
     produce((state) => {

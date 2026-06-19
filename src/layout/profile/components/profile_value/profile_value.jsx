@@ -1,5 +1,6 @@
 import { useContext } from "solid-js";
-import { Context, onRecordEdit } from "@/store/store.js";
+import { useLingui } from "@lingui/solid/macro";
+import { Context, onRecordEdit, branchTitle } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import styles from "./profile_value.module.css";
 
@@ -70,6 +71,8 @@ function calcSize(value, textarea) {
 
 export function ProfileValue(props) {
   const context = useContext(Context);
+  const { store } = context;
+  const { i18n } = useLingui();
 
   const editClasses = () =>
     rhetoric({ isEditing: true }).join(" ");
@@ -78,7 +81,7 @@ export function ProfileValue(props) {
 
   return (
     <>
-      <label for={`profile-${props.branch}`}>{props.branch} - </label>
+      <label for={`profile-${props.branch}`}>{branchTitle(store.schema, props.branch, i18n().locale)} - </label>
 
       <textarea
         id={`profile-${props.branch}`}

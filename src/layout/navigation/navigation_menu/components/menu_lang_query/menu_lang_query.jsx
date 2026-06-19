@@ -5,11 +5,8 @@ import styles from "./menu_lang_query.module.css";
 export function MenuLangQuery() {
   const { i18n, t } = useLingui();
 
-  const rtlLocales = new Set(["ar"]);
-
   async function onChange(locale) {
     await loadCatalog(locale, i18n());
-    document.documentElement.dir = rtlLocales.has(locale) ? "rtl" : "ltr";
   }
 
   return (

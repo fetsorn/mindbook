@@ -1,11 +1,15 @@
 import { createSignal, useContext } from "solid-js";
-import { Context } from "@/store/store.js";
+import { useLingui } from "@lingui/solid/macro";
+import { Context, branchTitle } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
 import { Spoiler } from "@/layout/components/index.js";
 
 export function OverviewValue(props) {
   const { store } = useContext(Context);
+  const { i18n } = useLingui();
+
+  const title = () => branchTitle(store.schema, props.branch, i18n().locale);
 
   const isBase = props.branch === store.base;
 
@@ -54,7 +58,7 @@ export function OverviewValue(props) {
             className={`${props.branch}-branch ${nucleusClasses()}`}
             onClick={() => setIsValue(true)}
           >
-            {props.branch}{" "}
+            {title()}{" "}
           </button>
         }
       >

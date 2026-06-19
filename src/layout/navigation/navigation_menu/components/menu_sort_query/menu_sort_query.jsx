@@ -1,11 +1,11 @@
 import { useContext, For, Show } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
-import { Context, onSort } from "@/store/store.js";
+import { Context, onSort, branchTitle } from "@/store/store.js";
 import styles from "./menu_sort_query.module.css";
 
 export function MenuSortQuery(props) {
   const { store, setStore } = useContext(Context);
-  const { t } = useLingui();
+  const { i18n, t } = useLingui();
 
   return (
     <div id="menuSort" className={styles.dropdown}>
@@ -28,7 +28,7 @@ export function MenuSortQuery(props) {
             )
             .concat([store.base])}
         >
-          {(field) => <option value={field}>{field}</option>}
+          {(field) => <option value={field}>{branchTitle(store.schema, field, i18n().locale)}</option>}
         </For>
       </select>
 

@@ -1,7 +1,7 @@
 import { defineConfig } from "@lingui/solid/config";
 
 export default defineConfig({
-  locales: ["en", "ar"],
+  locales: ["en", "ar", "bn", "es", "fr", "hi", "pt", "ru", "zh"],
   sourceLocale: "en",
   catalogs: [
     {
