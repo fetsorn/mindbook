@@ -8,7 +8,7 @@ import {
   isURL,
   isShowable,
 } from "@/layout/components/index.js";
-import styles from "./profile_value.module.css";
+import styles from "./edit_value.module.css";
 
 // https://css-tricks.com/auto-growing-inputs-textareas/
 function calcSize(value, textarea) {
@@ -75,7 +75,7 @@ function calcSize(value, textarea) {
   };
 }
 
-export function ProfileValue(props) {
+export function EditValue(props) {
   const context = useContext(Context);
   const { store } = context;
   const { i18n, t } = useLingui();

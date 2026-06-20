@@ -2,7 +2,7 @@ import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, onRecordEdit } from "@/store/store.js";
 import { Spoiler } from "@/layout/components/index.js";
-import { ProfileRecord, ProfileValue } from "../index.js";
+import { EditRecord, EditValue } from "../index.js";
 
 function proseLabel(key, locale, t) {
   const langTag = key.slice(1);
@@ -11,7 +11,7 @@ function proseLabel(key, locale, t) {
     : t`is`;
 }
 
-export function ProfileFieldItem(props) {
+export function EditFieldItem(props) {
   const { store, setStore } = useContext(Context);
   const { i18n, t } = useLingui();
 
@@ -32,7 +32,7 @@ export function ProfileFieldItem(props) {
   return (
     <Switch
       fallback={
-        <ProfileRecord
+        <EditRecord
           index={`${props.index}-${props.item[props.item._]}`}
           record={props.item}
           path={props.path}
@@ -40,7 +40,7 @@ export function ProfileFieldItem(props) {
       }
     >
       <Match when={baseIsTwig()}>
-        <ProfileValue
+        <EditValue
           // if twig is object, pass base value
           // otherwise pass string
           value={

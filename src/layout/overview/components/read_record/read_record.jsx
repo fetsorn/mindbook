@@ -4,9 +4,9 @@ import { Context } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
 import { Spoiler } from "@/layout/components/index.js";
-import { OverviewField, OverviewValue } from "../index.js";
+import { ReadField, ReadValue } from "../index.js";
 
-export function OverviewRecord(props) {
+export function ReadRecord(props) {
   const { store } = useContext(Context);
   const { t, i18n } = useLingui();
 
@@ -26,7 +26,7 @@ export function OverviewRecord(props) {
 
   return (
     <span className={recordClasses()}>
-      <OverviewValue
+      <ReadValue
         branch={props.record._}
         value={props.record[props.record._]}
         path={[...path(), props.record._]}
@@ -73,7 +73,7 @@ export function OverviewRecord(props) {
               const items = Array.isArray(value) ? value : [value];
 
               return (
-                <OverviewField
+                <ReadField
                   index={`${props.index}-${leaf}`}
                   items={items}
                   branch={leaf}

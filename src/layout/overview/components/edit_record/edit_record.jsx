@@ -2,9 +2,9 @@ import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, onRecordEdit, branchTitle } from "@/store/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
-import { ProfileField, ProfileProse, ProfileValue } from "../index.js";
+import { EditField, EditProse, EditValue } from "../index.js";
 
-export function ProfileRecord(props) {
+export function EditRecord(props) {
   const { store, setStore } = useContext(Context);
   const { i18n, t } = useLingui();
 
@@ -24,7 +24,7 @@ export function ProfileRecord(props) {
 
   return (
     <>
-      <ProfileValue
+      <EditValue
         value={access(access("_"))}
         branch={access("_")}
         path={[...props.path, access("_")]}
@@ -48,7 +48,7 @@ export function ProfileRecord(props) {
             : t`is`;
 
           return (
-            <ProfileProse
+            <EditProse
               label={label}
               value={access(key)}
               onInput={(html) =>
@@ -110,7 +110,7 @@ export function ProfileRecord(props) {
           fallback={<span>{t`record no items`}</span>}
         >
           {(leaf, index) => (
-            <ProfileField
+            <EditField
               index={`${props.index}-${leaf()}`}
               branch={leaf()}
               items={access(leaf()) ?? []}

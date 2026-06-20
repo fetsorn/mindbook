@@ -28,3 +28,18 @@
 .content {
   display: inline-block;
 }
+
+.editing {
+  width: 100%;
+  pointer-events: auto;
+}
+
+.dimmed {
+  opacity: 0.4;
+}
+
+.editActions {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 0.25em;
+}

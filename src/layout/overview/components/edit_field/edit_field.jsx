@@ -1,7 +1,7 @@
 import { useContext, createEffect } from "solid-js";
 import { Context, onRecordEdit } from "@/store/store.js";
 import { Spoiler, Confirmation } from "@/layout/components/index.js";
-import { ProfileFieldItem } from "../index.js";
+import { EditFieldItem } from "../index.js";
 
 // can't move this to field item
 // because remove needs to filter props.items
@@ -24,7 +24,7 @@ export function Foo(props) {
         }
       />
 
-      <ProfileFieldItem
+      <EditFieldItem
         index={`${props.index}-${props.i}`}
         branch={props.branch}
         item={props.item}
@@ -34,7 +34,7 @@ export function Foo(props) {
   );
 }
 
-export function ProfileField(props) {
+export function EditField(props) {
   const context = useContext(Context);
 
   // if props.items is not a list, treat is as list

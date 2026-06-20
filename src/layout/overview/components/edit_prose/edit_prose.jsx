@@ -3,7 +3,7 @@ import { useEditor } from "solid-tiptap";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 
-export function ProfileProse(props) {
+export function EditProse(props) {
   let ref;
 
   // Capture initial value once — the editor owns its content after

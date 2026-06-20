@@ -1,9 +1,9 @@
 import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context } from "@/store/store.js";
-import { OverviewRecord, OverviewValue } from "../index.js";
+import { ReadRecord, ReadValue } from "../index.js";
 
-export function OverviewFieldItem(props) {
+export function ReadFieldItem(props) {
   const { store } = useContext(Context);
   const { i18n } = useLingui();
 
@@ -21,7 +21,7 @@ export function OverviewFieldItem(props) {
   return (
     <Switch
       fallback={
-        <OverviewRecord
+        <ReadRecord
           index={`${props.index}-${props.item[props.item._]}`}
           record={
             typeof props.item === "object"
@@ -34,7 +34,7 @@ export function OverviewFieldItem(props) {
       }
     >
       <Match when={baseIsTwig()}>
-        <OverviewValue
+        <ReadValue
           branch={props.branch}
           value={typeof props.item === "object" ? props.item[props.item._] : props.item}
           path={path()}

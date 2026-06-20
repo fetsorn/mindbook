@@ -10,10 +10,7 @@
   grid: auto auto auto 1fr auto / auto;
   padding: 0px 15px 0px 15px;
   z-index: 999998;
-  width: 50vw;
-}
-
-.window.closed {
+  width: 100%;
 }
 
 @media (max-width: 600px) {
@@ -21,10 +18,11 @@
     width: 100vw;
     z-index: 999998;
   }
+}
 
-  .window.closed {
-    display: none;
-  }
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .buttonbar {

@@ -2,7 +2,7 @@ import { createElementSize } from "@solid-primitives/resize-observer";
 import { createSignal, createEffect } from "solid-js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { Confirmation, Spoiler } from "@/layout/components/index.js";
-import { OverviewValue } from "../index.js";
+import { ReadValue } from "../index.js";
 import styles from "./overview_item_light.module.css";
 
 // A light preview of an item: its base value plus one action
@@ -26,7 +26,7 @@ export function OverviewItemLight(props) {
     <div id={props.item[props.item._]} className={`${styles.item} ${itemClasses()}`}>
       <div className={foldClasses()}>
         <div className={styles.content} ref={setContent}>
-          <OverviewValue
+          <ReadValue
             branch={props.item._}
             value={props.item[props.item._]}
             path={props.path || [props.item._]}

@@ -1,9 +1,9 @@
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
 import { Spoiler } from "@/layout/components/index.js";
-import { OverviewFieldItem } from "../index.js";
+import { ReadFieldItem } from "../index.js";
 
-export function OverviewField(props) {
+export function ReadField(props) {
   const path = () => props.path || [];
 
   const meta = () => {
@@ -20,7 +20,7 @@ export function OverviewField(props) {
   return (
     <span className={fieldClasses()}>
       <Show when={items()[0] !== undefined} fallback={<></>}>
-        <OverviewFieldItem
+        <ReadFieldItem
           index={`${props.index}-0`}
           item={items()[0]}
           branch={props.branch}
@@ -36,7 +36,7 @@ export function OverviewField(props) {
               return (
                 <>
                   <Show when={index() > 0}>; </Show>
-                  <OverviewFieldItem
+                  <ReadFieldItem
                     index={`${props.index}-${index}`}
                     item={item}
                     branch={props.branch}
