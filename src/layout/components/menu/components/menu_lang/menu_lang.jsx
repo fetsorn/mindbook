@@ -1,8 +1,8 @@
 import { useLingui } from "@lingui/solid/macro";
 import { loadCatalog, locales } from "@/i18n.js";
-import styles from "./menu_lang_query.module.css";
+import styles from "./menu_lang.module.css";
 
-export function MenuLangQuery() {
+export function MenuLang() {
   const { i18n, t } = useLingui();
 
   async function onChange(locale) {

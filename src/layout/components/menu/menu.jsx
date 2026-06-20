@@ -1,5 +1,5 @@
 import { createSignal, createEffect } from "solid-js";
-import { MenuSortQuery, MenuBaseQuery, MenuChainQuery, MenuLangQuery } from "./components/index.js";
+import { MenuSort, MenuBase, MenuChain, MenuLang } from "./components/index.js";
 import styles from "./menu.module.css";
 
 export function Menu() {
@@ -55,16 +55,13 @@ export function Menu() {
         className={styles.menu + " " + (isOpen() ? styles.opened : "")}
       >
         {/*base query dropdown*/}
-        <MenuBaseQuery />
+        <MenuBase />
 
-        {/*sort query dropdown*/}
-        <MenuSortQuery />
+        <MenuSort />
 
-        {/*chain query dropdown*/}
-        <MenuChainQuery />
+        <MenuChain />
 
-        {/*language dropdown*/}
-        <MenuLangQuery />
+        <MenuLang />
       </div>
     </div>
   );

@@ -1,9 +1,9 @@
 import { useContext, For } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, onChain, branchTitle } from "@/store/store.js";
-import styles from "./menu_chain_query.module.css";
+import styles from "./menu_chain.module.css";
 
-export function MenuChainQuery(props) {
+export function MenuChain(props) {
   const { store, setStore, api } = useContext(Context);
   const { i18n, t } = useLingui();
 

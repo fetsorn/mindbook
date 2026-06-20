@@ -1,4 +1,4 @@
-export { MenuSortQuery } from "./menu_sort_query/menu_sort_query.jsx";
-export { MenuBaseQuery } from "./menu_base_query/menu_base_query.jsx";
-export { MenuChainQuery } from "./menu_chain_query/menu_chain_query.jsx";
-export { MenuLangQuery } from "./menu_lang_query/menu_lang_query.jsx";
+export { MenuSort } from "./menu_sort/menu_sort.jsx";
+export { MenuBase } from "./menu_base/menu_base.jsx";
+export { MenuChain } from "./menu_chain/menu_chain.jsx";
+export { MenuLang } from "./menu_lang/menu_lang.jsx";

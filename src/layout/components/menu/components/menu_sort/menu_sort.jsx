@@ -1,9 +1,9 @@
 import { useContext, For, Show } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, onSort, branchTitle } from "@/store/store.js";
-import styles from "./menu_sort_query.module.css";
+import styles from "./menu_sort.module.css";
 
-export function MenuSortQuery(props) {
+export function MenuSort(props) {
   const { store, setStore } = useContext(Context);
   const { i18n, t } = useLingui();
 
