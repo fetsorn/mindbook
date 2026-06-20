@@ -6,5 +6,5 @@ export function BottomCount() {
   const { store } = useContext(Context);
   const { t } = useLingui();
 
-  return <span>{t`found ${store.recordSet.length}`} </span>;
+  return <span aria-label="found">{t`found ${store.recordSet.length}`} </span>;
 }

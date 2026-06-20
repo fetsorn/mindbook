@@ -23,7 +23,10 @@ export function BottomNew() {
     <Show when={canAdd()} fallback={<></>}>
       <button
         className="bottomNew"
-        onClick={() => onRecordCreate({ store, setStore })}
+        onClick={() => {
+          onRecordCreate({ store, setStore });
+          window.scrollTo(0, 0);
+        }}
       >
         {t`new`}
       </button>

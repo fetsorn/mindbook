@@ -11,7 +11,7 @@ describe("update", () => {
 
     await edit();
 
-    await setValue(await $("aria/name -"), "foobaz");
+    await setValue(await $("aria/Name of the mind -"), "foobaz");
 
     await save();
 

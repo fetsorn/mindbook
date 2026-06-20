@@ -276,11 +276,6 @@ export async function onRecordSave(
   );
 
   setStore("loading", false);
-
-  queueMicrotask(() => {
-    const el = document.getElementById(keyNew);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
 }
 
 /**

@@ -25,6 +25,8 @@ export function ItemValueEdit(props) {
 
   const initialContent = untrack(() => props.value ?? "");
 
+  const label = () => `${branchTitle(store.schema, props.branch, i18n().locale)} -`;
+
   let ref;
 
   const editor = useEditor(() => ({
@@ -32,6 +34,9 @@ export function ItemValueEdit(props) {
     extensions: [Document, Text, Paragraph],
     content: initialContent,
     editable: true,
+    editorProps: {
+      attributes: { "aria-label": label() },
+    },
     onUpdate({ editor: e }) {
       onRecordEdit(context, props.path, e.getText());
     },
@@ -45,7 +50,7 @@ export function ItemValueEdit(props) {
   return (
     <>
       <label>
-        {branchTitle(store.schema, props.branch, i18n().locale)} -{" "}
+        {label()}{" "}
       </label>
 
       <span className={editClasses()}>
