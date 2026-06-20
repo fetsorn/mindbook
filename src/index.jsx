@@ -7,6 +7,7 @@ import { polyfill } from "@/polyfill.js";
 import App from "@/layout/layout.jsx";
 import "@/index.css";
 import "@/style/theme.css";
+import "highlight.js/styles/github.css";
 
 polyfill();
 
