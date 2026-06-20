@@ -39,7 +39,7 @@ test("item value edit", async () => {
 
   await userEvent.click(input);
 
-  await userEvent.keyboard("1");
+  await userEvent.keyboard("{End}1");
 
   expect(onRecordEdit).toHaveBeenCalledWith(
     { store, setStore },

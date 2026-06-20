@@ -27,7 +27,10 @@ describe("Item", () => {
 
     const { getByText } = render(() => (
       <I18nProvider i18n={i18n}>
-        <Context.Provider value={{ store }}>
+        <Context.Provider value={{ store, setStore, api: {
+          describe: () => Promise.resolve([]),
+          r: () => new ReadableStream({ start(c) { c.close(); } }),
+        } }}>
           <Item item={"mind"} index={index} />
         </Context.Provider>
       </I18nProvider>
