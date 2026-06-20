@@ -1,8 +1,7 @@
 import { createElementSize } from "@solid-primitives/resize-observer";
 import { createSignal, createEffect } from "solid-js";
 import { rhetoric } from "@/style/rhetoric.js";
-import { Confirmation, Spoiler } from "@/layout/components/index.js";
-import { ReadValue } from "../index.js";
+import { ItemValueRead } from "../index.js";
 import styles from "./overview_item_light.module.css";
 
 // A light preview of an item: its base value plus one action
@@ -19,14 +18,16 @@ export function OverviewItemLight(props) {
   const itemClasses = () =>
     rhetoric({ isItem: true, chainRole: props.chainRole }).join(" ");
 
-  const foldClasses = () =>
-    rhetoric({ isFolded: true }).join(" ");
+  const foldClasses = () => rhetoric({ isFolded: true }).join(" ");
 
   return (
-    <div id={props.item[props.item._]} className={`${styles.item} ${itemClasses()}`}>
+    <div
+      id={props.item[props.item._]}
+      className={`${styles.item} ${itemClasses()}`}
+    >
       <div className={foldClasses()}>
         <div className={styles.content} ref={setContent}>
-          <ReadValue
+          <ItemValueRead
             branch={props.item._}
             value={props.item[props.item._]}
             path={props.path || [props.item._]}
@@ -35,9 +36,7 @@ export function OverviewItemLight(props) {
         </div>
       </div>
 
-      <button onClick={() => props.onSelect?.()}>
-        {props.actionLabel}
-      </button>
+      <button onClick={() => props.onSelect?.()}>{props.actionLabel}</button>
     </div>
   );
 }

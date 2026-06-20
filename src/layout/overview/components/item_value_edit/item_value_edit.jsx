@@ -8,7 +8,7 @@ import {
   isURL,
   isShowable,
 } from "@/layout/components/index.js";
-import styles from "./edit_value.module.css";
+import styles from "./item_value_edit.module.css";
 
 // https://css-tricks.com/auto-growing-inputs-textareas/
 function calcSize(value, textarea) {
@@ -75,7 +75,7 @@ function calcSize(value, textarea) {
   };
 }
 
-export function EditValue(props) {
+export function ItemValueEdit(props) {
   const context = useContext(Context);
   const { store } = context;
   const { i18n, t } = useLingui();

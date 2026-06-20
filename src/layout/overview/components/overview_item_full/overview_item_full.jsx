@@ -11,8 +11,8 @@ import {
 } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { buildIndex } from "@/style/index_builder.js";
-import { Confirmation, Spoiler } from "@/layout/components/index.js";
-import { ReadRecord, EditRecord } from "../index.js";
+import { Confirmation } from "@/layout/components/index.js";
+import { ItemRecord } from "../index.js";
 import styles from "./overview_item_full.module.css";
 
 export function OverviewItemFull(props) {
@@ -32,8 +32,7 @@ export function OverviewItemFull(props) {
   const isFocused = () => store.focus === key();
 
   const isEditing = () =>
-    store.record !== undefined &&
-    store.record[store.record._] === key();
+    store.record !== undefined && store.record[store.record._] === key();
 
   const isTwig = () =>
     !store.schema[base()] || store.schema[base()].leaves.length === 0;
@@ -45,7 +44,10 @@ export function OverviewItemFull(props) {
   const foldClasses = () => rhetoric({ isFolded: isFold() }).join(" ");
 
   return (
-    <div id={key()} className={`${styles.item} ${itemClasses()} ${isEditing() ? styles.editing : ""} ${store.record !== undefined && !isEditing() ? styles.dimmed : ""}`}>
+    <div
+      id={key()}
+      className={`${styles.item} ${itemClasses()} ${isEditing() ? styles.editing : ""} ${store.record !== undefined && !isEditing() ? styles.dimmed : ""}`}
+    >
       <Show
         when={isEditing()}
         fallback={
@@ -53,7 +55,7 @@ export function OverviewItemFull(props) {
             <div className={styles.chrome}>
               <div className={foldClasses()}>
                 <div className={styles.content} ref={setContent}>
-                  <ReadRecord
+                  <ItemRecord
                     index={props.index}
                     record={props.item}
                     path={props.path || []}
@@ -70,7 +72,10 @@ export function OverviewItemFull(props) {
               <Show when={isFold()}>
                 <button
                   onClick={() =>
-                    setFocus({ store, setStore, api }, isFocused() ? null : key())
+                    setFocus(
+                      { store, setStore, api },
+                      isFocused() ? null : key(),
+                    )
                   }
                 >
                   .
@@ -84,7 +89,10 @@ export function OverviewItemFull(props) {
 
                 <button
                   onClick={() =>
-                    setFocus({ store, setStore, api }, isFocused() ? null : key())
+                    setFocus(
+                      { store, setStore, api },
+                      isFocused() ? null : key(),
+                    )
                   }
                 >
                   .
@@ -123,7 +131,9 @@ export function OverviewItemFull(props) {
                     return (
                       <button
                         title={action}
-                        onClick={() => onAction({ store, api }, action, props.item)}
+                        onClick={() =>
+                          onAction({ store, api }, action, props.item)
+                        }
                       >
                         {action}{" "}
                       </button>
@@ -136,12 +146,13 @@ export function OverviewItemFull(props) {
         }
       >
         <>
-          <EditRecord
+          <ItemRecord
             index={`${props.index}-edit`}
             record={store.record}
             path={["record"]}
             rstIndex={rstIndex()}
             isOpenDefault={true}
+            editing={true}
           />
 
           <div className={styles.editActions}>

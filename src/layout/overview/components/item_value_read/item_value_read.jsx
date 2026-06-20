@@ -10,7 +10,7 @@ import {
   isShowable,
 } from "@/layout/components/index.js";
 
-export function ReadValue(props) {
+export function ItemValueRead(props) {
   const { store } = useContext(Context);
   const { i18n, t } = useLingui();
 

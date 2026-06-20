@@ -5,7 +5,7 @@ import {
   OverviewFilter,
   OverviewHeader,
   OverviewChainFeed,
-  EditRecord,
+  ItemRecord,
 } from "./components/index.js";
 import styles from "./overview.module.css";
 
@@ -32,11 +32,12 @@ export function Overview() {
       <div className={styles.container}>
         <Show when={isNewRecord()}>
           <div className={styles.newRecord}>
-            <EditRecord
+            <ItemRecord
               index="new-record"
               record={store.record}
               path={["record"]}
               isOpenDefault={true}
+              editing={true}
             />
 
             <div className={styles.newRecordActions}>

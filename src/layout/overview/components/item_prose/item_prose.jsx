@@ -3,16 +3,22 @@ import { useEditor } from "solid-tiptap";
 import StarterKit from "@tiptap/starter-kit";
 import { Markdown } from "tiptap-markdown";
 
-export function ReadProse(props) {
+export function ItemProse(props) {
   let ref;
 
+  // Capture initial value once — the editor owns its content after
+  // creation; re-reading props.value would cause reactive loops
+  // (onUpdate → setStore → re-render → new editor).
   const initialContent = untrack(() => props.value ?? "");
 
   const editor = useEditor(() => ({
     element: ref,
     extensions: [StarterKit, Markdown],
     content: initialContent,
-    editable: false,
+    editable: props.editing ?? false,
+    onUpdate({ editor: e }) {
+      props.onInput?.(e.storage.markdown.getMarkdown());
+    },
   }));
 
   onCleanup(() => {
