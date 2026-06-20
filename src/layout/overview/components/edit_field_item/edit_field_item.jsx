@@ -24,6 +24,15 @@ export function EditFieldItem(props) {
     return store.schema[props.branch].leaves.length === 0;
   };
 
+  // normalize: string items become { _: branch, [branch]: item }
+  const record = () =>
+    typeof props.item === "object"
+      ? props.item
+      : { _: props.branch, [props.branch]: props.item };
+
+  const value = () =>
+    typeof props.item === "object" ? props.item[props.branch] : props.item;
+
   const proseKeys = () => {
     if (typeof props.item !== "object" || props.item === null) return [];
     return Object.keys(props.item).filter((k) => k.startsWith("@"));
@@ -33,23 +42,19 @@ export function EditFieldItem(props) {
     <Switch
       fallback={
         <EditRecord
-          index={`${props.index}-${props.item[props.item._]}`}
-          record={props.item}
+          index={`${props.index}-${record()[record()._]}`}
+          record={record()}
           path={props.path}
+          rstIndex={props.rstIndex}
         />
       }
     >
       <Match when={baseIsTwig()}>
         <EditValue
-          // if twig is object, pass base value
-          // otherwise pass string
-          value={
-            typeof props.item === "object"
-              ? props.item[props.branch]
-              : props.item
-          }
+          value={value()}
           branch={props.branch}
           path={props.path}
+          rstIndex={props.rstIndex}
         />
 
         <Spoiler
@@ -85,9 +90,9 @@ export function EditFieldItem(props) {
           <For each={proseKeys()}>
             {(key) => (
               <>
-                <label for={`profile-${props.branch}-${key}`}>{proseLabel(key, i18n().locale, t)} - </label>
+                <label for={`edit-${props.branch}-${key}`}>{proseLabel(key, i18n().locale, t)} - </label>
                 <textarea
-                  id={`profile-${props.branch}-${key}`}
+                  id={`edit-${props.branch}-${key}`}
                   onInput={async (event) => {
                     await onRecordEdit(
                       { setStore },

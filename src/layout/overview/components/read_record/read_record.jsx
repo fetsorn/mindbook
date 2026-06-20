@@ -4,53 +4,67 @@ import { Context } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
 import { Spoiler } from "@/layout/components/index.js";
-import { ReadField, ReadValue } from "../index.js";
+import { ReadField, ReadProse, ReadValue } from "../index.js";
 
 export function ReadRecord(props) {
   const { store } = useContext(Context);
-  const { t, i18n } = useLingui();
+  const { i18n, t } = useLingui();
 
-  const path = () => props.path || [];
+  const leaves = () => {
+    if (
+      store.schema === undefined ||
+      store.schema[props.record._] === undefined
+    )
+      return [];
+
+    return store.schema[props.record._].leaves;
+  };
+
+  function recordHasLeaf(leaf) {
+    return props.record.hasOwnProperty(leaf);
+  }
 
   const meta = () => {
-    const key = pathToKey(path());
+    const key = pathToKey(props.path || []);
     return props.rstIndex?.get(key) || {};
   };
 
   const recordClasses = () =>
     rhetoric(meta()).join(" ");
 
-  function recordHasLeaf(leaf) {
-    return props.record.hasOwnProperty(leaf);
-  }
-
   return (
     <span className={recordClasses()}>
       <ReadValue
         branch={props.record._}
         value={props.record[props.record._]}
-        path={[...path(), props.record._]}
+        path={[...props.path, props.record._]}
         rstIndex={props.rstIndex}
       />
 
-      <Show
-        when={Object.entries(props.record).filter(([k]) => k.startsWith("@")).length > 0}
-      >
-        <Spoiler
-          index={`${props.index}-prose`}
-          title={t`is`}
-          isOpenDefault={false}
-        >
-          <span className={`${props.record._}-prose`}>
-            {props.record[`@${i18n().locale}`] ?? props.record["@"]}
-          </span>
-        </Spoiler>
-      </Show>
+      <For each={Object.keys(props.record ?? {}).filter((k) => k.startsWith("@"))}>
+        {(key) => {
+          const langTag = key.slice(1);
+          const label = langTag
+            ? new Intl.DisplayNames([i18n().locale], { type: "language" }).of(langTag)
+            : t`is`;
+
+          return (
+            <Spoiler
+              index={`${props.index}-prose-${key}`}
+              title={label}
+              isOpenDefault={false}
+            >
+              <ReadProse
+                label={label}
+                value={props.record[key]}
+              />
+            </Spoiler>
+          );
+        }}
+      </For>
 
       <Show
-        when={
-          store.schema[props.record._].leaves.filter(recordHasLeaf).length > 0
-        }
+        when={leaves().filter(recordHasLeaf).length > 0}
         fallback={<></>}
       >
         <Spoiler
@@ -59,15 +73,10 @@ export function ReadRecord(props) {
           isOpenDefault={props.isOpenDefault}
         >
           <For
-            each={
-              store.schema !== undefined &&
-              props.record !== undefined &&
-              store.schema[props.record._] !== undefined &&
-              store.schema[props.record._].leaves.filter(recordHasLeaf)
-            }
+            each={leaves().filter(recordHasLeaf)}
             fallback={<span>{t`record no items`}</span>}
           >
-            {(leaf, index) => {
+            {(leaf) => {
               const value = props.record[leaf];
 
               const items = Array.isArray(value) ? value : [value];
@@ -77,7 +86,7 @@ export function ReadRecord(props) {
                   index={`${props.index}-${leaf}`}
                   items={items}
                   branch={leaf}
-                  path={[...path(), leaf]}
+                  path={[...props.path, leaf]}
                   rstIndex={props.rstIndex}
                 />
               );

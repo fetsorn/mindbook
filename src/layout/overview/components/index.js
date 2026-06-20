@@ -5,6 +5,7 @@ export { ReadRecord } from "./read_record/read_record.jsx";
 export { ReadField } from "./read_field/read_field.jsx";
 export { ReadFieldItem } from "./read_field_item/read_field_item.jsx";
 export { ReadValue } from "./read_value/read_value.jsx";
+export { ReadProse } from "./read_prose/read_prose.jsx";
 export { OverviewFilter } from "./overview_filter/overview_filter.jsx";
 export { OverviewHeader } from "./overview_header/overview_header.jsx";
 export { OverviewChainFeed } from "./overview_chain_feed/overview_chain_feed.jsx";

@@ -4,10 +4,8 @@ import { Spoiler } from "@/layout/components/index.js";
 import { ReadFieldItem } from "../index.js";
 
 export function ReadField(props) {
-  const path = () => props.path || [];
-
   const meta = () => {
-    const key = pathToKey(path());
+    const key = pathToKey(props.path || []);
     return props.rstIndex?.get(key) || {};
   };
 
@@ -24,7 +22,7 @@ export function ReadField(props) {
           index={`${props.index}-0`}
           item={items()[0]}
           branch={props.branch}
-          path={[...path(), 0]}
+          path={[...props.path, 0]}
           rstIndex={props.rstIndex}
         />
       </Show>
@@ -40,7 +38,7 @@ export function ReadField(props) {
                     index={`${props.index}-${index}`}
                     item={item}
                     branch={props.branch}
-                    path={[...path(), index + 1]}
+                    path={[...props.path, index + 1]}
                     rstIndex={props.rstIndex}
                   />
                 </>

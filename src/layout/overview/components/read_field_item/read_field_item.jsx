@@ -1,13 +1,12 @@
 import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context } from "@/store/store.js";
-import { ReadRecord, ReadValue } from "../index.js";
+import { Spoiler } from "@/layout/components/index.js";
+import { ReadRecord, ReadProse, ReadValue } from "../index.js";
 
 export function ReadFieldItem(props) {
   const { store } = useContext(Context);
-  const { i18n } = useLingui();
-
-  const path = () => props.path || [];
+  const { i18n, t } = useLingui();
 
   // if base has no leaves, show value
   // otherwise show record
@@ -18,17 +17,27 @@ export function ReadFieldItem(props) {
     return store.schema[props.branch].leaves.length === 0;
   };
 
+  // normalize: string items become { _: branch, [branch]: item }
+  const record = () =>
+    typeof props.item === "object"
+      ? props.item
+      : { _: props.branch, [props.branch]: props.item };
+
+  const value = () =>
+    typeof props.item === "object" ? props.item[props.branch] : props.item;
+
+  const proseKeys = () => {
+    if (typeof props.item !== "object" || props.item === null) return [];
+    return Object.keys(props.item).filter((k) => k.startsWith("@"));
+  };
+
   return (
     <Switch
       fallback={
         <ReadRecord
-          index={`${props.index}-${props.item[props.item._]}`}
-          record={
-            typeof props.item === "object"
-              ? props.item
-              : { _: props.branch, [props.branch]: props.item }
-          }
-          path={path()}
+          index={`${props.index}-${record()[record()._]}`}
+          record={record()}
+          path={props.path}
           rstIndex={props.rstIndex}
         />
       }
@@ -36,17 +45,32 @@ export function ReadFieldItem(props) {
       <Match when={baseIsTwig()}>
         <ReadValue
           branch={props.branch}
-          value={typeof props.item === "object" ? props.item[props.item._] : props.item}
-          path={path()}
+          value={value()}
+          path={props.path}
           rstIndex={props.rstIndex}
         />
 
-        <Show when={typeof props.item === "object" && props.item !== null
-          && Object.keys(props.item).some((k) => k.startsWith("@"))}>
-          <span className={`${props.branch}-prose`}>
-            {props.item[`@${i18n().locale}`] ?? props.item["@"]}
-          </span>
-        </Show>
+        <For each={proseKeys()}>
+          {(key) => {
+            const langTag = key.slice(1);
+            const label = langTag
+              ? new Intl.DisplayNames([i18n().locale], { type: "language" }).of(langTag)
+              : t`is`;
+
+            return (
+              <Spoiler
+                index={`${props.index}-prose-${key}`}
+                title={label}
+                isOpenDefault={false}
+              >
+                <ReadProse
+                  label={label}
+                  value={props.item[key]}
+                />
+              </Spoiler>
+            );
+          }}
+        </For>
       </Match>
     </Switch>
   );

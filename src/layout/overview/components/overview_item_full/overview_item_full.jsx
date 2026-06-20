@@ -140,6 +140,7 @@ export function OverviewItemFull(props) {
             index={`${props.index}-edit`}
             record={store.record}
             path={["record"]}
+            rstIndex={rstIndex()}
             isOpenDefault={true}
           />
 

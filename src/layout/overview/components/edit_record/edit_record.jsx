@@ -1,7 +1,9 @@
 import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, onRecordEdit, branchTitle } from "@/store/store.js";
-import { Spoiler, Confirmation } from "@/layout/components/index.js";
+import { rhetoric } from "@/style/rhetoric.js";
+import { pathToKey } from "@/style/index_builder.js";
+import { Spoiler } from "@/layout/components/index.js";
 import { EditField, EditProse, EditValue } from "../index.js";
 
 export function EditRecord(props) {
@@ -18,19 +20,28 @@ export function EditRecord(props) {
     return store.schema[props.record._].leaves;
   };
 
-  function access(field) {
-    return props.record !== undefined ? props.record[field] : undefined;
+  function recordHasLeaf(leaf) {
+    return props.record.hasOwnProperty(leaf);
   }
 
+  const meta = () => {
+    const key = pathToKey(props.path || []);
+    return props.rstIndex?.get(key) || {};
+  };
+
+  const recordClasses = () =>
+    rhetoric(meta()).join(" ");
+
   return (
-    <>
+    <span className={recordClasses()}>
       <EditValue
-        value={access(access("_"))}
-        branch={access("_")}
-        path={[...props.path, access("_")]}
+        value={props.record[props.record._]}
+        branch={props.record._}
+        path={[...props.path, props.record._]}
+        rstIndex={props.rstIndex}
       />
 
-      <Show when={access("@") === undefined}>
+      <Show when={props.record["@"] === undefined}>
         <button
           onClick={() =>
             onRecordEdit({ setStore }, [...props.path, "@"], "")
@@ -50,7 +61,7 @@ export function EditRecord(props) {
           return (
             <EditProse
               label={label}
-              value={access(key)}
+              value={props.record[key]}
               onInput={(html) =>
                 onRecordEdit({ setStore }, [...props.path, key], html)
               }
@@ -60,13 +71,13 @@ export function EditRecord(props) {
       </For>
 
       <Spoiler
-        index={`${props.index}-spoilerfield`}
+        index={props.index}
         title={t`with`}
         isOpenDefault={props.isOpenDefault}
       >
         <Spoiler index={`${props.index}-spoileradd`} title={t`add`}>
           <Index each={leaves()} fallback={<>...</>}>
-            {(leaf, index) => {
+            {(leaf) => {
               const addNew = () =>
                 onRecordEdit(
                   { setStore },
@@ -82,7 +93,7 @@ export function EditRecord(props) {
               const addAnother = () =>
                 onRecordEdit(
                   { setStore },
-                  [...props.path, leaf(), access(leaf()).length],
+                  [...props.path, leaf(), props.record[leaf()].length],
                   {
                     _: leaf(),
                     [leaf()]: "",
@@ -93,7 +104,7 @@ export function EditRecord(props) {
                 <button
                   className={"profileAddNew"}
                   onClick={() =>
-                    props.record.hasOwnProperty(leaf())
+                    recordHasLeaf(leaf())
                       ? addAnother()
                       : addNew()
                   }
@@ -105,20 +116,21 @@ export function EditRecord(props) {
           </Index>
         </Spoiler>
 
-        <Index
-          each={leaves()}
+        <For
+          each={leaves().filter(recordHasLeaf)}
           fallback={<span>{t`record no items`}</span>}
         >
-          {(leaf, index) => (
+          {(leaf) => (
             <EditField
-              index={`${props.index}-${leaf()}`}
-              branch={leaf()}
-              items={access(leaf()) ?? []}
-              path={[...props.path, leaf()]}
+              index={`${props.index}-${leaf}`}
+              branch={leaf}
+              items={props.record[leaf] ?? []}
+              path={[...props.path, leaf]}
+              rstIndex={props.rstIndex}
             />
           )}
-        </Index>
+        </For>
       </Spoiler>
-    </>
+    </span>
   );
 }
