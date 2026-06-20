@@ -2,11 +2,9 @@
   "name": "@fetsorn/mindbook",
   "description": "SPARQL in plain text",
   "productName": "mindbook",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "type": "module",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "main": "./dist/mindbook.js",
   "module": "./dist/mindbook.js",
   "license": "AGPL-3.0-or-later",

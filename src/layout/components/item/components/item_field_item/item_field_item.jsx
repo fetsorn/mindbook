@@ -1,6 +1,6 @@
 import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
-import { Context, onRecordEdit } from "@/store/store.js";
+import { Context, onRecordEdit, visibleProseKeys } from "@/store/store.js";
 import { Spoiler } from "@/layout/components/index.js";
 import { ItemRecord, ItemProse, ItemValueRead, ItemValueEdit } from "../index.js";
 
@@ -33,10 +33,17 @@ export function ItemFieldItem(props) {
   const value = () =>
     typeof props.item === "object" ? props.item[props.branch] : props.item;
 
-  const proseKeys = () => {
-    if (typeof props.item !== "object" || props.item === null) return [];
-    return Object.keys(props.item).filter((k) => k.startsWith("@"));
-  };
+  // When item is an object, write to the value inside it (preserving _ and @ keys);
+  // when it's a plain string, write to the array slot directly.
+  const valuePath = () =>
+    typeof props.item === "object" && props.item !== null
+      ? [...props.path, props.branch]
+      : props.path;
+
+  const proseKeys = () =>
+    typeof props.item === "object" && props.item !== null
+      ? visibleProseKeys(props.item, i18n().locale, props.editing)
+      : [];
 
   const Value = props.editing ? ItemValueEdit : ItemValueRead;
 
@@ -56,7 +63,7 @@ export function ItemFieldItem(props) {
         <Value
           value={value()}
           branch={props.branch}
-          path={props.path}
+          path={valuePath()}
           rstIndex={props.rstIndex}
         />
 
@@ -65,11 +72,10 @@ export function ItemFieldItem(props) {
           {(key) => (
             <Spoiler
               index={`${props.index}-prose-${key}`}
-              title={proseLabel(key, i18n().locale, t)}
+              title={props.editing ? proseLabel(key, i18n().locale, t) : t`is`}
               isOpenDefault={false}
             >
               <ItemProse
-                label={proseLabel(key, i18n().locale, t)}
                 value={props.item[key]}
                 editing={props.editing}
                 onInput={(html) =>

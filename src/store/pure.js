@@ -74,6 +74,24 @@ export function sortCallback(sortBy, sortDirection) {
   };
 }
 
+/**
+ * Return the @-keyed prose fields to display.
+ * Edit mode: all keys, @ first, then alphabetical.
+ * Read mode: best locale match only (@{locale} > @ > none).
+ */
+export function visibleProseKeys(record, locale, editing) {
+  const allKeys = Object.keys(record ?? {}).filter((k) => k.startsWith("@"));
+  if (editing) {
+    return allKeys.sort((a, b) =>
+      a === "@" ? -1 : b === "@" ? 1 : a.localeCompare(b),
+    );
+  }
+  const localeKey = `@${locale}`;
+  if (allKeys.includes(localeKey)) return [localeKey];
+  if (allKeys.includes("@")) return ["@"];
+  return [];
+}
+
 // Ensure branches with leaves are objects, not bare strings.
 // If schema says "place" has leaves and the value is "new york",
 // wrap it into { _: "place", place: "new york" }.

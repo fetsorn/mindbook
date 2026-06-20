@@ -2,7 +2,8 @@
 import { createStore, produce } from "solid-js/store";
 import { sortCallback } from "@/store/pure.js";
 import { createRecord } from "@/store/impure.js";
-import { sonKeys, normalizeBranches } from "@/store/pure.js";
+import { sonKeys, normalizeBranches, visibleProseKeys } from "@/store/pure.js";
+export { visibleProseKeys };
 import { createContext } from "solid-js";
 
 export const Context = createContext();
@@ -171,6 +172,7 @@ export async function onRecordCreate({ store, setStore }) {
   setStore(
     produce((state) => {
       state.record = record;
+      state.editingKey = record[record._];
     }),
   );
 }
@@ -254,7 +256,11 @@ export async function onRecordSave(
 
   const keyNew = recordCleaned[base];
 
-  const records = store.recordSet.filter((r) => r !== keyOld).concat([keyNew]);
+  const idx = store.recordSet.indexOf(keyOld);
+
+  const records = idx >= 0
+    ? store.recordSet.with(idx, keyNew)
+    : [...store.recordSet, keyNew];
 
   // force reload
   setStore("recordSet", []);
@@ -270,6 +276,11 @@ export async function onRecordSave(
   );
 
   setStore("loading", false);
+
+  queueMicrotask(() => {
+    const el = document.getElementById(keyNew);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 }
 
 /**

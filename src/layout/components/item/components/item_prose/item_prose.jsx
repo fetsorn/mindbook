@@ -4,6 +4,7 @@ import StarterKit from "@tiptap/starter-kit";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { common, createLowlight } from "lowlight";
 import { Markdown } from "tiptap-markdown";
+import styles from "./item_prose.module.css";
 
 const lowlight = createLowlight(common);
 
@@ -35,9 +36,8 @@ export function ItemProse(props) {
   });
 
   return (
-    <div>
-      <label>{props.label} </label>
-      <div ref={ref} />
-    </div>
+    <span className={styles.prose}>
+      <span ref={ref} />
+    </span>
   );
 }

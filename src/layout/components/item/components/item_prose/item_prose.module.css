@@ -1,0 +1,11 @@
+.prose {
+  display: inline;
+}
+
+.prose :global(.ProseMirror) {
+  display: inline;
+}
+
+.prose :global(.ProseMirror) p {
+  display: inline;
+}
