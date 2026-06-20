@@ -1,5 +1,6 @@
 import { createSignal, onMount } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
+import styles from "./preview.module.css";
 
 const showableExts = new Set([
   // image
@@ -78,28 +79,30 @@ export function Preview(props) {
 
   return (
     <Show when={src()} fallback={<span>{t`loading...`}</span>}>
-      <Switch fallback={
-        <iframe title="preview" width="100%" height="400" src={src()} />
-      }>
-        <Match when={mime().startsWith("image/")}>
-          <img alt="preview" width="100%" src={src()} />
-        </Match>
-        <Match when={mime().startsWith("audio/")}>
-          <audio controls>
-            <track kind="captions" />
-            <source src={src()} type={mime()} />
-          </audio>
-        </Match>
-        <Match when={mime().startsWith("video/")}>
-          <video width="100%" controls>
-            <track kind="captions" />
-            <source src={src()} type={mime()} />
-          </video>
-        </Match>
-        <Match when={mime() === "application/pdf"}>
-          <iframe title="preview" width="100%" height="1000" src={src()} />
-        </Match>
-      </Switch>
+      <figure className={styles.figure}>
+        <Switch fallback={
+          <iframe title="preview" height="400" src={src()} />
+        }>
+          <Match when={mime().startsWith("image/")}>
+            <img alt="preview" src={src()} />
+          </Match>
+          <Match when={mime().startsWith("audio/")}>
+            <audio controls>
+              <track kind="captions" />
+              <source src={src()} type={mime()} />
+            </audio>
+          </Match>
+          <Match when={mime().startsWith("video/")}>
+            <video controls>
+              <track kind="captions" />
+              <source src={src()} type={mime()} />
+            </video>
+          </Match>
+          <Match when={mime() === "application/pdf"}>
+            <iframe title="preview" height="1000" src={src()} />
+          </Match>
+        </Switch>
+      </figure>
     </Show>
   );
 }

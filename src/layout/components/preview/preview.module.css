@@ -1,0 +1,16 @@
+.figure {
+    display: block;
+    max-width: 60%;
+    margin: 1em auto;
+}
+
+.figure img,
+.figure video {
+    max-width: 100%;
+    height: auto;
+}
+
+.figure iframe {
+    width: 100%;
+    border: none;
+}
