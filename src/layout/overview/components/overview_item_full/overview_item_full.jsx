@@ -54,23 +54,34 @@ export function OverviewItemFull(props) {
           </div>
         </div>
 
-        <Show when={size.height > 40}>
-          <Show
-            when={isFold()}
-            fallback={<button onClick={() => setIsFold(true)}>{t`less...`}</button>}
-          >
-            <button onClick={() => setIsFold(false)}>{t`more...`}</button>
-          </Show>
+        <Show when={isFold() && size.height > 40}>
+          <button onClick={() => setIsFold(false)}>{t`more...`}</button>
         </Show>
 
-        <button
-          onClick={() =>
-            setFocus({ store, setStore, api }, isFocused() ? null : key())
-          }
-        >
-          .
-        </button>
+        <Show when={isFold()}>
+          <button
+            onClick={() =>
+              setFocus({ store, setStore, api }, isFocused() ? null : key())
+            }
+          >
+            .
+          </button>
+        </Show>
       </div>
+
+      <Show when={!isFold()}>
+        <div className={styles.controls}>
+          <button onClick={() => setIsFold(true)}>{t`less...`}</button>
+
+          <button
+            onClick={() =>
+              setFocus({ store, setStore, api }, isFocused() ? null : key())
+            }
+          >
+            .
+          </button>
+        </div>
+      </Show>
 
       <Show when={isFocused()}>
         <div className={styles.actions}>

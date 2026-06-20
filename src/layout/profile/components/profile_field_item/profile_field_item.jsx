@@ -4,9 +4,16 @@ import { Context, onRecordEdit } from "@/store/store.js";
 import { Spoiler } from "@/layout/components/index.js";
 import { ProfileRecord, ProfileValue } from "../index.js";
 
+function proseLabel(key, locale, t) {
+  const langTag = key.slice(1);
+  return langTag
+    ? new Intl.DisplayNames([locale], { type: "language" }).of(langTag)
+    : t`is`;
+}
+
 export function ProfileFieldItem(props) {
   const { store, setStore } = useContext(Context);
-  const { t } = useLingui();
+  const { i18n, t } = useLingui();
 
   // if base has no leaves, show value
   // otherwise show record with buttons that can add leaves
@@ -78,7 +85,7 @@ export function ProfileFieldItem(props) {
           <For each={proseKeys()}>
             {(key) => (
               <>
-                <label for={`profile-${props.branch}-${key}`}>{key} - </label>
+                <label for={`profile-${props.branch}-${key}`}>{proseLabel(key, i18n().locale, t)} - </label>
                 <textarea
                   id={`profile-${props.branch}-${key}`}
                   onInput={async (event) => {

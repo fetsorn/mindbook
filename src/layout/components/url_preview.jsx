@@ -1,4 +1,5 @@
 import { createSignal, onMount } from "solid-js";
+import { useLingui } from "@lingui/solid/macro";
 
 const showableExts = new Set([
   // image
@@ -50,6 +51,7 @@ function mimeFromExt(ext) {
 }
 
 export function URLPreview(props) {
+  const { t } = useLingui();
   const [src, setSrc] = createSignal(undefined);
   const [mime, setMime] = createSignal("");
 
@@ -75,7 +77,7 @@ export function URLPreview(props) {
   });
 
   return (
-    <Show when={src()} fallback={<span>loading...</span>}>
+    <Show when={src()} fallback={<span>{t`loading...`}</span>}>
       <Switch fallback={
         <iframe title="preview" width="100%" height="400" src={src()} />
       }>

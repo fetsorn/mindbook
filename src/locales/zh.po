@@ -13,13 +13,17 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/layout/profile/components/profile_record/profile_record.jsx:60
+#: src/layout/profile/components/profile_record/profile_record.jsx:67
 msgid "add"
 msgstr "添加"
 
 #: src/layout/navigation/navigation_menu/components/menu_base_query/menu_base_query.jsx:13
 msgid "base:"
 msgstr "基础："
+
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:15
+msgid "cancel"
+msgstr ""
 
 #: src/layout/navigation/navigation_menu/components/menu_chain_query/menu_chain_query.jsx:16
 msgid "chain:"
@@ -29,11 +33,11 @@ msgstr "链："
 msgid "Conflict"
 msgstr "冲突"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:92
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:103
 msgid "delete"
 msgstr "删除"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:88
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:99
 msgid "edit"
 msgstr "编辑"
 
@@ -43,6 +47,9 @@ msgid "found {0}"
 msgstr "找到 {0}"
 
 #: src/layout/overview/components/overview_record/overview_record.jsx:41
+#: src/layout/profile/components/profile_field_item/profile_field_item.jsx:57
+#: src/layout/profile/components/profile_record/profile_record.jsx:39
+#: src/layout/profile/components/profile_record/profile_record.jsx:48
 msgid "is"
 msgstr "是"
 
@@ -50,16 +57,21 @@ msgstr "是"
 msgid "lang:"
 msgstr "语言："
 
-#: src/layout/overview/components/overview_value/overview_value.jsx
-#: src/layout/profile/components/profile_value/profile_value.jsx
-msgid "like"
-msgstr "如同"
-
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:60
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:74
 msgid "less..."
 msgstr "收起…"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:62
+#: src/layout/overview/components/overview_value/overview_value.jsx:83
+#: src/layout/profile/components/profile_value/profile_value.jsx:120
+msgid "like"
+msgstr "如同"
+
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:12
+#: src/layout/components/url_preview.jsx:80
+msgid "loading..."
+msgstr ""
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:58
 #: src/layout/overview/components/overview_item/overview_item.jsx:51
 msgid "more..."
 msgstr "展开…"
@@ -68,15 +80,24 @@ msgstr "展开…"
 msgid "new"
 msgstr "新建"
 
+#: src/layout/components/confirmation/confirmation.jsx:44
+msgid "no"
+msgstr ""
+
 #: src/layout/overview/components/overview_chain_feed/overview_chain_feed.jsx:39
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "点击右上角「新建」以添加条目"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:93
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:16
+msgid "really cancel?"
+msgstr ""
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:104
 msgid "really delete?"
 msgstr "确定删除？"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:72
+#: src/layout/overview/components/overview_record/overview_record.jsx:68
+#: src/layout/profile/components/profile_record/profile_record.jsx:110
 msgid "record no items"
 msgstr "记录无条目"
 
@@ -87,6 +108,10 @@ msgstr "还原"
 #: src/layout/navigation/navigation_save/navigation_save.jsx:19
 msgid "save"
 msgstr "保存"
+
+#: src/layout/navigation/navigation_menu/components/filter_scroll/filter_scroll.jsx:7
+msgid "scroll to top"
+msgstr ""
 
 #: src/layout/overview/components/overview_filter/overview_filter.jsx:32
 msgid "search"
@@ -100,7 +125,11 @@ msgstr "搜索或按 关键字:值 筛选"
 msgid "sort:"
 msgstr "排序："
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:62
-#: src/layout/profile/components/profile_record/profile_record.jsx:57
+#: src/layout/overview/components/overview_record/overview_record.jsx:58
+#: src/layout/profile/components/profile_record/profile_record.jsx:64
 msgid "with"
 msgstr "包含"
+
+#: src/layout/components/confirmation/confirmation.jsx:31
+msgid "yes"
+msgstr ""

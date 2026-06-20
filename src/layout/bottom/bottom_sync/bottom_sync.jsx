@@ -7,7 +7,7 @@ export function BottomSync() {
   const { t } = useLingui();
 
   return (
-    <Show when={!store.mergeResult} fallback={<></>}>
+    <Show when={store.mergeResult === false} fallback={<></>}>
       <span>{t`Conflict`}</span>
     </Show>
   );

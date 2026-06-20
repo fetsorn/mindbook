@@ -11,13 +11,17 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/layout/profile/components/profile_record/profile_record.jsx:60
+#: src/layout/profile/components/profile_record/profile_record.jsx:67
 msgid "add"
 msgstr "añadir"
 
 #: src/layout/navigation/navigation_menu/components/menu_base_query/menu_base_query.jsx:13
 msgid "base:"
 msgstr "base:"
+
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:15
+msgid "cancel"
+msgstr ""
 
 #: src/layout/navigation/navigation_menu/components/menu_chain_query/menu_chain_query.jsx:16
 msgid "chain:"
@@ -27,11 +31,11 @@ msgstr "cadena:"
 msgid "Conflict"
 msgstr "Conflicto"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:92
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:103
 msgid "delete"
 msgstr "eliminar"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:88
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:99
 msgid "edit"
 msgstr "editar"
 
@@ -41,6 +45,9 @@ msgid "found {0}"
 msgstr "encontrados {0}"
 
 #: src/layout/overview/components/overview_record/overview_record.jsx:41
+#: src/layout/profile/components/profile_field_item/profile_field_item.jsx:57
+#: src/layout/profile/components/profile_record/profile_record.jsx:39
+#: src/layout/profile/components/profile_record/profile_record.jsx:48
 msgid "is"
 msgstr "es"
 
@@ -48,16 +55,21 @@ msgstr "es"
 msgid "lang:"
 msgstr "idioma:"
 
-#: src/layout/overview/components/overview_value/overview_value.jsx
-#: src/layout/profile/components/profile_value/profile_value.jsx
-msgid "like"
-msgstr "como"
-
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:60
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:74
 msgid "less..."
 msgstr "menos…"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:62
+#: src/layout/overview/components/overview_value/overview_value.jsx:83
+#: src/layout/profile/components/profile_value/profile_value.jsx:120
+msgid "like"
+msgstr "como"
+
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:12
+#: src/layout/components/url_preview.jsx:80
+msgid "loading..."
+msgstr ""
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:58
 #: src/layout/overview/components/overview_item/overview_item.jsx:51
 msgid "more..."
 msgstr "más…"
@@ -66,15 +78,24 @@ msgstr "más…"
 msgid "new"
 msgstr "nuevo"
 
+#: src/layout/components/confirmation/confirmation.jsx:44
+msgid "no"
+msgstr ""
+
 #: src/layout/overview/components/overview_chain_feed/overview_chain_feed.jsx:39
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "pulse «nuevo» en la esquina superior derecha para añadir entradas"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:93
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:16
+msgid "really cancel?"
+msgstr ""
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:104
 msgid "really delete?"
 msgstr "¿eliminar de verdad?"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:72
+#: src/layout/overview/components/overview_record/overview_record.jsx:68
+#: src/layout/profile/components/profile_record/profile_record.jsx:110
 msgid "record no items"
 msgstr "registro sin elementos"
 
@@ -85,6 +106,10 @@ msgstr "revertir"
 #: src/layout/navigation/navigation_save/navigation_save.jsx:19
 msgid "save"
 msgstr "guardar"
+
+#: src/layout/navigation/navigation_menu/components/filter_scroll/filter_scroll.jsx:7
+msgid "scroll to top"
+msgstr ""
 
 #: src/layout/overview/components/overview_filter/overview_filter.jsx:32
 msgid "search"
@@ -98,7 +123,11 @@ msgstr "buscar o filtrar con clave:valor"
 msgid "sort:"
 msgstr "orden:"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:62
-#: src/layout/profile/components/profile_record/profile_record.jsx:57
+#: src/layout/overview/components/overview_record/overview_record.jsx:58
+#: src/layout/profile/components/profile_record/profile_record.jsx:64
 msgid "with"
 msgstr "con"
+
+#: src/layout/components/confirmation/confirmation.jsx:31
+msgid "yes"
+msgstr ""

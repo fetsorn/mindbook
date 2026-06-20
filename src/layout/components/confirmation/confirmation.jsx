@@ -1,7 +1,9 @@
 import { createSignal } from "solid-js";
+import { useLingui } from "@lingui/solid/macro";
 
 export function Confirmation(props) {
   const [confirmation, setConfirmation] = createSignal(false);
+  const { t } = useLingui();
 
   return (
     <Show
@@ -26,7 +28,7 @@ export function Confirmation(props) {
             setConfirmation(false);
           }}
         >
-          Yes{" "}
+          {t`yes`}{" "}
         </button>
 
         <button
@@ -39,7 +41,7 @@ export function Confirmation(props) {
             setConfirmation(false)
           }}
         >
-          No{" "}
+          {t`no`}{" "}
         </button>
       </>
     </Show>

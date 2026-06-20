@@ -13,13 +13,17 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/layout/profile/components/profile_record/profile_record.jsx:60
+#: src/layout/profile/components/profile_record/profile_record.jsx:67
 msgid "add"
 msgstr "add"
 
 #: src/layout/navigation/navigation_menu/components/menu_base_query/menu_base_query.jsx:13
 msgid "base:"
 msgstr "base:"
+
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:15
+msgid "cancel"
+msgstr "cancel"
 
 #: src/layout/navigation/navigation_menu/components/menu_chain_query/menu_chain_query.jsx:16
 msgid "chain:"
@@ -29,11 +33,11 @@ msgstr "chain:"
 msgid "Conflict"
 msgstr "Conflict"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:92
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:103
 msgid "delete"
 msgstr "delete"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:88
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:99
 msgid "edit"
 msgstr "edit"
 
@@ -43,6 +47,9 @@ msgid "found {0}"
 msgstr "found {0}"
 
 #: src/layout/overview/components/overview_record/overview_record.jsx:41
+#: src/layout/profile/components/profile_field_item/profile_field_item.jsx:57
+#: src/layout/profile/components/profile_record/profile_record.jsx:39
+#: src/layout/profile/components/profile_record/profile_record.jsx:48
 msgid "is"
 msgstr "is"
 
@@ -50,16 +57,21 @@ msgstr "is"
 msgid "lang:"
 msgstr "lang:"
 
-#: src/layout/overview/components/overview_value/overview_value.jsx
-#: src/layout/profile/components/profile_value/profile_value.jsx
-msgid "like"
-msgstr "like"
-
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:60
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:74
 msgid "less..."
 msgstr "less..."
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:62
+#: src/layout/overview/components/overview_value/overview_value.jsx:83
+#: src/layout/profile/components/profile_value/profile_value.jsx:120
+msgid "like"
+msgstr "like"
+
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:12
+#: src/layout/components/url_preview.jsx:80
+msgid "loading..."
+msgstr "loading..."
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:58
 #: src/layout/overview/components/overview_item/overview_item.jsx:51
 msgid "more..."
 msgstr "more..."
@@ -68,15 +80,24 @@ msgstr "more..."
 msgid "new"
 msgstr "new"
 
+#: src/layout/components/confirmation/confirmation.jsx:44
+msgid "no"
+msgstr "no"
+
 #: src/layout/overview/components/overview_chain_feed/overview_chain_feed.jsx:39
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "press \"new\" in the top right corner to add entries"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:93
+#: src/layout/bottom/bottom_loader/bottom_loader.jsx:16
+msgid "really cancel?"
+msgstr "really cancel?"
+
+#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:104
 msgid "really delete?"
 msgstr "really delete?"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:72
+#: src/layout/overview/components/overview_record/overview_record.jsx:68
+#: src/layout/profile/components/profile_record/profile_record.jsx:110
 msgid "record no items"
 msgstr "record no items"
 
@@ -87,6 +108,10 @@ msgstr "revert"
 #: src/layout/navigation/navigation_save/navigation_save.jsx:19
 msgid "save"
 msgstr "save"
+
+#: src/layout/navigation/navigation_menu/components/filter_scroll/filter_scroll.jsx:7
+msgid "scroll to top"
+msgstr "scroll to top"
 
 #: src/layout/overview/components/overview_filter/overview_filter.jsx:32
 msgid "search"
@@ -100,7 +125,11 @@ msgstr "search or filter with keyword:value"
 msgid "sort:"
 msgstr "sort:"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:62
-#: src/layout/profile/components/profile_record/profile_record.jsx:57
+#: src/layout/overview/components/overview_record/overview_record.jsx:58
+#: src/layout/profile/components/profile_record/profile_record.jsx:64
 msgid "with"
 msgstr "with"
+
+#: src/layout/components/confirmation/confirmation.jsx:31
+msgid "yes"
+msgstr "yes"

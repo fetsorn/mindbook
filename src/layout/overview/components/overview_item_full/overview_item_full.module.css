@@ -12,6 +12,13 @@
   flex-shrink: 0;
 }
 
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

@@ -36,20 +36,27 @@ export function ProfileRecord(props) {
             onRecordEdit({ setStore }, [...props.path, "@"], "")
           }
         >
-          @
+          {t`is`}
         </button>
       </Show>
 
       <For each={Object.keys(props.record ?? {}).filter((k) => k.startsWith("@"))}>
-        {(key) => (
-          <ProfileProse
-            label={key}
-            value={access(key)}
-            onInput={(html) =>
-              onRecordEdit({ setStore }, [...props.path, key], html)
-            }
-          />
-        )}
+        {(key) => {
+          const langTag = key.slice(1);
+          const label = langTag
+            ? new Intl.DisplayNames([i18n().locale], { type: "language" }).of(langTag)
+            : t`is`;
+
+          return (
+            <ProfileProse
+              label={label}
+              value={access(key)}
+              onInput={(html) =>
+                onRecordEdit({ setStore }, [...props.path, key], html)
+              }
+            />
+          );
+        }}
       </For>
 
       <Spoiler
@@ -100,7 +107,7 @@ export function ProfileRecord(props) {
 
         <Index
           each={leaves()}
-          fallback={<span>record but branch is twig</span>}
+          fallback={<span>{t`record no items`}</span>}
         >
           {(leaf, index) => (
             <ProfileField
