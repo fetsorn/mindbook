@@ -1,8 +1,8 @@
 import { createSignal, createEffect } from "solid-js";
 import { MenuSortQuery, MenuBaseQuery, MenuChainQuery, MenuLangQuery } from "./components/index.js";
-import styles from "./navigation_menu.module.css";
+import styles from "./menu.module.css";
 
-export function NavigationMenu() {
+export function Menu() {
   const [isOpen, setIsOpen] = createSignal(false);
 
   function close(e) {

@@ -4,7 +4,7 @@ import { Context, onRecordEdit, branchTitle } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import {
   Spoiler,
-  URLPreview,
+  Preview,
   isURL,
   isShowable,
 } from "@/layout/components/index.js";
@@ -118,7 +118,7 @@ export function ItemValueEdit(props) {
 
       <Show when={showPreview()}>
         <Spoiler title={t`like`}>
-          <URLPreview url={props.value} />
+          <Preview url={props.value} />
         </Spoiler>
       </Show>
     </>

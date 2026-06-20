@@ -2,13 +2,13 @@ import { createElementSize } from "@solid-primitives/resize-observer";
 import { createSignal, createEffect } from "solid-js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { ItemValueRead } from "../index.js";
-import styles from "./overview_item_light.module.css";
+import styles from "./item_light.module.css";
 
 // A light preview of an item: its base value plus one action
 // button supplied by the caller. The component does not know what
 // the action means (load, recenter, ...) — onSelect + actionLabel
 // are passed in.
-export function OverviewItemLight(props) {
+export function ItemLight(props) {
   const [content, setContent] = createSignal();
 
   const [showActions, setShowActions] = createSignal(false);

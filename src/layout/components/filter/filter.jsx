@@ -1,9 +1,9 @@
 import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, setQuery, onSearch } from "@/store/store.js";
-import styles from "./overview_filter.module.css";
+import styles from "./filter.module.css";
 
-export function OverviewFilter() {
+export function Filter() {
   const context = useContext(Context);
   const { t } = useLingui();
 

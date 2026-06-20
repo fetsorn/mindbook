@@ -1,23 +1,39 @@
 import history from "history/hash";
-import { onMount, useContext } from "solid-js";
+import { createEffect, onMount, useContext } from "solid-js";
 import { MetaProvider, Title } from "@solidjs/meta";
+import { useLingui } from "@lingui/solid/macro";
 import { Context } from "@/store/store.js";
 import {
-  NavigationMenu,
-} from "./navigation/index.js";
-import {
+  Menu,
+  Filter,
+  Header,
+  Item,
+  ItemFull,
   BottomCount,
   BottomLoader,
   BottomNew,
   BottomSync,
-} from "./bottom/index.js";
-import { Overview } from "./overview/overview.jsx";
+} from "./components/index.js";
 import styles from "./layout.module.css";
 
-export function LayoutOverview() {
+export function Layout() {
   const { store } = useContext(Context);
+  const { t } = useLingui();
 
   const isEditing = () => store.record !== undefined;
+
+  // A new record being created — store.record exists but its key
+  // is not in the current recordSet (it hasn't been saved yet).
+  const isNewRecord = () =>
+    isEditing() &&
+    !store.recordSet.includes(store.record[store.record._]);
+
+  createEffect(() => {
+    const key = store.focus;
+    if (key === null) return;
+    const el = document.getElementById(key);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 
   return (
     <div className={styles.window}>
@@ -30,10 +46,43 @@ export function LayoutOverview() {
         }
         title="navigationOverview"
       >
-        <NavigationMenu />
+        <Menu />
       </nav>
 
-      <Overview />
+      <div className={isEditing() ? styles.disabled : ""}>
+        <Header />
+
+        <Filter />
+      </div>
+
+      <div className={styles.container}>
+        <Show when={isNewRecord()}>
+          <ItemFull
+            index="new-record"
+            item={store.record}
+          />
+        </Show>
+
+        <div className={
+          styles.items +
+          (isEditing() ? " " + styles.itemsDisabled : "")
+        }>
+          <Show
+            when={store.recordSet.length}
+            fallback={<span>{t`press "new" in the top right corner to add entries`}</span>}
+          >
+            <For each={store.recordSet}>
+              {(key, keyIndex) => (
+                <Item
+                  index={`feed_${keyIndex()}`}
+                  item={key}
+                  keyIndex={keyIndex()}
+                />
+              )}
+            </For>
+          </Show>
+        </div>
+      </div>
 
       <footer
         className={
@@ -67,7 +116,7 @@ export function App() {
       </MetaProvider>
 
       <main className={styles.main}>
-        <LayoutOverview />
+        <Layout />
       </main>
 
       <span style={{ display: "none" }}>{__COMMIT_HASH__}</span>

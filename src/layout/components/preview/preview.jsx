@@ -50,7 +50,7 @@ function mimeFromExt(ext) {
   return map[ext] ?? "application/octet-stream";
 }
 
-export function URLPreview(props) {
+export function Preview(props) {
   const { t } = useLingui();
   const [src, setSrc] = createSignal(undefined);
   const [mime, setMime] = createSignal("");

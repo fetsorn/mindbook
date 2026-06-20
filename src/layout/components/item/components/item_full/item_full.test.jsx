@@ -4,9 +4,9 @@ import { render } from "@solidjs/testing-library";
 import { I18nProvider } from "@lingui/solid";
 import { i18n } from "@/i18n.js";
 import { Context, makeStore } from "@/store/store.js";
-import { OverviewItemFull } from "./overview_item_full.jsx";
+import { ItemFull } from "./item_full.jsx";
 
-describe("OverviewItemFull", () => {
+describe("ItemFull", () => {
   test("", async () => {
     const [store, setStore] = makeStore();
 
@@ -37,7 +37,7 @@ describe("OverviewItemFull", () => {
     const { getByText } = render(() => (
       <I18nProvider i18n={i18n}>
         <Context.Provider value={{ store }}>
-          <OverviewItemFull item={record} index={index} />
+          <ItemFull item={record} index={index} />
         </Context.Provider>
       </I18nProvider>
     ));

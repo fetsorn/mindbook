@@ -4,7 +4,7 @@ import { render } from "@solidjs/testing-library";
 import { I18nProvider } from "@lingui/solid";
 import { i18n } from "@/i18n.js";
 import { Context, makeStore, setQuery } from "@/store/store.js";
-import { OverviewFilter } from "./overview_filter.jsx";
+import { Filter } from "./filter.jsx";
 
 vi.mock("@/store/store.js", async (importOriginal) => {
   const mod = await importOriginal();
@@ -26,7 +26,7 @@ const schemaRoot = {
   },
 };
 
-describe("OverviewFilter", () => {
+describe("Filter", () => {
   test("", async () => {
     const [store, setStore] = makeStore();
 
@@ -35,7 +35,7 @@ describe("OverviewFilter", () => {
     const { getByText, getByRole } = render(() => (
       <I18nProvider i18n={i18n}>
         <Context.Provider value={{ store }}>
-          <OverviewFilter />
+          <Filter />
         </Context.Provider>
       </I18nProvider>
     ));

@@ -3,54 +3,50 @@ import { userEvent } from "@vitest/browser/context";
 import { cleanup, render } from "@solidjs/testing-library";
 import { Context, makeStore } from "@/store/store.js";
 import {
-  NavigationRevert,
-  NavigationSave,
-  NavigationMenu,
-} from "./navigation/index.js";
-import {
+  Menu,
+  Filter,
+  Header,
+  Item,
+  ItemFull,
   BottomCount,
   BottomLoader,
   BottomNew,
   BottomSync,
-} from "./bottom/index.js";
-import { Overview } from "./overview/overview.jsx";
-import { Profile } from "./profile/profile.jsx";
-import { App, LayoutOverview, LayoutProfile } from "./layout.jsx";
+} from "./components/index.js";
+import { App, Layout } from "./layout.jsx";
 
-vi.mock("./navigation/index.js", () => ({
-  NavigationRevert: vi.fn(),
-  NavigationSave: vi.fn(),
-  NavigationMenu: vi.fn(),
-}));
-
-vi.mock("./bottom/index.js", () => ({
+vi.mock("./components/index.js", () => ({
+  Spoiler: vi.fn(),
+  Confirmation: vi.fn(),
+  Preview: vi.fn(),
+  isURL: vi.fn(),
+  isShowable: vi.fn(),
+  Menu: vi.fn(),
+  Filter: vi.fn(),
+  Header: vi.fn(),
+  Item: vi.fn(),
+  ItemFull: vi.fn(),
   BottomCount: vi.fn(),
   BottomLoader: vi.fn(),
   BottomNew: vi.fn(),
   BottomSync: vi.fn(),
 }));
 
-vi.mock("./overview/overview.jsx", () => ({
-  Overview: vi.fn(),
-}));
-
-vi.mock("./profile/profile.jsx", () => ({
-  Profile: vi.fn(),
-}));
-
-describe("LayoutOverview", () => {
+describe("Layout", () => {
   test("layout", async () => {
     const [store, setStore] = makeStore();
 
     render(() => (
       <Context.Provider value={{ store }}>
-        <LayoutOverview />
+        <Layout />
       </Context.Provider>
     ));
 
-    expect(NavigationMenu).toHaveBeenCalledWith({});
+    expect(Menu).toHaveBeenCalledWith({});
 
-    expect(Overview).toHaveBeenCalledWith({});
+    expect(Header).toHaveBeenCalledWith({});
+
+    expect(Filter).toHaveBeenCalledWith({});
 
     expect(BottomCount).toHaveBeenCalledWith({});
 
@@ -59,26 +55,6 @@ describe("LayoutOverview", () => {
     expect(BottomNew).toHaveBeenCalledWith({});
 
     expect(BottomSync).toHaveBeenCalledWith({});
-  });
-});
-
-describe("LayoutProfile", () => {
-  test("", async () => {
-    const [store, setStore] = makeStore();
-
-    setStore("record", { _: "mind", mind: "mind" });
-
-    render(() => (
-      <Context.Provider value={{ store }}>
-        <LayoutProfile />
-      </Context.Provider>
-    ));
-
-    expect(NavigationRevert).toHaveBeenCalledWith({});
-
-    expect(NavigationSave).toHaveBeenCalledWith({});
-
-    expect(Profile).toHaveBeenCalledWith({});
   });
 });
 

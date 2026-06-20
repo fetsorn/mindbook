@@ -2,7 +2,7 @@ import { useContext } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import { Context, branchTitle } from "@/store/store.js";
 
-export function OverviewHeader() {
+export function Header() {
   const { store } = useContext(Context);
   const { i18n } = useLingui();
 

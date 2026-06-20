@@ -56,3 +56,15 @@
   overflow-y: auto;
   max-height: 100vh;
 }
+
+.container {
+  overflow: scroll;
+  padding-right: 1.5em;
+}
+
+.items {
+}
+
+.itemsDisabled {
+  pointer-events: none;
+}

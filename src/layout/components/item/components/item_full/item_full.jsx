@@ -13,9 +13,9 @@ import { rhetoric } from "@/style/rhetoric.js";
 import { buildIndex } from "@/style/index_builder.js";
 import { Confirmation } from "@/layout/components/index.js";
 import { ItemRecord } from "../index.js";
-import styles from "./overview_item_full.module.css";
+import styles from "./item_full.module.css";
 
-export function OverviewItemFull(props) {
+export function ItemFull(props) {
   const { store, setStore, api } = useContext(Context);
   const { t } = useLingui();
 

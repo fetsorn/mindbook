@@ -5,7 +5,7 @@ import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
 import {
   Spoiler,
-  URLPreview,
+  Preview,
   isURL,
   isShowable,
 } from "@/layout/components/index.js";
@@ -81,7 +81,7 @@ export function ItemValueRead(props) {
 
         <Show when={showPreview()}>
           <Spoiler title={t`like`}>
-            <URLPreview url={props.value} />
+            <Preview url={props.value} />
           </Spoiler>
         </Show>
       </Show>
