@@ -1,6 +1,8 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { cleanup, render } from "@solidjs/testing-library";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Context, makeStore } from "@/store/store.js";
 import {
   Menu,
@@ -37,9 +39,11 @@ describe("Layout", () => {
     const [store, setStore] = makeStore();
 
     render(() => (
-      <Context.Provider value={{ store }}>
-        <Layout />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store }}>
+          <Layout />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     expect(Menu).toHaveBeenCalledWith({});
@@ -74,9 +78,11 @@ describe("App", () => {
     const [store, setStore] = makeStore();
 
     const { getByText } = render(() => (
-      <Context.Provider value={{ store, setStore, api }}>
-        <App />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store, setStore, api }}>
+          <App />
+        </Context.Provider>
+      </I18nProvider>
     ));
 
     expect(() =>
@@ -97,9 +103,11 @@ describe("App", () => {
     const [store, setStore] = makeStore();
 
     render(() => (
-      <Context.Provider value={{ store, setStore, api }}>
-        <App />
-      </Context.Provider>
+      <I18nProvider i18n={i18n}>
+        <Context.Provider value={{ store, setStore, api }}>
+          <App />
+        </Context.Provider>
+      </I18nProvider>
     ));
   });
 });

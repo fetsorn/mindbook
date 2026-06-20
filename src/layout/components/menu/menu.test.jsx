@@ -2,34 +2,34 @@ import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
 import {
-  MenuSortQuery,
-  MenuBaseQuery,
-  MenuChainQuery,
-  MenuLangQuery,
-} from "@/layout/navigation/navigation_menu/components/index.js";
-import { NavigationMenu } from "./navigation_menu.jsx";
+  MenuSort,
+  MenuBase,
+  MenuChain,
+  MenuLang,
+} from "./components/index.js";
+import { Menu } from "./menu.jsx";
 
 vi.mock(
-  "@/layout/navigation/navigation_menu/components/index.js",
+  "./components/index.js",
   async (importOriginal) => {
     const mod = await importOriginal();
 
     return {
       ...mod,
-      MenuSortQuery: vi.fn(),
-      MenuBaseQuery: vi.fn(),
-      MenuChainQuery: vi.fn(),
-      MenuLangQuery: vi.fn(),
+      MenuSort: vi.fn(),
+      MenuBase: vi.fn(),
+      MenuChain: vi.fn(),
+      MenuLang: vi.fn(),
     };
   },
 );
 
-describe("NavigationMenu", () => {
+describe("Menu", () => {
   test("", async () => {
-    const { getByText } = render(() => <NavigationMenu />);
+    const { getByText } = render(() => <Menu />);
 
-    expect(MenuBaseQuery).toHaveBeenCalled();
+    expect(MenuBase).toHaveBeenCalled();
 
-    expect(MenuSortQuery).toHaveBeenCalled();
+    expect(MenuSort).toHaveBeenCalled();
   });
 });

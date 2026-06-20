@@ -1,6 +1,8 @@
 import { describe, test, expect, vi } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render } from "@solidjs/testing-library";
+import { I18nProvider } from "@lingui/solid";
+import { i18n } from "@/i18n.js";
 import { Confirmation } from "./confirmation.jsx";
 
 describe("Confirmation", () => {
@@ -14,12 +16,14 @@ describe("Confirmation", () => {
     const onCancel = vi.fn();
 
     const { getByText } = render(() => (
-      <Confirmation
-        action={action}
-        question={question}
-        onAction={onAction}
-        onCancel={onCancel}
-      />
+      <I18nProvider i18n={i18n}>
+        <Confirmation
+          action={action}
+          question={question}
+          onAction={onAction}
+          onCancel={onCancel}
+        />
+      </I18nProvider>
     ));
 
     // find remove
@@ -29,7 +33,7 @@ describe("Confirmation", () => {
     await userEvent.click(command);
 
     // find no
-    const no = getByText(/No/);
+    const no = getByText(/no/i);
 
     // click no
     await userEvent.click(no);
@@ -51,7 +55,9 @@ describe("Confirmation", () => {
     const onAction = vi.fn();
 
     const { getByText } = render(() => (
-      <Confirmation action={action} question={question} onAction={onAction} />
+      <I18nProvider i18n={i18n}>
+        <Confirmation action={action} question={question} onAction={onAction} />
+      </I18nProvider>
     ));
 
     // find remove
@@ -61,7 +67,7 @@ describe("Confirmation", () => {
     await userEvent.click(command);
 
     // find yes
-    const yes = getByText(/Yes/);
+    const yes = getByText(/yes/i);
 
     // click yes
     await userEvent.click(yes);

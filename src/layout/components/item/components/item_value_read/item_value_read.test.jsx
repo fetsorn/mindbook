@@ -4,7 +4,7 @@ import { render } from "@solidjs/testing-library";
 import { I18nProvider } from "@lingui/solid";
 import { i18n } from "@/i18n.js";
 import { Context, makeStore } from "@/store/store.js";
-import { OverviewValue } from "./overview_value.jsx";
+import { ItemValueRead } from "./item_value_read.jsx";
 
 const schemaRoot = {
   mind: {
@@ -21,7 +21,7 @@ const schemaRoot = {
   },
 };
 
-describe("OverviewValue", () => {
+describe("ItemValueRead", () => {
   test("", async () => {
     const [store, setStore] = makeStore();
 
@@ -34,7 +34,7 @@ describe("OverviewValue", () => {
     const { getByText } = render(() => (
       <I18nProvider i18n={i18n}>
         <Context.Provider value={{ store }}>
-          <OverviewValue value={value} branch={branch} />
+          <ItemValueRead value={value} branch={branch} />
         </Context.Provider>
       </I18nProvider>
     ));

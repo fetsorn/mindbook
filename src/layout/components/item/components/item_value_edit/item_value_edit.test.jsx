@@ -5,7 +5,7 @@ import { render } from "@solidjs/testing-library";
 import { I18nProvider } from "@lingui/solid";
 import { i18n } from "@/i18n.js";
 import { Context, makeStore, onRecordEdit } from "@/store/store.js";
-import { ProfileValue } from "./profile_value.jsx";
+import { ItemValueEdit } from "./item_value_edit.jsx";
 
 const [store, setStore] = makeStore();
 
@@ -18,17 +18,17 @@ vi.mock("@/store/store.js", async (importOriginal) => {
   };
 });
 
-test("profile value", async () => {
+test("item value edit", async () => {
   const record = { _: "mind", mind: "mind" };
 
   setStore("record", record);
 
   const path = ["record", "mind"];
 
-  const { getByText, getByRole } = render(() => (
+  const { getByRole } = render(() => (
     <I18nProvider i18n={i18n}>
       <Context.Provider value={{ store, setStore }}>
-        <ProfileValue value={store.record.mind} branch="mind" path={path} />
+        <ItemValueEdit value={store.record.mind} branch="mind" path={path} />
       </Context.Provider>
     </I18nProvider>
   ));
@@ -37,11 +37,15 @@ test("profile value", async () => {
 
   expect(input).toHaveTextContent("mind");
 
-  input.focus();
+  await userEvent.click(input);
 
-  await userEvent.keyboard("a");
+  await userEvent.keyboard("1");
 
-  expect(onRecordEdit).toHaveBeenCalledWith({ store, setStore }, path, "amind");
+  expect(onRecordEdit).toHaveBeenCalledWith(
+    { store, setStore },
+    path,
+    "mind1",
+  );
 
-  expect(store.record.mind).toBe("amind");
+  expect(store.record.mind).toBe("mind1");
 });

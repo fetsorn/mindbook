@@ -4,9 +4,9 @@ import { render } from "@solidjs/testing-library";
 import { I18nProvider } from "@lingui/solid";
 import { i18n } from "@/i18n.js";
 import { Context, makeStore } from "@/store/store.js";
-import { MenuBaseQuery } from "./menu_base_query.jsx";
+import { MenuBase } from "./menu_base.jsx";
 
-describe("MenuBaseQuery", () => {
+describe("MenuBase", () => {
   test("", async () => {
     const [store, setStore] = makeStore();
 
@@ -32,7 +32,7 @@ describe("MenuBaseQuery", () => {
     const { getByRole, getAllByRole } = render(() => (
       <I18nProvider i18n={i18n}>
         <Context.Provider value={{ store, setStore }}>
-          <MenuBaseQuery />
+          <MenuBase />
         </Context.Provider>
       </I18nProvider>
     ));
