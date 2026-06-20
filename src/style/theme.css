@@ -109,8 +109,8 @@
 /* --- fold/unfold: overview item clipping --- */
 
 .rst-fold {
-  flex: 1;
-  min-width: 0;
+  display: inline-block;
+  text-align: left;
   max-height: 48px;
   overflow: hidden;
 }

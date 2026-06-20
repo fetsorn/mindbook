@@ -1,5 +1,4 @@
 import { useContext, onCleanup } from "solid-js";
-import { useLingui } from "@lingui/solid/macro";
 import { Context, getBase, getRecord, setFocus } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { ItemLight, ItemFull } from "./components/index.js";
@@ -11,7 +10,6 @@ import styles from "./item.module.css";
 function FeedItem(props) {
   const context = useContext(Context);
   const { store } = context;
-  const { t } = useLingui();
 
   const base = () => getBase({ store });
 
@@ -46,8 +44,11 @@ function FeedItem(props) {
           <ItemLight
             index={props.index}
             item={grain()}
-            onSelect={() => getRecord(context, props.item)}
-            actionLabel={t`more...`}
+            onSelect={() => {
+              getRecord(context, props.item);
+              setFocus(context, props.item);
+            }}
+            actionLabel="…"
           />
         }
       >
@@ -86,7 +87,7 @@ export function Item(props) {
                     index={`ego_cause_${props.keyIndex}_${causeIndex()}`}
                     item={lightItem(causeKey)}
                     chainRole="cause-satellite"
-                    actionLabel="."
+                    actionLabel="…"
                     onSelect={() => setFocus(context, causeKey)}
                   />
                 }
@@ -118,7 +119,7 @@ export function Item(props) {
                     index={`ego_result_${props.keyIndex}_${resultIndex()}`}
                     item={lightItem(resultKey)}
                     chainRole="result-satellite"
-                    actionLabel="."
+                    actionLabel="…"
                     onSelect={() => setFocus(context, resultKey)}
                   />
                 }

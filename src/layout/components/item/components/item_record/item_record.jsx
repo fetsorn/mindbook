@@ -59,11 +59,12 @@ export function ItemRecord(props) {
           <Spoiler
             index={`${props.index}-prose-${key}`}
             title={props.editing ? proseLabel(key) : t`is`}
-            isOpenDefault={false}
+            isOpenDefault={props.editing}
           >
             <ItemProse
               value={props.record[key]}
               editing={props.editing}
+              label={`${proseLabel(key)} -`}
               onInput={(html) =>
                 onRecordEdit({ setStore }, [...props.path, key], html)
               }
@@ -71,17 +72,6 @@ export function ItemRecord(props) {
           </Spoiler>
         )}
       </For>
-
-      {/* Edit-only: button to add prose when none exists */}
-      <Show when={props.editing && props.record["@"] === undefined}>
-        <button
-          onClick={() =>
-            onRecordEdit({ setStore }, [...props.path, "@"], "")
-          }
-        >
-          {t`is`}
-        </button>
-      </Show>
 
       <Spoiler
         index={props.index}
@@ -91,6 +81,21 @@ export function ItemRecord(props) {
         {/* Edit-only: add leaf buttons */}
         <Show when={props.editing}>
           <Spoiler index={`${props.index}-spoileradd`} title={t`add`}>
+            <Show when={props.record[`@${i18n().locale}`] === undefined}>
+              <button
+                className={"profileAddNew"}
+                onClick={() =>
+                  onRecordEdit(
+                    { setStore },
+                    [...props.path, `@${i18n().locale}`],
+                    "",
+                  )
+                }
+              >
+                {proseLabel(`@${i18n().locale}`)}{" "}
+              </button>
+            </Show>
+
             <Index each={leaves()} fallback={<>...</>}>
               {(leaf) => {
                 const addNew = () =>

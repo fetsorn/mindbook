@@ -1,11 +1,13 @@
 .prose {
-  display: inline;
+  display: inline-block;
 }
 
 .prose :global(.ProseMirror) {
-  display: inline;
+  display: inline-block;
+  min-width: 4em;
 }
 
 .prose :global(.ProseMirror) p {
-  display: inline;
+  display: inline-block;
+  margin: 0;
 }

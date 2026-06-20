@@ -1,0 +1,8 @@
+.editor :global(.ProseMirror) {
+  display: inline-block;
+}
+
+.editor :global(.ProseMirror) p {
+  display: inline-block;
+  margin: 0;
+}

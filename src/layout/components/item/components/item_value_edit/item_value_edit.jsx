@@ -53,7 +53,7 @@ export function ItemValueEdit(props) {
         {label()}{" "}
       </label>
 
-      <span className={editClasses()}>
+      <span className={`${styles.editor} ${editClasses()}`}>
         <span ref={ref} />
       </span>
 

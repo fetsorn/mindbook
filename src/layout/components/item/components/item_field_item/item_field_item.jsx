@@ -73,7 +73,7 @@ export function ItemFieldItem(props) {
             <Spoiler
               index={`${props.index}-prose-${key}`}
               title={props.editing ? proseLabel(key, i18n().locale, t) : t`is`}
-              isOpenDefault={false}
+              isOpenDefault={props.editing}
             >
               <ItemProse
                 value={props.item[key]}
@@ -86,30 +86,34 @@ export function ItemFieldItem(props) {
           )}
         </For>
 
-        {/* Edit-only: button to add prose when none exists */}
+        {/* Edit-only: add prose for current locale */}
         <Show when={props.editing && (
           typeof props.item !== "object"
-            || (props.item !== null && props.item["@"] === undefined)
+            || (props.item !== null && props.item[`@${i18n().locale}`] === undefined)
         )}>
-          <button
-            onClick={() => {
-              if (typeof props.item === "object" && props.item !== null) {
-                onRecordEdit(
-                  { setStore },
-                  [...props.path, "@"],
-                  "",
-                );
-              } else {
-                onRecordEdit(
-                  { setStore },
-                  props.path,
-                  { _: props.branch, [props.branch]: props.item, "@": "" },
-                );
-              }
-            }}
-          >
-            +
-          </button>
+          <Spoiler index={`${props.index}-spoileradd`} title={t`add`}>
+            <button
+              className={"profileAddNew"}
+              onClick={() => {
+                const localeKey = `@${i18n().locale}`;
+                if (typeof props.item === "object" && props.item !== null) {
+                  onRecordEdit(
+                    { setStore },
+                    [...props.path, localeKey],
+                    "",
+                  );
+                } else {
+                  onRecordEdit(
+                    { setStore },
+                    props.path,
+                    { _: props.branch, [props.branch]: props.item, [localeKey]: "" },
+                  );
+                }
+              }}
+            >
+              {proseLabel(`@${i18n().locale}`, i18n().locale, t)}{" "}
+            </button>
+          </Spoiler>
         </Show>
       </Match>
     </Switch>

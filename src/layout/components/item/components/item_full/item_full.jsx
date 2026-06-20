@@ -1,4 +1,3 @@
-import { createElementSize } from "@solid-primitives/resize-observer";
 import { useContext, createSignal } from "solid-js";
 import { useLingui } from "@lingui/solid/macro";
 import {
@@ -19,17 +18,15 @@ export function ItemFull(props) {
   const { store, setStore, api } = useContext(Context);
   const { t } = useLingui();
 
-  const [content, setContent] = createSignal();
-
-  const size = createElementSize(content);
-
-  const [isFold, setIsFold] = createSignal(true);
-
   const base = () => props.item._;
 
   const key = () => props.item[props.item._];
 
   const isFocused = () => store.focus === key();
+
+  const [content, setContent] = createSignal();
+
+  const [isFold, setIsFold] = createSignal(!isFocused());
 
   const isEditing = () =>
     store.record !== undefined && store.editingKey === key();
@@ -65,40 +62,22 @@ export function ItemFull(props) {
                 </div>
               </div>
 
-              <Show when={isFold() && size.height > 40}>
-                <button onClick={() => setIsFold(false)}>{t`more...`}</button>
-              </Show>
-
-              <Show when={isFold()}>
-                <button
-                  onClick={() =>
-                    setFocus(
-                      { store, setStore, api },
-                      isFocused() ? null : key(),
-                    )
+              <button
+                onClick={() => {
+                  if (isFold()) {
+                    setIsFold(false);
+                    setFocus({ store, setStore, api }, key());
+                  } else {
+                    setIsFold(true);
+                    if (isFocused()) {
+                      setFocus({ store, setStore, api }, null);
+                    }
                   }
-                >
-                  .
-                </button>
-              </Show>
+                }}
+              >
+                …
+              </button>
             </div>
-
-            <Show when={!isFold()}>
-              <div className={styles.controls}>
-                <button onClick={() => setIsFold(true)}>{t`less...`}</button>
-
-                <button
-                  onClick={() =>
-                    setFocus(
-                      { store, setStore, api },
-                      isFocused() ? null : key(),
-                    )
-                  }
-                >
-                  .
-                </button>
-              </div>
-            </Show>
 
             <Show when={isFocused()}>
               <div className={styles.actions}>

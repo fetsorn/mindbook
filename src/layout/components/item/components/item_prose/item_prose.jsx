@@ -25,6 +25,9 @@ export function ItemProse(props) {
     ],
     content: initialContent,
     editable: props.editing ?? false,
+    editorProps: props.label
+      ? { attributes: { "aria-label": props.label } }
+      : {},
     onUpdate({ editor: e }) {
       props.onInput?.(e.storage.markdown.getMarkdown());
     },
