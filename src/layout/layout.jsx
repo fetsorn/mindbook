@@ -22,11 +22,11 @@ export function Layout() {
 
   const isEditing = () => store.record !== undefined;
 
-  // A new record being created — store.record exists but its key
+  // A new record being created — store.record exists but editingKey
   // is not in the current recordSet (it hasn't been saved yet).
   const isNewRecord = () =>
     isEditing() &&
-    !store.recordSet.includes(store.record[store.record._]);
+    !store.recordSet.includes(store.editingKey);
 
   createEffect(() => {
     const key = store.focus;

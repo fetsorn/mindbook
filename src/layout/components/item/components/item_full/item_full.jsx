@@ -32,7 +32,7 @@ export function ItemFull(props) {
   const isFocused = () => store.focus === key();
 
   const isEditing = () =>
-    store.record !== undefined && store.record[store.record._] === key();
+    store.record !== undefined && store.editingKey === key();
 
   const isTwig = () =>
     !store.schema[base()] || store.schema[base()].leaves.length === 0;

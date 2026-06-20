@@ -125,13 +125,10 @@ export function ItemRecord(props) {
           fallback={<span>{t`record no items`}</span>}
         >
           {(leaf) => {
-            const value = props.record[leaf];
-            const items = Array.isArray(value) ? value : [value];
-
             return (
               <ItemField
                 index={`${props.index}-${leaf}`}
-                items={items}
+                items={props.record[leaf]}
                 branch={leaf}
                 path={[...props.path, leaf]}
                 rstIndex={props.rstIndex}

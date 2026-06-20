@@ -18,6 +18,7 @@ export function makeStore() {
     schema: {},
     template: {},
     record: undefined,
+    editingKey: undefined, // stable key snapshot — never mutated during edit
     recordSet: [],
     recordMap: {},
     spoilerMap: {},
@@ -41,6 +42,7 @@ export function openBook({ setStore }, content) {
       state.recordSet = [];
       state.recordMap = {};
       state.record = undefined;
+      state.editingKey = undefined;
       state.chainBy = null;
       state.focus = null;
       state.egoCauses = [];
@@ -94,6 +96,11 @@ export function setSpoilerOpen({ setStore }, index, isOpen) {
  */
 export function onRecordEdit({ setStore }, path, value) {
   setStore(...path, value);
+
+  // Entering or leaving edit mode — snapshot the key for stable identity
+  if (path.length === 1 && path[0] === "record") {
+    setStore("editingKey", value ? value[value._] : undefined);
+  }
 }
 
 export function getBase({ store }) {
@@ -133,6 +140,7 @@ export function onBase(context, value) {
       state.recordSet = [];
       state.recordMap = {};
       state.record = undefined;
+      state.editingKey = undefined;
     }),
   );
 }
@@ -257,6 +265,7 @@ export async function onRecordSave(
     produce((state) => {
       state.recordSet = records;
       state.record = undefined;
+      state.editingKey = undefined;
     }),
   );
 
