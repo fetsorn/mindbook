@@ -22,6 +22,10 @@ msgstr "添加"
 msgid "and"
 msgstr "和"
 
+#: src/layout/layout.jsx:49
+msgid "back"
+msgstr "返回"
+
 #: src/layout/components/menu/components/menu_base/menu_base.jsx:13
 msgid "base:"
 msgstr "基础："
@@ -92,7 +96,7 @@ msgstr "新建"
 msgid "no"
 msgstr "否"
 
-#: src/layout/layout.jsx:71
+#: src/layout/layout.jsx:75
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "点击右上角「新建」以添加条目"
 

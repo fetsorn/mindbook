@@ -1,5 +1,5 @@
 import history from "history/hash";
-import { createEffect, onMount, useContext } from "solid-js";
+import { createEffect, onMount, Show, useContext } from "solid-js";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { useLingui } from "@lingui/solid/macro";
 import { Context } from "@/store/store.js";
@@ -45,6 +45,10 @@ export function Layout() {
         }
         title="navigationOverview"
       >
+        <Show when={store.onBack}>
+          <button onClick={() => store.onBack()()}>{t`back`}</button>
+        </Show>
+
         <Menu />
       </nav>
 

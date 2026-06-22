@@ -20,6 +20,10 @@ msgstr "adicionar"
 msgid "and"
 msgstr "e"
 
+#: src/layout/layout.jsx:49
+msgid "back"
+msgstr "voltar"
+
 #: src/layout/components/menu/components/menu_base/menu_base.jsx:13
 msgid "base:"
 msgstr "base:"
@@ -90,7 +94,7 @@ msgstr "novo"
 msgid "no"
 msgstr "não"
 
-#: src/layout/layout.jsx:71
+#: src/layout/layout.jsx:75
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "clique em «novo» no canto superior direito para adicionar entradas"
 

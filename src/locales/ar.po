@@ -22,6 +22,10 @@ msgstr "إضافة"
 msgid "and"
 msgstr "و"
 
+#: src/layout/layout.jsx:49
+msgid "back"
+msgstr "رجوع"
+
 #: src/layout/components/menu/components/menu_base/menu_base.jsx:13
 msgid "base:"
 msgstr "الأساس:"
@@ -92,7 +96,7 @@ msgstr "جديد"
 msgid "no"
 msgstr "لا"
 
-#: src/layout/layout.jsx:71
+#: src/layout/layout.jsx:75
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "اضغط على \"جديد\" في الزاوية العلوية اليمنى لإضافة مدخلات"
 

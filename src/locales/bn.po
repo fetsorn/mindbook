@@ -20,6 +20,10 @@ msgstr "যোগ করুন"
 msgid "and"
 msgstr "এবং"
 
+#: src/layout/layout.jsx:49
+msgid "back"
+msgstr "পিছনে"
+
 #: src/layout/components/menu/components/menu_base/menu_base.jsx:13
 msgid "base:"
 msgstr "ভিত্তি:"
@@ -90,7 +94,7 @@ msgstr "নতুন"
 msgid "no"
 msgstr "না"
 
-#: src/layout/layout.jsx:71
+#: src/layout/layout.jsx:75
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "এন্ট্রি যোগ করতে উপরের ডান কোণে «নতুন» চাপুন"
 

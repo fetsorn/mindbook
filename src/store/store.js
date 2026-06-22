@@ -23,6 +23,7 @@ export function makeStore() {
     recordMap: {},
     spoilerMap: {},
     actions: {},
+    onBack: null, // optional callback — when set, a back button appears in nav
     status: null, // freeform status string shown in footer
     chainBy: null,
     focus: null, // key of the focused record, or null
@@ -55,6 +56,7 @@ export function openBook({ setStore }, content) {
       state.schema = content.schema;
       state.template = content.template;
       state.actions = content.actions;
+      state.onBack = content.onBack ? () => content.onBack : null;
 
       if (content.base !== undefined) state.base = content.base;
       if (content.sortBy !== undefined) state.sortBy = content.sortBy;

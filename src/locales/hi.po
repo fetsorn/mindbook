@@ -20,6 +20,10 @@ msgstr "जोड़ें"
 msgid "and"
 msgstr "और"
 
+#: src/layout/layout.jsx:49
+msgid "back"
+msgstr "वापस"
+
 #: src/layout/components/menu/components/menu_base/menu_base.jsx:13
 msgid "base:"
 msgstr "आधार:"
@@ -90,7 +94,7 @@ msgstr "नया"
 msgid "no"
 msgstr "नहीं"
 
-#: src/layout/layout.jsx:71
+#: src/layout/layout.jsx:75
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "प्रविष्टियाँ जोड़ने के लिए ऊपर दाएँ कोने में «नया» दबाएँ"
 
