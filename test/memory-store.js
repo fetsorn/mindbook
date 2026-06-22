@@ -116,7 +116,7 @@ const seed = [
   {
     _: "mind",
     mind: "random-photo",
-    name: "https://picsum.photos/id/237/200/300.jpg",
+    name: "https://placeholdpicsum.dev/photo/600/400.jpeg",
     category: "image",
   },
   // chain-friendly: events that reference each other via actname
