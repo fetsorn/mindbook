@@ -10,9 +10,8 @@ import {
   Item,
   ItemFull,
   BottomCount,
-  BottomLoader,
   BottomNew,
-  BottomSync,
+  BottomStatus,
 } from "./components/index.js";
 import styles from "./layout.module.css";
 
@@ -94,9 +93,7 @@ export function Layout() {
       >
         <BottomCount />
 
-        <BottomSync />
-
-        <BottomLoader />
+        <BottomStatus />
 
         <BottomNew />
       </footer>

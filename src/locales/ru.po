@@ -11,123 +11,134 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#: src/layout/profile/components/profile_record/profile_record.jsx:67
+#: src/layout/components/item/components/item_field_item/item_field_item.jsx:94
+#: src/layout/components/item/components/item_record/item_record.jsx:83
 msgid "add"
 msgstr "добавить"
 
-#: src/layout/navigation/navigation_menu/components/menu_base_query/menu_base_query.jsx:13
+#: src/layout/components/item/components/item_field/item_field.jsx:58
+msgid "and"
+msgstr "и"
+
+#: src/layout/components/menu/components/menu_base/menu_base.jsx:13
 msgid "base:"
 msgstr "база:"
 
-#: src/layout/bottom/bottom_loader/bottom_loader.jsx:15
+#: src/layout/components/bottom_status/bottom_status.jsx:15
 msgid "cancel"
-msgstr ""
+msgstr "отмена"
 
-#: src/layout/navigation/navigation_menu/components/menu_chain_query/menu_chain_query.jsx:16
+#: src/layout/components/menu/components/menu_chain/menu_chain.jsx:16
 msgid "chain:"
 msgstr "цепь:"
 
 #: src/layout/bottom/bottom_sync/bottom_sync.jsx:11
-msgid "Conflict"
-msgstr "Конфликт"
+#~ msgid "Conflict"
+#~ msgstr "Конфликт"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:103
+#: src/layout/components/item/components/item_field/item_field.jsx:35
+#: src/layout/components/item/components/item_field/item_field.jsx:66
+msgid "cut..."
+msgstr "убрать…"
+
+#: src/layout/components/item/components/item_full/item_full.jsx:98
 msgid "delete"
 msgstr "удалить"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:99
+#: src/layout/components/item/components/item_full/item_full.jsx:94
 msgid "edit"
 msgstr "редактировать"
 
 #. placeholder {0}: store.recordSet.length
-#: src/layout/bottom/bottom_count/bottom_count.jsx:9
+#: src/layout/components/bottom_count/bottom_count.jsx:9
 msgid "found {0}"
 msgstr "найдено {0}"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:41
-#: src/layout/profile/components/profile_field_item/profile_field_item.jsx:57
-#: src/layout/profile/components/profile_record/profile_record.jsx:39
-#: src/layout/profile/components/profile_record/profile_record.jsx:48
+#: src/layout/components/item/components/item_field_item/item_field_item.jsx:75
+#: src/layout/components/item/components/item_record/item_record.jsx:39
+#: src/layout/components/item/components/item_record/item_record.jsx:61
 msgid "is"
 msgstr "это"
 
-#: src/layout/navigation/navigation_menu/components/menu_lang_query/menu_lang_query.jsx:15
+#: src/layout/components/menu/components/menu_lang/menu_lang.jsx:15
 msgid "lang:"
 msgstr "язык:"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:74
-msgid "less..."
-msgstr "меньше…"
+#~ msgid "less..."
+#~ msgstr "меньше…"
 
-#: src/layout/overview/components/overview_value/overview_value.jsx:83
-#: src/layout/profile/components/profile_value/profile_value.jsx:120
+#: src/layout/components/item/components/item_value_edit/item_value_edit.jsx:61
+#: src/layout/components/item/components/item_value_read/item_value_read.jsx:86
 msgid "like"
 msgstr "вроде"
 
-#: src/layout/bottom/bottom_loader/bottom_loader.jsx:12
-#: src/layout/components/url_preview.jsx:80
+#: src/layout/components/preview/preview.jsx:81
 msgid "loading..."
-msgstr ""
+msgstr "загрузка…"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:58
 #: src/layout/overview/components/overview_item/overview_item.jsx:51
-msgid "more..."
-msgstr "больше…"
+#~ msgid "more..."
+#~ msgstr "больше…"
 
-#: src/layout/bottom/bottom_new/bottom_new.jsx:28
+#: src/layout/components/bottom_new/bottom_new.jsx:31
 msgid "new"
 msgstr "создать"
 
 #: src/layout/components/confirmation/confirmation.jsx:44
 msgid "no"
-msgstr ""
+msgstr "нет"
 
-#: src/layout/overview/components/overview_chain_feed/overview_chain_feed.jsx:39
+#: src/layout/layout.jsx:71
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "нажмите «создать» в правом верхнем углу"
 
-#: src/layout/bottom/bottom_loader/bottom_loader.jsx:16
+#: src/layout/components/bottom_status/bottom_status.jsx:16
 msgid "really cancel?"
-msgstr ""
+msgstr "точно отменить?"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:104
+#: src/layout/components/item/components/item_field/item_field.jsx:36
+#: src/layout/components/item/components/item_field/item_field.jsx:67
+msgid "really cut?"
+msgstr "точно убрать?"
+
+#: src/layout/components/item/components/item_full/item_full.jsx:99
 msgid "really delete?"
 msgstr "точно удалить?"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:68
-#: src/layout/profile/components/profile_record/profile_record.jsx:110
+#: src/layout/components/item/components/item_record/item_record.jsx:132
 msgid "record no items"
 msgstr "запись пуста"
 
-#: src/layout/navigation/navigation_revert/navigation_revert.jsx:15
+#: src/layout/components/item/components/item_full/item_full.jsx:148
 msgid "revert"
 msgstr "отменить"
 
-#: src/layout/navigation/navigation_save/navigation_save.jsx:19
+#: src/layout/components/item/components/item_full/item_full.jsx:142
 msgid "save"
 msgstr "сохранить"
 
-#: src/layout/navigation/navigation_menu/components/filter_scroll/filter_scroll.jsx:7
+#: src/layout/components/menu/components/filter_scroll/filter_scroll.jsx:7
 msgid "scroll to top"
-msgstr ""
+msgstr "наверх"
 
-#: src/layout/overview/components/overview_filter/overview_filter.jsx:32
+#: src/layout/components/filter/filter.jsx:32
 msgid "search"
 msgstr "поиск"
 
-#: src/layout/overview/components/overview_filter/overview_filter.jsx:15
+#: src/layout/components/filter/filter.jsx:15
 msgid "search or filter with keyword:value"
 msgstr "поиск или фильтр по ключ:значение"
 
-#: src/layout/navigation/navigation_menu/components/menu_sort_query/menu_sort_query.jsx:13
+#: src/layout/components/menu/components/menu_sort/menu_sort.jsx:13
 msgid "sort:"
 msgstr "сортировка:"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:58
-#: src/layout/profile/components/profile_record/profile_record.jsx:64
+#: src/layout/components/item/components/item_record/item_record.jsx:78
 msgid "with"
 msgstr "с"
 
 #: src/layout/components/confirmation/confirmation.jsx:31
 msgid "yes"
-msgstr ""
+msgstr "да"

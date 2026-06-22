@@ -2,7 +2,7 @@
 import { render } from "solid-js/web";
 import { I18nProvider } from "@lingui/solid";
 import { i18n, detectLocale, loadCatalog } from "@/i18n.js";
-import { Context, makeStore, openBook, searchBook } from "@/store/store.js";
+import { Context, makeStore, openBook, searchBook, setStatus } from "@/store/store.js";
 import { polyfill } from "@/polyfill.js";
 import App from "@/layout/layout.jsx";
 import "@/index.css";
@@ -41,6 +41,7 @@ export function create(api) {
     open: (content) => openBook({ setStore }, content),
     bind: (element) => bindBook({ store, setStore, api }, element),
     find: (base, query) => searchBook({ store, setStore, api }, base, query),
+    status: (message) => setStatus({ setStore }, message),
   };
 }
 

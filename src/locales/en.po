@@ -13,70 +13,78 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/layout/profile/components/profile_record/profile_record.jsx:67
+#: src/layout/components/item/components/item_field_item/item_field_item.jsx:94
+#: src/layout/components/item/components/item_record/item_record.jsx:83
 msgid "add"
 msgstr "add"
 
-#: src/layout/navigation/navigation_menu/components/menu_base_query/menu_base_query.jsx:13
+#: src/layout/components/item/components/item_field/item_field.jsx:58
+msgid "and"
+msgstr "and"
+
+#: src/layout/components/menu/components/menu_base/menu_base.jsx:13
 msgid "base:"
 msgstr "base:"
 
-#: src/layout/bottom/bottom_loader/bottom_loader.jsx:15
+#: src/layout/components/bottom_status/bottom_status.jsx:15
 msgid "cancel"
 msgstr "cancel"
 
-#: src/layout/navigation/navigation_menu/components/menu_chain_query/menu_chain_query.jsx:16
+#: src/layout/components/menu/components/menu_chain/menu_chain.jsx:16
 msgid "chain:"
 msgstr "chain:"
 
 #: src/layout/bottom/bottom_sync/bottom_sync.jsx:11
-msgid "Conflict"
-msgstr "Conflict"
+#~ msgid "Conflict"
+#~ msgstr "Conflict"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:103
+#: src/layout/components/item/components/item_field/item_field.jsx:35
+#: src/layout/components/item/components/item_field/item_field.jsx:66
+msgid "cut..."
+msgstr "cut..."
+
+#: src/layout/components/item/components/item_full/item_full.jsx:98
 msgid "delete"
 msgstr "delete"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:99
+#: src/layout/components/item/components/item_full/item_full.jsx:94
 msgid "edit"
 msgstr "edit"
 
 #. placeholder {0}: store.recordSet.length
-#: src/layout/bottom/bottom_count/bottom_count.jsx:9
+#: src/layout/components/bottom_count/bottom_count.jsx:9
 msgid "found {0}"
 msgstr "found {0}"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:41
-#: src/layout/profile/components/profile_field_item/profile_field_item.jsx:57
-#: src/layout/profile/components/profile_record/profile_record.jsx:39
-#: src/layout/profile/components/profile_record/profile_record.jsx:48
+#: src/layout/components/item/components/item_field_item/item_field_item.jsx:75
+#: src/layout/components/item/components/item_record/item_record.jsx:39
+#: src/layout/components/item/components/item_record/item_record.jsx:61
 msgid "is"
 msgstr "is"
 
-#: src/layout/navigation/navigation_menu/components/menu_lang_query/menu_lang_query.jsx:15
+#: src/layout/components/menu/components/menu_lang/menu_lang.jsx:15
 msgid "lang:"
 msgstr "lang:"
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:74
-msgid "less..."
-msgstr "less..."
+#~ msgid "less..."
+#~ msgstr "less..."
 
-#: src/layout/overview/components/overview_value/overview_value.jsx:83
-#: src/layout/profile/components/profile_value/profile_value.jsx:120
+#: src/layout/components/item/components/item_value_edit/item_value_edit.jsx:61
+#: src/layout/components/item/components/item_value_read/item_value_read.jsx:86
 msgid "like"
 msgstr "like"
 
-#: src/layout/bottom/bottom_loader/bottom_loader.jsx:12
-#: src/layout/components/url_preview.jsx:80
+#: src/layout/components/preview/preview.jsx:81
 msgid "loading..."
 msgstr "loading..."
 
 #: src/layout/overview/components/overview_item_full/overview_item_full.jsx:58
 #: src/layout/overview/components/overview_item/overview_item.jsx:51
-msgid "more..."
-msgstr "more..."
+#~ msgid "more..."
+#~ msgstr "more..."
 
-#: src/layout/bottom/bottom_new/bottom_new.jsx:28
+#: src/layout/components/bottom_new/bottom_new.jsx:31
 msgid "new"
 msgstr "new"
 
@@ -84,49 +92,52 @@ msgstr "new"
 msgid "no"
 msgstr "no"
 
-#: src/layout/overview/components/overview_chain_feed/overview_chain_feed.jsx:39
+#: src/layout/layout.jsx:71
 msgid "press \"new\" in the top right corner to add entries"
 msgstr "press \"new\" in the top right corner to add entries"
 
-#: src/layout/bottom/bottom_loader/bottom_loader.jsx:16
+#: src/layout/components/bottom_status/bottom_status.jsx:16
 msgid "really cancel?"
 msgstr "really cancel?"
 
-#: src/layout/overview/components/overview_item_full/overview_item_full.jsx:104
+#: src/layout/components/item/components/item_field/item_field.jsx:36
+#: src/layout/components/item/components/item_field/item_field.jsx:67
+msgid "really cut?"
+msgstr "really cut?"
+
+#: src/layout/components/item/components/item_full/item_full.jsx:99
 msgid "really delete?"
 msgstr "really delete?"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:68
-#: src/layout/profile/components/profile_record/profile_record.jsx:110
+#: src/layout/components/item/components/item_record/item_record.jsx:132
 msgid "record no items"
 msgstr "record no items"
 
-#: src/layout/navigation/navigation_revert/navigation_revert.jsx:15
+#: src/layout/components/item/components/item_full/item_full.jsx:148
 msgid "revert"
 msgstr "revert"
 
-#: src/layout/navigation/navigation_save/navigation_save.jsx:19
+#: src/layout/components/item/components/item_full/item_full.jsx:142
 msgid "save"
 msgstr "save"
 
-#: src/layout/navigation/navigation_menu/components/filter_scroll/filter_scroll.jsx:7
+#: src/layout/components/menu/components/filter_scroll/filter_scroll.jsx:7
 msgid "scroll to top"
 msgstr "scroll to top"
 
-#: src/layout/overview/components/overview_filter/overview_filter.jsx:32
+#: src/layout/components/filter/filter.jsx:32
 msgid "search"
 msgstr "search"
 
-#: src/layout/overview/components/overview_filter/overview_filter.jsx:15
+#: src/layout/components/filter/filter.jsx:15
 msgid "search or filter with keyword:value"
 msgstr "search or filter with keyword:value"
 
-#: src/layout/navigation/navigation_menu/components/menu_sort_query/menu_sort_query.jsx:13
+#: src/layout/components/menu/components/menu_sort/menu_sort.jsx:13
 msgid "sort:"
 msgstr "sort:"
 
-#: src/layout/overview/components/overview_record/overview_record.jsx:58
-#: src/layout/profile/components/profile_record/profile_record.jsx:64
+#: src/layout/components/item/components/item_record/item_record.jsx:78
 msgid "with"
 msgstr "with"
 

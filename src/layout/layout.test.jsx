@@ -11,9 +11,8 @@ import {
   Item,
   ItemFull,
   BottomCount,
-  BottomLoader,
   BottomNew,
-  BottomSync,
+  BottomStatus,
 } from "./components/index.js";
 import { App, Layout } from "./layout.jsx";
 
@@ -29,9 +28,8 @@ vi.mock("./components/index.js", () => ({
   Item: vi.fn(),
   ItemFull: vi.fn(),
   BottomCount: vi.fn(),
-  BottomLoader: vi.fn(),
   BottomNew: vi.fn(),
-  BottomSync: vi.fn(),
+  BottomStatus: vi.fn(),
 }));
 
 describe("Layout", () => {
@@ -54,11 +52,9 @@ describe("Layout", () => {
 
     expect(BottomCount).toHaveBeenCalledWith({});
 
-    expect(BottomLoader).toHaveBeenCalledWith({});
+    expect(BottomStatus).toHaveBeenCalledWith({});
 
     expect(BottomNew).toHaveBeenCalledWith({});
-
-    expect(BottomSync).toHaveBeenCalledWith({});
   });
 });
 

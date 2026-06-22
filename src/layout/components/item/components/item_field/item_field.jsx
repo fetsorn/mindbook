@@ -1,4 +1,5 @@
 import { useContext, createEffect } from "solid-js";
+import { useLingui } from "@lingui/solid/macro";
 import { Context, onRecordEdit } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
@@ -7,6 +8,7 @@ import { ItemFieldItem } from "../index.js";
 
 export function ItemField(props) {
   const context = useContext(Context);
+  const { t } = useLingui();
 
   const meta = () => {
     const key = pathToKey(props.path || []);
@@ -30,8 +32,8 @@ export function ItemField(props) {
       <Show when={items()[0] !== undefined} fallback={<></>}>
         <Show when={props.editing}>
           <Confirmation
-            action={`cut...`}
-            question={"really cut?"}
+            action={t`cut...`}
+            question={t`really cut?`}
             onAction={() =>
               onRecordEdit(
                 context,
@@ -53,7 +55,7 @@ export function ItemField(props) {
       </Show>
 
       <Show when={items().length > 1}>
-        <Spoiler index={`${props.index}spoiler`} title={"and"}>
+        <Spoiler index={`${props.index}spoiler`} title={t`and`}>
           <For each={items().slice(1)} fallback={<></>}>
             {(item, index) => (
               <>
@@ -61,8 +63,8 @@ export function ItemField(props) {
 
                 <Show when={props.editing}>
                   <Confirmation
-                    action={`cut...`}
-                    question={"really cut?"}
+                    action={t`cut...`}
+                    question={t`really cut?`}
                     onAction={() =>
                       onRecordEdit(
                         context,

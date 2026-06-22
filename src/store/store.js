@@ -24,7 +24,7 @@ export function makeStore() {
     recordMap: {},
     spoilerMap: {},
     actions: {},
-    loading: false,
+    status: null, // freeform status string shown in footer
     chainBy: null,
     focus: null, // key of the focused record, or null
     // ego network: populated by queries when focus + chainBy are set
@@ -86,6 +86,10 @@ export function getSpoilerOpen({ store }, index) {
  */
 export function setSpoilerOpen({ setStore }, index, isOpen) {
   setStore("spoilerMap", { [index]: isOpen });
+}
+
+export function setStatus({ setStore }, message) {
+  setStore("status", message);
 }
 
 /**
@@ -180,7 +184,7 @@ export async function onRecordCreate({ store, setStore }) {
 export async function onCancel({ store, setStore }) {
   await store.abortPreviousStream();
 
-  setStore("loading", false);
+  setStore("status", null);
 }
 
 export async function getRecord({ store, setStore, api }, record) {
@@ -236,7 +240,7 @@ export async function onRecordSave(
   recordOld,
   recordNew,
 ) {
-  setStore("loading", true);
+  setStore("status", "saving...");
 
   await store.abortPreviousStream();
 
@@ -275,7 +279,7 @@ export async function onRecordSave(
     }),
   );
 
-  setStore("loading", false);
+  setStore("status", null);
 }
 
 /**
@@ -285,7 +289,7 @@ export async function onRecordSave(
  * @param {object} record -
  */
 export async function onRecordWipe({ store, setStore, api }, record) {
-  setStore("loading", true);
+  setStore("status", "deleting...");
 
   await store.abortPreviousStream();
 
@@ -304,7 +308,7 @@ export async function onRecordWipe({ store, setStore, api }, record) {
     }),
   );
 
-  setStore("loading", false);
+  setStore("status", null);
 }
 
 /**
@@ -313,7 +317,7 @@ export async function onRecordWipe({ store, setStore, api }, record) {
  * @export function
  */
 export async function onSearch({ store, setStore, api }) {
-  setStore("loading", true);
+  setStore("status", "loading...");
 
   try {
     const base = store.base;
@@ -401,7 +405,7 @@ export async function onSearch({ store, setStore, api }) {
     }
   }
 
-  setStore("loading", false);
+  setStore("status", null);
 }
 
 export async function onAction({ store, api }, action, record) {
