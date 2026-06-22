@@ -1,4 +1,4 @@
-export { Spoiler } from "./spoiler/spoiler.jsx";
+export { Spoiler, SpoilerFocusContext } from "./spoiler/spoiler.jsx";
 export { Confirmation } from "./confirmation/confirmation.jsx";
 export { Preview, isURL, isShowable } from "./preview/preview.jsx";
 export { Filter } from "./filter/filter.jsx";

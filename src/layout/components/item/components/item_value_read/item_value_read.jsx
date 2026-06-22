@@ -5,6 +5,7 @@ import { rhetoric } from "@/style/rhetoric.js";
 import { pathToKey } from "@/style/index_builder.js";
 import {
   Spoiler,
+  SpoilerFocusContext,
   Preview,
   isURL,
   isShowable,
@@ -12,6 +13,7 @@ import {
 
 export function ItemValueRead(props) {
   const { store } = useContext(Context);
+  const onFocus = useContext(SpoilerFocusContext);
   const { i18n, t } = useLingui();
 
   const title = () => branchTitle(store.schema, props.branch, i18n().locale);
@@ -63,7 +65,7 @@ export function ItemValueRead(props) {
         fallback={
           <button
             className={`${props.branch}-branch ${nucleusClasses()}`}
-            onClick={() => setIsValue(true)}
+            onClick={() => { setIsValue(true); onFocus?.(); }}
           >
             {title()}{" "}
           </button>
@@ -74,6 +76,7 @@ export function ItemValueRead(props) {
           onClick={() => {
             navigator.clipboard.writeText(props.value);
             setIsValue(false);
+            onFocus?.();
           }}
         >
           {props.value}

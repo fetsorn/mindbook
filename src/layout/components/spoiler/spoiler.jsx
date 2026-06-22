@@ -1,22 +1,19 @@
-import { createEffect, createSignal, useContext } from "solid-js";
+import { createContext, createSignal, useContext } from "solid-js";
+
+export const SpoilerFocusContext = createContext(null);
 
 export function Spoiler(props) {
+  const onFocus = useContext(SpoilerFocusContext);
   const [isOpen, setIsOpen] = createSignal(props.isOpenDefault);
-
-  //createEffect(() => {
-  //  if (getSpoilerOpen(props.index) === undefined) {
-  //    setSpoilerOpen(props.index, props.isOpenDefault);
-  //  }
-  //});
 
   function open() {
     setIsOpen(true);
-    //setSpoilerOpen(props.index, true);
+    onFocus?.();
   }
 
   function close() {
     setIsOpen(false);
-    //setSpoilerOpen(props.index, false);
+    onFocus?.();
   }
 
   return (

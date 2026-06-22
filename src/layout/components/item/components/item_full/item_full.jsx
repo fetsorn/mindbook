@@ -10,7 +10,7 @@ import {
 } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import { buildIndex } from "@/style/index_builder.js";
-import { Confirmation } from "@/layout/components/index.js";
+import { Confirmation, SpoilerFocusContext } from "@/layout/components/index.js";
 import { ItemRecord } from "../index.js";
 import styles from "./item_full.module.css";
 
@@ -26,13 +26,15 @@ export function ItemFull(props) {
 
   const [content, setContent] = createSignal();
 
-  const [isFold, setIsFold] = createSignal(!isFocused());
+  const isFold = () => !isFocused();
 
   const isEditing = () =>
     store.record !== undefined && store.editingKey === key();
 
   const isTwig = () =>
     !store.schema[base()] || store.schema[base()].leaves.length === 0;
+
+  const focusThis = () => setFocus({ store, setStore, api }, key());
 
   const rstIndex = () => buildIndex(props.item, store.schema, props.path || []);
 
@@ -41,6 +43,7 @@ export function ItemFull(props) {
   const foldClasses = () => rhetoric({ isFolded: isFold() }).join(" ");
 
   return (
+    <SpoilerFocusContext.Provider value={focusThis}>
     <div
       id={key()}
       className={`${styles.item} ${itemClasses()} ${isEditing() ? styles.editing : ""} ${store.record !== undefined && !isEditing() ? styles.dimmed : ""}`}
@@ -64,14 +67,10 @@ export function ItemFull(props) {
 
               <button
                 onClick={() => {
-                  if (isFold()) {
-                    setIsFold(false);
-                    setFocus({ store, setStore, api }, key());
+                  if (isFocused()) {
+                    setFocus({ store, setStore, api }, null);
                   } else {
-                    setIsFold(true);
-                    if (isFocused()) {
-                      setFocus({ store, setStore, api }, null);
-                    }
+                    setFocus({ store, setStore, api }, key());
                   }
                 }}
               >
@@ -152,5 +151,6 @@ export function ItemFull(props) {
         </>
       </Show>
     </div>
+    </SpoilerFocusContext.Provider>
   );
 }
