@@ -14,7 +14,6 @@ export function makeStore() {
     base: "mind",
     sortBy: "mind",
     sortDirection: undefined,
-    scroll: undefined,
     query: "", // raw search bar text, source of truth
     schema: {},
     template: {},
@@ -61,7 +60,7 @@ export function openBook({ setStore }, content) {
       if (content.sortBy !== undefined) state.sortBy = content.sortBy;
       if (content.sortDirection !== undefined)
         state.sortDirection = content.sortDirection;
-      if (content.scroll !== undefined) state.scroll = content.scroll;
+      if (content.focus !== undefined) state.focus = content.focus;
       if (content.query !== undefined) state.query = content.query;
     }),
   );
@@ -322,7 +321,7 @@ export async function onSearch({ store, setStore, api }) {
   try {
     const base = store.base;
 
-    const fromStrm = await api.r(base, store.query, { register: true });
+    const fromStrm = await api.r(base, store.query, { register: true, focus: store.focus });
 
     // prepare a controller to stop the new stream
     let isAborted = false;
@@ -395,14 +394,6 @@ export async function onSearch({ store, setStore, api }) {
         state.recordSet = [];
       }),
     );
-  }
-
-  if (store.scroll !== undefined && store.scroll !== null) {
-    const element = document.getElementById(store.scroll);
-
-    if (element) {
-      element.scrollIntoView();
-    }
   }
 
   setStore("status", null);
