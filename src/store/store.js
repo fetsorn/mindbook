@@ -199,8 +199,7 @@ export async function getRecord({ store, setStore, api }, record) {
     // A bare grain ({ _: base, [base]: key }) echoed back by describe
     // means no real record exists — treat as not found.
     const hasContent =
-      recordNew &&
-      Object.keys(recordNew).some((k) => k !== "_" && k !== base);
+      recordNew && Object.keys(recordNew).some((k) => k !== "_" && k !== base);
 
     setStore("recordMap", {
       [record]: hasContent
@@ -263,9 +262,8 @@ export async function onRecordSave(
 
   const idx = store.recordSet.indexOf(keyOld);
 
-  const records = idx >= 0
-    ? store.recordSet.with(idx, keyNew)
-    : [...store.recordSet, keyNew];
+  const records =
+    idx >= 0 ? store.recordSet.with(idx, keyNew) : [...store.recordSet, keyNew];
 
   // force reload
   setStore("recordSet", []);
@@ -323,7 +321,10 @@ export async function onSearch({ store, setStore, api }) {
   try {
     const base = store.base;
 
-    const fromStrm = await api.r(base, store.query, { register: true, focus: store.focus });
+    const fromStrm = await api.r(base, store.query, {
+      register: true,
+      focus: store.focus,
+    });
 
     // prepare a controller to stop the new stream
     let isAborted = false;
@@ -437,23 +438,25 @@ export async function setFocus({ store, setStore, api }, key) {
     return;
   }
 
+  // TODO put back for chain search later
+  // breaks cloning
   // key not in current results — search for it
-  if (!store.recordSet.includes(key)) {
-    const base = store.base;
+  //if (!store.recordSet.includes(key)) {
+  //  const base = store.base;
 
-    setStore(
-      produce((state) => {
-        state.focus = key;
-        state.egoCauses = [];
-        state.egoResults = [];
-        state.query = `${base}:${key}`;
-      }),
-    );
+  //  setStore(
+  //    produce((state) => {
+  //      state.focus = key;
+  //      state.egoCauses = [];
+  //      state.egoResults = [];
+  //      state.query = `${base}:${key}`;
+  //    }),
+  //  );
 
-    await onSearch({ store, setStore, api });
+  //  await onSearch({ store, setStore, api });
 
-    return;
-  }
+  //  return;
+  //}
 
   setStore(
     produce((state) => {
