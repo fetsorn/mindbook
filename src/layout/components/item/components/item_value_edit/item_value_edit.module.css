@@ -1,8 +1,23 @@
 .editor :global(.ProseMirror) {
   display: inline-block;
+  min-width: 4em;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .editor :global(.ProseMirror) p {
   display: inline-block;
   margin: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.editor :global(.ProseMirror p.is-editor-empty:first-child)::before {
+  content: attr(data-placeholder);
+  color: #999;
+  pointer-events: none;
+  float: left;
+  height: 0;
 }

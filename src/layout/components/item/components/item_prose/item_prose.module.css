@@ -11,3 +11,11 @@
   display: inline-block;
   margin: 0;
 }
+
+.prose :global(.ProseMirror p.is-editor-empty:first-child)::before {
+  content: attr(data-placeholder);
+  color: #999;
+  pointer-events: none;
+  float: left;
+  height: 0;
+}

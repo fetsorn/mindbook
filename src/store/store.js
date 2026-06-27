@@ -120,9 +120,11 @@ export function getBase({ store }) {
  * @returns {Function}
  */
 export function getSortedRecords({ store }) {
-  const records = store.recordSet.toSorted(
-    sortCallback(store.sortBy, store.sortDirection),
-  );
+  const records = store.recordSet.toSorted((a, b) => {
+    const recA = store.recordMap[a];
+    const recB = store.recordMap[b];
+    return sortCallback(store.sortBy, store.sortDirection)(recA ?? {}, recB ?? {});
+  });
 
   return records;
 }
@@ -438,25 +440,23 @@ export async function setFocus({ store, setStore, api }, key) {
     return;
   }
 
-  // TODO put back for chain search later
-  // breaks cloning
   // key not in current results — search for it
-  //if (!store.recordSet.includes(key)) {
-  //  const base = store.base;
+  if (!store.recordSet.includes(key)) {
+    const base = store.base;
 
-  //  setStore(
-  //    produce((state) => {
-  //      state.focus = key;
-  //      state.egoCauses = [];
-  //      state.egoResults = [];
-  //      state.query = `${base}:${key}`;
-  //    }),
-  //  );
+    setStore(
+      produce((state) => {
+        state.focus = key;
+        state.egoCauses = [];
+        state.egoResults = [];
+        state.query = `${base}:${key}`;
+      }),
+    );
 
-  //  await onSearch({ store, setStore, api });
+    await onSearch({ store, setStore, api });
 
-  //  return;
-  //}
+    return;
+  }
 
   setStore(
     produce((state) => {

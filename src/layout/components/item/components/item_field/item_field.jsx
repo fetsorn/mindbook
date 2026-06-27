@@ -61,6 +61,7 @@ export function ItemField(props) {
               <>
                 <Show when={!props.editing && index() > 0}>; </Show>
 
+                <Show when={props.editing}>, </Show>
                 <Show when={props.editing}>
                   <Confirmation
                     action={t`cut...`}

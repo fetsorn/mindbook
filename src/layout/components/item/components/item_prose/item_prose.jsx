@@ -1,6 +1,7 @@
 import { onCleanup, untrack } from "solid-js";
 import { useEditor } from "solid-tiptap";
 import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { common, createLowlight } from "lowlight";
 import { Markdown } from "tiptap-markdown";
@@ -16,13 +17,19 @@ export function ItemProse(props) {
   // (onUpdate → setStore → re-render → new editor).
   const initialContent = untrack(() => props.value ?? "");
 
+  const extensions = [
+    StarterKit.configure({ codeBlock: false }),
+    CodeBlockLowlight.configure({ lowlight }),
+    Markdown,
+  ];
+
+  if (props.editing && props.label) {
+    extensions.push(Placeholder.configure({ placeholder: props.label }));
+  }
+
   const editor = useEditor(() => ({
     element: ref,
-    extensions: [
-      StarterKit.configure({ codeBlock: false }),
-      CodeBlockLowlight.configure({ lowlight }),
-      Markdown,
-    ],
+    extensions,
     content: initialContent,
     editable: props.editing ?? false,
     editorProps: props.label

@@ -14,7 +14,7 @@ msgstr ""
 #: src/layout/components/item/components/item_field_item/item_field_item.jsx:94
 #: src/layout/components/item/components/item_record/item_record.jsx:83
 msgid "add"
-msgstr "добавить"
+msgstr "ещё"
 
 #: src/layout/components/item/components/item_field/item_field.jsx:58
 msgid "and"

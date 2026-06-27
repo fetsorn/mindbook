@@ -67,24 +67,38 @@ export function ItemFieldItem(props) {
           rstIndex={props.rstIndex}
         />
 
-        {/* Prose */}
-        <For each={proseKeys()}>
-          {(key) => (
-            <Spoiler
-              index={`${props.index}-prose-${key}`}
-              title={props.editing ? proseLabel(key, i18n().locale, t) : t`is`}
-              isOpenDefault={props.editing}
-            >
-              <ItemProse
-                value={props.item[key]}
-                editing={props.editing}
-                onInput={(html) =>
-                  onRecordEdit({ setStore }, [...props.path, key], html)
-                }
-              />
-            </Spoiler>
-          )}
-        </For>
+        {/* Prose: single → inline, multiple → behind "is..." spoiler */}
+        <Show when={proseKeys().length === 1}>
+          <Spoiler index={`${props.index}-prose-${proseKeys()[0]}`} title={t`is`}>
+            <ItemProse
+              value={props.item[proseKeys()[0]]}
+              editing={props.editing}
+              label={proseLabel(proseKeys()[0], i18n().locale, t)}
+              onInput={props.editing ? (html) =>
+                onRecordEdit({ setStore }, [...props.path, proseKeys()[0]], html) : undefined}
+            />
+          </Spoiler>
+        </Show>
+        <Show when={proseKeys().length > 1}>
+          <Spoiler index={`${props.index}-prose`} title={t`is`}>
+            <For each={proseKeys()}>
+              {(key) => (
+                <Spoiler
+                  index={`${props.index}-prose-${key}`}
+                  title={proseLabel(key, i18n().locale, t)}
+                  isOpenDefault={props.editing}
+                >
+                  <ItemProse
+                    value={props.item[key]}
+                    editing={props.editing}
+                    onInput={props.editing ? (html) =>
+                      onRecordEdit({ setStore }, [...props.path, key], html) : undefined}
+                  />
+                </Spoiler>
+              )}
+            </For>
+          </Spoiler>
+        </Show>
 
         {/* Edit-only: add prose for current locale */}
         <Show when={props.editing && (

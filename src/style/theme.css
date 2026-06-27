@@ -103,6 +103,9 @@
 .rst-value-toggle {
   margin-inline: 0.15em;
   text-align: left;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 
@@ -182,10 +185,13 @@
 .rst-chain-cause {
   font-weight: 400;
   font-style: italic;
+  margin-inline-start: 1.5em;
 }
 
 .rst-chain-focus { }
 
 .rst-chain-result {
   font-weight: 400;
+  font-style: italic;
+  margin-inline-start: 1.5em;
 }

@@ -26,7 +26,9 @@ export function ItemFull(props) {
 
   const [content, setContent] = createSignal();
 
-  const isFold = () => !isFocused();
+  const [isUnfolded, setIsUnfolded] = createSignal(false);
+
+  const isFold = () => !isFocused() && !isUnfolded();
 
   const isEditing = () =>
     store.record !== undefined && store.editingKey === key();
@@ -34,7 +36,7 @@ export function ItemFull(props) {
   const isTwig = () =>
     !store.schema[base()] || store.schema[base()].leaves.length === 0;
 
-  const focusThis = () => setFocus({ store, setStore, api }, key());
+  const unfoldThis = () => setIsUnfolded(true);
 
   const rstIndex = () => buildIndex(props.item, store.schema, props.path || []);
 
@@ -43,7 +45,7 @@ export function ItemFull(props) {
   const foldClasses = () => rhetoric({ isFolded: isFold() }).join(" ");
 
   return (
-    <SpoilerFocusContext.Provider value={focusThis}>
+    <SpoilerFocusContext.Provider value={unfoldThis}>
     <div
       id={key()}
       className={`${styles.item} ${itemClasses()} ${isEditing() ? styles.editing : ""} ${store.record !== undefined && !isEditing() ? styles.dimmed : ""}`}
@@ -69,6 +71,7 @@ export function ItemFull(props) {
                 onClick={() => {
                   if (isFocused()) {
                     setFocus({ store, setStore, api }, null);
+                    setIsUnfolded(false);
                   } else {
                     setFocus({ store, setStore, api }, key());
                   }

@@ -4,6 +4,7 @@ import { useEditor } from "solid-tiptap";
 import Document from "@tiptap/extension-document";
 import Text from "@tiptap/extension-text";
 import Paragraph from "@tiptap/extension-paragraph";
+import Placeholder from "@tiptap/extension-placeholder";
 import { Context, onRecordEdit, branchTitle } from "@/store/store.js";
 import { rhetoric } from "@/style/rhetoric.js";
 import {
@@ -25,13 +26,13 @@ export function ItemValueEdit(props) {
 
   const initialContent = untrack(() => props.value ?? "");
 
-  const label = () => `${branchTitle(store.schema, props.branch, i18n().locale)} -`;
+  const label = () => branchTitle(store.schema, props.branch, i18n().locale);
 
   let ref;
 
   const editor = useEditor(() => ({
     element: ref,
-    extensions: [Document, Text, Paragraph],
+    extensions: [Document, Text, Paragraph, Placeholder.configure({ placeholder: label() })],
     content: initialContent,
     editable: true,
     editorProps: {
@@ -49,10 +50,6 @@ export function ItemValueEdit(props) {
 
   return (
     <>
-      <label>
-        {label()}{" "}
-      </label>
-
       <span className={`${styles.editor} ${editClasses()}`}>
         <span ref={ref} />
       </span>

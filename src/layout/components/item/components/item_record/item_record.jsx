@@ -54,24 +54,39 @@ export function ItemRecord(props) {
       />
 
       {/* Prose */}
-      <For each={proseKeys()}>
-        {(key) => (
-          <Spoiler
-            index={`${props.index}-prose-${key}`}
-            title={props.editing ? proseLabel(key) : t`is`}
-            isOpenDefault={props.editing}
-          >
-            <ItemProse
-              value={props.record[key]}
-              editing={props.editing}
-              label={`${proseLabel(key)} -`}
-              onInput={(html) =>
-                onRecordEdit({ setStore }, [...props.path, key], html)
-              }
-            />
-          </Spoiler>
-        )}
-      </For>
+      {/* Prose: single → inline, multiple → behind "is..." spoiler */}
+      <Show when={proseKeys().length === 1}>
+        <Spoiler index={`${props.index}-prose-${proseKeys()[0]}`} title={t`is`}>
+          <ItemProse
+            value={props.record[proseKeys()[0]]}
+            editing={props.editing}
+            label={proseLabel(proseKeys()[0])}
+            onInput={props.editing ? (html) =>
+              onRecordEdit({ setStore }, [...props.path, proseKeys()[0]], html) : undefined}
+          />
+        </Spoiler>
+      </Show>
+      <Show when={proseKeys().length > 1}>
+        <Spoiler index={`${props.index}-prose`} title={t`is`}>
+          <For each={proseKeys()}>
+            {(key) => (
+              <Spoiler
+                index={`${props.index}-prose-${key}`}
+                title={proseLabel(key)}
+                isOpenDefault={props.editing}
+              >
+                <ItemProse
+                  value={props.record[key]}
+                  editing={props.editing}
+                  label={proseLabel(key)}
+                  onInput={props.editing ? (html) =>
+                    onRecordEdit({ setStore }, [...props.path, key], html) : undefined}
+                />
+              </Spoiler>
+            )}
+          </For>
+        </Spoiler>
+      </Show>
 
       <Spoiler
         index={props.index}
@@ -131,16 +146,19 @@ export function ItemRecord(props) {
           each={leaves().filter(recordHasLeaf)}
           fallback={<span>{t`record no items`}</span>}
         >
-          {(leaf) => {
+          {(leaf, index) => {
             return (
-              <ItemField
-                index={`${props.index}-${leaf}`}
-                items={props.record[leaf]}
-                branch={leaf}
-                path={[...props.path, leaf]}
-                rstIndex={props.rstIndex}
-                editing={props.editing}
-              />
+              <>
+                <Show when={props.editing && index() > 0}>, </Show>
+                <ItemField
+                  index={`${props.index}-${leaf}`}
+                  items={props.record[leaf]}
+                  branch={leaf}
+                  path={[...props.path, leaf]}
+                  rstIndex={props.rstIndex}
+                  editing={props.editing}
+                />
+              </>
             );
           }}
         </For>

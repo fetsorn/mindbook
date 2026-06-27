@@ -89,6 +89,7 @@ export function visibleProseKeys(record, locale, editing) {
   const localeKey = `@${locale}`;
   if (allKeys.includes(localeKey)) return [localeKey];
   if (allKeys.includes("@")) return ["@"];
+  if (allKeys.length > 0) return [allKeys[0]];
   return [];
 }
 

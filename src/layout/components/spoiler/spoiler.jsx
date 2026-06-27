@@ -3,17 +3,16 @@ import { createContext, createSignal, useContext } from "solid-js";
 export const SpoilerFocusContext = createContext(null);
 
 export function Spoiler(props) {
-  const onFocus = useContext(SpoilerFocusContext);
+  const onUnfold = useContext(SpoilerFocusContext);
   const [isOpen, setIsOpen] = createSignal(props.isOpenDefault);
 
   function open() {
     setIsOpen(true);
-    onFocus?.();
+    onUnfold?.();
   }
 
   function close() {
     setIsOpen(false);
-    onFocus?.();
   }
 
   return (
